@@ -1,0 +1,105 @@
+# ==============================================================================
+# .gitattributes - Proyecto Modelos Probabilistas
+# ==============================================================================
+# Este archivo normaliza el formato de archivos entre diferentes sistemas
+# operativos (Windows usa CRLF, Linux/Mac usan LF)
+# ==============================================================================
+
+# ==============================================================================
+# CONFIGURACIÓN AUTOMÁTICA
+# ==============================================================================
+# Git convierte automáticamente finales de línea
+* text=auto
+
+# ==============================================================================
+# ARCHIVOS DE TEXTO (Forzar LF en repositorio)
+# ==============================================================================
+
+# Código fuente
+*.php text eol=lf
+*.js text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.html text eol=lf
+*.htm text eol=lf
+
+# Datos
+*.json text eol=lf
+*.xml text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.csv text eol=lf
+*.sql text eol=lf
+
+# Configuración
+*.conf text eol=lf
+*.config text eol=lf
+*.ini text eol=lf
+.htaccess text eol=lf
+.editorconfig text eol=lf
+
+# Documentación
+*.md text eol=lf
+*.txt text eol=lf
+LICENSE text eol=lf
+README text eol=lf
+
+# Scripts
+*.sh text eol=lf
+*.bat text eol=crlf
+
+# ==============================================================================
+# ARCHIVOS BINARIOS (No convertir)
+# ==============================================================================
+
+# Imágenes
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg binary
+*.webp binary
+
+# Fuentes
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+*.eot binary
+
+# Documentos
+*.pdf binary
+*.doc binary
+*.docx binary
+*.xls binary
+*.xlsx binary
+*.ppt binary
+*.pptx binary
+
+# Archivos comprimidos
+*.zip binary
+*.tar binary
+*.gz binary
+*.7z binary
+*.rar binary
+
+# ==============================================================================
+# ARCHIVOS ESPECIALES
+# ==============================================================================
+
+# Archivo de control de versión
+.gitignore text eol=lf
+.gitattributes text eol=lf
+
+# ==============================================================================
+# CONFIGURACIÓN DE LENGUAJES (Para estadísticas de GitHub)
+# ==============================================================================
+
+# Ignorar librerías en estadísticas
+lib/* linguist-vendored
+vendor/* linguist-vendored
+
+# Especificar que este es principalmente un proyecto PHP
+*.php linguist-detectable=true
+*.js linguist-detectable=true

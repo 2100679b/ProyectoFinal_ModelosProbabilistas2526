@@ -1,0 +1,675 @@
+/*
+ * ==============================================================================
+ * REDES BAYESIANAS - ESTILOS ESPECÍFICOS
+ * Universidad Michoacana de San Nicolás de Hidalgo
+ * Estilos para el módulo de Redes Bayesianas (bayesian.css)
+ * ==============================================================================
+ */
+
+/* ==============================================================================
+ * VARIABLES ESPECÍFICAS DE REDES BAYESIANAS
+ * ==============================================================================
+ */
+:root {
+    /* Colores específicos para Redes Bayesianas */
+    --bayesian-primary: #3498db;
+    --bayesian-secondary: #2980b9;
+    --bayesian-light: #5dade2;
+    --bayesian-dark: #21618c;
+    
+    /* Colores para nodos */
+    --node-default: #97C2FC;
+    --node-evidence: #FFD700;
+    --node-query: #FF6B6B;
+    --node-selected: #4CAF50;
+    --node-border: #2B7CE9;
+    
+    /* Colores para aristas */
+    --edge-default: #848484;
+    --edge-selected: #2B7CE9;
+    
+    /* Colores para tablas de probabilidad */
+    --table-header: #3498db;
+    --table-row-even: #f8f9fa;
+    --table-row-odd: #ffffff;
+    --table-border: #dee2e6;
+}
+
+/* ==============================================================================
+ * HEADER DEL MÓDULO
+ * ==============================================================================
+ */
+.bayesian-header {
+    background: linear-gradient(135deg, var(--bayesian-primary) 0%, var(--bayesian-secondary) 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.bayesian-header h1 {
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.bayesian-header p {
+    opacity: 0.95;
+    margin-bottom: 0;
+}
+
+/* ==============================================================================
+ * CONTENEDOR PRINCIPAL
+ * ==============================================================================
+ */
+.bayesian-container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* ==============================================================================
+ * PANEL LATERAL (Controles y opciones)
+ * ==============================================================================
+ */
+.bayesian-sidebar {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+    position: sticky;
+    top: 80px;
+}
+
+.sidebar-section {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.sidebar-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.sidebar-section h3 {
+    font-size: 1.1rem;
+    color: var(--bayesian-primary);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sidebar-section h3::before {
+    content: "▶";
+    font-size: 0.8rem;
+}
+
+/* ==============================================================================
+ * BOTONES DE EJEMPLOS
+ * ==============================================================================
+ */
+.example-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.btn-example {
+    background-color: #f8f9fa;
+    color: var(--bayesian-primary);
+    border: 2px solid var(--bayesian-light);
+    padding: 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    text-align: left;
+}
+
+.btn-example:hover {
+    background-color: var(--bayesian-light);
+    color: white;
+    transform: translateX(5px);
+}
+
+.btn-example.active {
+    background-color: var(--bayesian-primary);
+    color: white;
+    border-color: var(--bayesian-primary);
+}
+
+/* ==============================================================================
+ * ALGORITMOS
+ * ==============================================================================
+ */
+.algorithm-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.algorithm-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.algorithm-option:hover {
+    background-color: var(--bayesian-light);
+    color: white;
+}
+
+.algorithm-option input[type="radio"] {
+    accent-color: var(--bayesian-primary);
+}
+
+.algorithm-option label {
+    cursor: pointer;
+    flex-grow: 1;
+}
+
+/* ==============================================================================
+ * ÁREA PRINCIPAL (Visualización y contenido)
+ * ==============================================================================
+ */
+.bayesian-main {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* ==============================================================================
+ * TABS (Pestañas)
+ * ==============================================================================
+ */
+.bayesian-tabs {
+    display: flex;
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 1rem;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    color: #6c757d;
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+}
+
+.tab-button:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+    color: var(--bayesian-primary);
+}
+
+.tab-button.active {
+    color: var(--bayesian-primary);
+    border-bottom-color: var(--bayesian-primary);
+    background-color: white;
+}
+
+/* ==============================================================================
+ * CONTENIDO DE TABS
+ * ==============================================================================
+ */
+.tab-content {
+    padding: 2rem;
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==============================================================================
+ * VISUALIZACIÓN DE RED
+ * ==============================================================================
+ */
+.network-visualization {
+    width: 100%;
+    height: 600px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #fafafa;
+    position: relative;
+}
+
+.network-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 0.5rem;
+    z-index: 10;
+}
+
+.network-controls button {
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.network-controls button:hover {
+    background-color: var(--bayesian-primary);
+    color: white;
+}
+
+/* ==============================================================================
+ * EDITOR DE NODOS
+ * ==============================================================================
+ */
+.node-editor {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.node-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--bayesian-dark);
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--bayesian-primary);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* ==============================================================================
+ * TABLAS DE PROBABILIDAD CONDICIONAL (CPT)
+ * ==============================================================================
+ */
+.cpt-container {
+    margin-top: 1.5rem;
+}
+
+.cpt-table-wrapper {
+    overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cpt-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+.cpt-table thead {
+    background-color: var(--table-header);
+    color: white;
+}
+
+.cpt-table th,
+.cpt-table td {
+    padding: 1rem;
+    text-align: left;
+    border: 1px solid var(--table-border);
+}
+
+.cpt-table th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.cpt-table tbody tr:nth-child(even) {
+    background-color: var(--table-row-even);
+}
+
+.cpt-table tbody tr:nth-child(odd) {
+    background-color: var(--table-row-odd);
+}
+
+.cpt-table tbody tr:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+.cpt-table input[type="number"] {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
+.cpt-table input[type="number"]:focus {
+    outline: none;
+    border-color: var(--bayesian-primary);
+}
+
+/* ==============================================================================
+ * CONSULTAS
+ * ==============================================================================
+ */
+.query-builder {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.query-section {
+    margin-bottom: 1.5rem;
+}
+
+.query-section h4 {
+    color: var(--bayesian-primary);
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.variable-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.variable-chip {
+    padding: 0.5rem 1rem;
+    background-color: white;
+    border: 2px solid #ddd;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.variable-chip:hover {
+    border-color: var(--bayesian-primary);
+    transform: translateY(-2px);
+}
+
+.variable-chip.selected {
+    background-color: var(--bayesian-primary);
+    color: white;
+    border-color: var(--bayesian-primary);
+}
+
+.evidence-inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+/* ==============================================================================
+ * RESULTADOS
+ * ==============================================================================
+ */
+.results-container {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--bayesian-primary);
+}
+
+.result-item {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+}
+
+.result-label {
+    font-weight: 600;
+    color: var(--bayesian-dark);
+    margin-bottom: 0.5rem;
+}
+
+.result-value {
+    font-size: 1.5rem;
+    color: var(--bayesian-primary);
+    font-weight: 700;
+}
+
+.result-bar {
+    height: 30px;
+    background-color: #e0e0e0;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+}
+
+.result-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--bayesian-secondary), var(--bayesian-light));
+    transition: width 0.5s ease;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 1rem;
+    color: white;
+    font-weight: 600;
+}
+
+/* ==============================================================================
+ * DETALLES DEL ALGORITMO
+ * ==============================================================================
+ */
+.algorithm-details {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 1.5rem;
+}
+
+.algorithm-steps {
+    list-style: none;
+    counter-reset: step-counter;
+}
+
+.algorithm-steps li {
+    counter-increment: step-counter;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    background-color: white;
+    border-radius: 6px;
+    border-left: 4px solid var(--bayesian-primary);
+    position: relative;
+    padding-left: 3rem;
+}
+
+.algorithm-steps li::before {
+    content: counter(step-counter);
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--bayesian-primary);
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+/* ==============================================================================
+ * ALERTAS Y MENSAJES
+ * ==============================================================================
+ */
+.alert {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border-left: 4px solid;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    border-color: #0c5460;
+    color: #0c5460;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border-color: #155724;
+    color: #155724;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border-color: #856404;
+    color: #856404;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    border-color: #721c24;
+    color: #721c24;
+}
+
+/* ==============================================================================
+ * LOADING / SPINNER
+ * ==============================================================================
+ */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid var(--bayesian-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ==============================================================================
+ * RESPONSIVE DESIGN
+ * ==============================================================================
+ */
+
+/* Tablets */
+@media (max-width: 1024px) {
+    .bayesian-container {
+        grid-template-columns: 250px 1fr;
+        gap: 1rem;
+    }
+    
+    .node-form {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Tablets pequeñas */
+@media (max-width: 768px) {
+    .bayesian-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .bayesian-sidebar {
+        position: static;
+    }
+    
+    .network-visualization {
+        height: 400px;
+    }
+    
+    .evidence-inputs {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Móviles */
+@media (max-width: 480px) {
+    .bayesian-header {
+        padding: 1.5rem 1rem;
+    }
+    
+    .tab-content {
+        padding: 1rem;
+    }
+    
+    .bayesian-tabs {
+        flex-direction: column;
+    }
+    
+    .network-visualization {
+        height: 300px;
+    }
+    
+    .cpt-table {
+        font-size: 0.85rem;
+    }
+    
+    .cpt-table th,
+    .cpt-table td {
+        padding: 0.5rem;
+    }
+}

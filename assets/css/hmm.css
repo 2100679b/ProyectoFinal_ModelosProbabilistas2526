@@ -1,6 +1,6 @@
 /*
  * ==============================================================================
- * MODELOS OCULTOS DE MARKOV - ESTILOS ESPECÍFICOS
+ * MODELOS OCULTOS DE MARKOV (HMM) - ESTILOS ESPECÍFICOS
  * Universidad Michoacana de San Nicolás de Hidalgo
  * Estilos para el módulo de HMM (hmm.css)
  * ==============================================================================
@@ -18,19 +18,21 @@
     --hmm-dark: #0e6655;
     
     /* Colores para estados ocultos */
-    --hidden-state: #16a085;
-    --hidden-state-active: #FFD700;
-    --hidden-state-border: #138d75;
+    --hidden-state-1: #3498db;
+    --hidden-state-2: #e74c3c;
+    --hidden-state-3: #f39c12;
+    --hidden-state-4: #9b59b6;
     
     /* Colores para observaciones */
-    --observation: #e67e22;
-    --observation-active: #FF6B6B;
-    --observation-border: #d35400;
+    --observation-1: #1abc9c;
+    --observation-2: #2ecc71;
+    --observation-3: #f1c40f;
+    --observation-4: #e67e22;
     
     /* Colores para algoritmos */
     --forward-color: #3498db;
-    --backward-color: #9b59b6;
-    --viterbi-color: #e74c3c;
+    --backward-color: #e74c3c;
+    --viterbi-color: #f39c12;
 }
 
 /* ==============================================================================
@@ -102,6 +104,11 @@
     gap: 0.5rem;
 }
 
+.sidebar-section h3::before {
+    content: "🔍";
+    font-size: 1.2rem;
+}
+
 /* ==============================================================================
  * ÁREA PRINCIPAL
  * ==============================================================================
@@ -164,221 +171,202 @@
 }
 
 /* ==============================================================================
- * VISUALIZACIÓN DE HMM
+ * ARQUITECTURA HMM (Visualización de dos capas)
  * ==============================================================================
  */
-.hmm-visualization {
+.hmm-architecture {
     width: 100%;
-    height: 600px;
+    height: 500px;
     border: 2px solid #e0e0e0;
     border-radius: 8px;
     background-color: #fafafa;
     position: relative;
+    padding: 2rem;
 }
 
-.visualization-legend {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: white;
-    padding: 1rem;
-    border-radius: 6px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 10;
+.hmm-layer {
+    margin-bottom: 3rem;
 }
 
-.legend-item {
+.hmm-layer h4 {
+    text-align: center;
+    color: var(--hmm-dark);
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.states-row {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    align-items: center;
+}
+
+.hmm-state {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
+    justify-content: center;
+    font-weight: 600;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    transition: all 0.3s ease;
 }
 
-.legend-color {
-    width: 20px;
-    height: 20px;
-    border-radius: 4px;
+.hmm-state:hover {
+    transform: scale(1.1);
 }
 
-.legend-color.hidden-state {
-    background-color: var(--hidden-state);
+.hmm-state.hidden {
+    background-color: var(--hmm-primary);
 }
 
-.legend-color.observation {
-    background-color: var(--observation);
+.hmm-state.observation {
+    background-color: var(--hmm-light);
+}
+
+.state-label {
+    font-size: 1.1rem;
+}
+
+.state-arrow {
+    color: #95a5a6;
+    font-size: 2rem;
 }
 
 /* ==============================================================================
- * MATRICES DE CONFIGURACIÓN
+ * MATRICES DE PARÁMETROS
  * ==============================================================================
  */
-.matrix-section {
+.parameters-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.parameter-box {
     background-color: #f8f9fa;
     padding: 1.5rem;
     border-radius: 8px;
-    margin-bottom: 1.5rem;
+    border-top: 4px solid var(--hmm-primary);
 }
 
-.matrix-section h3 {
+.parameter-box h4 {
     color: var(--hmm-primary);
     margin-bottom: 1rem;
+    font-size: 1rem;
 }
 
-.matrix-description {
+.parameter-description {
+    font-size: 0.85rem;
     color: #6c757d;
-    font-size: 0.9rem;
     margin-bottom: 1rem;
 }
 
-.matrix-table-wrapper {
-    overflow-x: auto;
-    background-color: white;
-    border-radius: 6px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.hmm-matrix {
+/* Matriz pequeña dentro del box */
+.mini-matrix {
     width: 100%;
     border-collapse: collapse;
+    font-size: 0.85rem;
 }
 
-.hmm-matrix th,
-.hmm-matrix td {
-    padding: 1rem;
+.mini-matrix th,
+.mini-matrix td {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
     text-align: center;
-    border: 1px solid #dee2e6;
 }
 
-.hmm-matrix thead th {
+.mini-matrix thead {
     background-color: var(--hmm-primary);
     color: white;
-    font-weight: 600;
 }
 
-.hmm-matrix tbody th {
-    background-color: var(--hmm-light);
-    color: white;
-    font-weight: 600;
-}
-
-.hmm-matrix td input {
-    width: 80px;
-    padding: 0.5rem;
+.mini-matrix input[type="number"] {
+    width: 100%;
+    padding: 0.25rem;
     border: 1px solid #ddd;
     border-radius: 4px;
     text-align: center;
-}
-
-.hmm-matrix td input:focus {
-    outline: none;
-    border-color: var(--hmm-primary);
 }
 
 /* ==============================================================================
  * SECUENCIA DE OBSERVACIONES
  * ==============================================================================
  */
-.observation-input-section {
+.observation-sequence {
     background-color: white;
     padding: 1.5rem;
     border-radius: 8px;
-    border-left: 4px solid var(--observation);
+    border: 2px solid var(--hmm-light);
     margin-bottom: 1.5rem;
 }
 
-.observation-input-section h4 {
-    color: var(--observation);
+.observation-sequence h4 {
+    color: var(--hmm-primary);
     margin-bottom: 1rem;
 }
 
-.observation-sequence {
+.sequence-input {
     display: flex;
-    flex-wrap: wrap;
     gap: 0.5rem;
-    margin-top: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
 }
 
-.observation-chip {
-    padding: 0.5rem 1rem;
-    background-color: var(--observation);
-    color: white;
-    border-radius: 20px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.observation-chip:hover {
-    background-color: var(--observation-border);
-    transform: translateY(-2px);
-}
-
-.observation-chip.selected {
-    background-color: var(--observation-active);
+.sequence-input input {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
 }
 
 .sequence-display {
     display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    margin-top: 1rem;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    min-height: 60px;
     padding: 1rem;
     background-color: #f8f9fa;
-    border-radius: 6px;
-    min-height: 60px;
-    flex-wrap: wrap;
+    border-radius: 8px;
 }
 
-.sequence-item {
+.observation-token {
     padding: 0.5rem 1rem;
-    background-color: var(--observation);
+    background-color: var(--hmm-light);
     color: white;
-    border-radius: 6px;
+    border-radius: 20px;
     font-weight: 600;
-    position: relative;
-    animation: itemAppear 0.3s ease;
-}
-
-.sequence-item .remove-btn {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    width: 20px;
-    height: 20px;
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 0.8rem;
-    display: none;
-}
-
-.sequence-item:hover .remove-btn {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 0.5rem;
+    animation: slideIn 0.3s ease;
 }
 
-@keyframes itemAppear {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+.observation-token .remove-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-weight: 700;
+    padding: 0 0.25rem;
+}
+
+.observation-token .remove-btn:hover {
+    color: #e74c3c;
 }
 
 /* ==============================================================================
  * ALGORITMOS
  * ==============================================================================
  */
-.algorithm-panel {
-    background-color: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 8px;
+.algorithm-section {
+    margin-bottom: 2rem;
 }
 
 .algorithm-selector {
@@ -389,218 +377,271 @@
 }
 
 .algorithm-card {
-    background-color: white;
     padding: 1.5rem;
+    background-color: white;
+    border: 2px solid #e0e0e0;
     border-radius: 8px;
     cursor: pointer;
-    border: 2px solid transparent;
     transition: all 0.3s ease;
+    text-align: center;
 }
 
 .algorithm-card:hover {
     border-color: var(--hmm-primary);
-    transform: translateY(-3px);
+    transform: translateY(-5px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.algorithm-card.active {
+.algorithm-card.selected {
     border-color: var(--hmm-primary);
-    background-color: var(--hmm-light);
-    color: white;
+    background-color: rgba(22, 160, 133, 0.1);
 }
 
-.algorithm-card h4 {
+.algorithm-card.forward {
+    border-top: 4px solid var(--forward-color);
+}
+
+.algorithm-card.viterbi {
+    border-top: 4px solid var(--viterbi-color);
+}
+
+.algorithm-card.forward-backward {
+    border-top: 4px solid var(--backward-color);
+}
+
+.algorithm-icon {
+    font-size: 2.5rem;
     margin-bottom: 0.5rem;
 }
 
-.algorithm-card p {
-    font-size: 0.9rem;
-    margin-bottom: 0;
-    color: #6c757d;
-}
-
-.algorithm-card.active p {
-    color: rgba(255, 255, 255, 0.9);
-}
-
-/* ==============================================================================
- * RESULTADOS DE ALGORITMOS
- * ==============================================================================
- */
-.results-panel {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-top: 1.5rem;
-}
-
-.results-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid var(--hmm-primary);
-}
-
-.results-header h3 {
-    color: var(--hmm-primary);
-    margin: 0;
-}
-
-.algorithm-badge {
-    padding: 0.5rem 1rem;
-    background-color: var(--hmm-primary);
-    color: white;
-    border-radius: 20px;
-    font-size: 0.9rem;
+.algorithm-name {
     font-weight: 600;
-}
-
-/* Resultados Forward/Backward */
-.probability-result {
-    background-color: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 8px;
-    text-align: center;
-    margin-bottom: 1rem;
-}
-
-.probability-label {
-    font-size: 1rem;
     color: var(--hmm-dark);
     margin-bottom: 0.5rem;
 }
 
-.probability-value {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--hmm-primary);
+.algorithm-description {
+    font-size: 0.85rem;
+    color: #6c757d;
 }
 
-/* Resultados Viterbi */
+/* ==============================================================================
+ * RESULTADOS - TRELLIS (Diagrama de enrejado)
+ * ==============================================================================
+ */
+.trellis-container {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+.trellis-diagram {
+    min-width: 600px;
+    display: flex;
+    gap: 3rem;
+}
+
+.trellis-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.trellis-time-label {
+    font-weight: 600;
+    color: var(--hmm-primary);
+    margin-bottom: 0.5rem;
+}
+
+.trellis-observation {
+    padding: 0.5rem 1rem;
+    background-color: var(--hmm-light);
+    color: white;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.trellis-states {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.trellis-node {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--hmm-primary);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.trellis-node.highlight {
+    background-color: var(--viterbi-color);
+    box-shadow: 0 0 0 4px rgba(243, 156, 18, 0.3);
+}
+
+.trellis-probability {
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+/* ==============================================================================
+ * TABLA DE PROBABILIDADES FORWARD/BACKWARD
+ * ==============================================================================
+ */
+.probability-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.probability-table thead {
+    background-color: var(--hmm-primary);
+    color: white;
+}
+
+.probability-table th,
+.probability-table td {
+    padding: 0.75rem;
+    border: 1px solid #dee2e6;
+    text-align: center;
+}
+
+.probability-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.probability-table tbody tr:hover {
+    background-color: rgba(22, 160, 133, 0.1);
+}
+
+.prob-value {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+.prob-value.high {
+    color: var(--hmm-primary);
+    font-weight: 700;
+}
+
+/* ==============================================================================
+ * SECUENCIA VITERBI (Resultado)
+ * ==============================================================================
+ */
 .viterbi-result {
     background-color: #f8f9fa;
     padding: 1.5rem;
     border-radius: 8px;
+    border-left: 4px solid var(--viterbi-color);
+    margin-top: 1.5rem;
+}
+
+.viterbi-result h4 {
+    color: var(--viterbi-color);
     margin-bottom: 1rem;
 }
 
-.state-sequence {
+.viterbi-path {
     display: flex;
-    gap: 1rem;
     align-items: center;
-    margin-top: 1rem;
+    gap: 0.75rem;
     flex-wrap: wrap;
 }
 
-.state-box {
-    padding: 1rem 1.5rem;
-    background-color: var(--hidden-state);
+.viterbi-state {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--viterbi-color);
     color: white;
-    border-radius: 8px;
+    border-radius: 25px;
     font-weight: 600;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    animation: stateAppear 0.5s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    animation: slideIn 0.3s ease;
 }
 
-.state-arrow {
+.viterbi-arrow {
+    color: var(--viterbi-color);
     font-size: 1.5rem;
-    color: var(--hmm-primary);
+    font-weight: 700;
 }
 
-@keyframes stateAppear {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.viterbi-probability {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: white;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.viterbi-probability strong {
+    color: var(--viterbi-color);
+}
+
+.viterbi-probability .value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--viterbi-color);
 }
 
 /* ==============================================================================
- * MATRIZ DE RESULTADOS DETALLADOS
+ * COMPARACIÓN DE ALGORITMOS
  * ==============================================================================
  */
-.detailed-results {
+.algorithm-comparison {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
     margin-top: 2rem;
 }
 
-.detailed-results h4 {
+.comparison-card {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.comparison-card h5 {
     color: var(--hmm-primary);
     margin-bottom: 1rem;
 }
 
-.results-matrix {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.comparison-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
 }
 
-.results-matrix th,
-.results-matrix td {
-    padding: 0.75rem;
-    text-align: center;
-    border: 1px solid #dee2e6;
-}
-
-.results-matrix thead th {
-    background-color: var(--hmm-primary);
-    color: white;
-}
-
-.results-matrix tbody th {
-    background-color: var(--hmm-light);
-    color: white;
-}
-
-.results-matrix td {
-    font-family: monospace;
-    font-size: 0.9rem;
-}
-
-/* ==============================================================================
- * VISUALIZACIÓN DE PASOS
- * ==============================================================================
- */
-.algorithm-steps-viz {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-top: 1rem;
-}
-
-.step-item {
-    padding: 1rem;
-    margin-bottom: 1rem;
+.metric-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem;
     background-color: #f8f9fa;
-    border-left: 4px solid var(--hmm-primary);
     border-radius: 4px;
 }
 
-.step-number {
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-    background-color: var(--hmm-primary);
-    color: white;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 30px;
-    font-weight: 700;
-    margin-right: 1rem;
+.metric-label {
+    font-weight: 600;
+    color: #6c757d;
 }
 
-.step-content {
-    display: inline-block;
-    vertical-align: top;
+.metric-value {
+    color: var(--hmm-primary);
+    font-weight: 600;
 }
 
 /* ==============================================================================
- * BOTONES
+ * BOTONES DE ACCIÓN
  * ==============================================================================
  */
 .action-buttons {
@@ -610,45 +651,59 @@
     flex-wrap: wrap;
 }
 
-.btn-hmm {
+.btn-run {
+    flex: 1;
+    min-width: 150px;
+    padding: 1rem;
     background-color: var(--hmm-primary);
     color: white;
-    padding: 0.75rem 1.5rem;
     border: none;
     border-radius: 8px;
-    cursor: pointer;
     font-weight: 600;
+    cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.btn-hmm:hover {
+.btn-run:hover {
     background-color: var(--hmm-secondary);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.btn-hmm:disabled {
-    background-color: #ccc;
+.btn-run:disabled {
+    background-color: #95a5a6;
     cursor: not-allowed;
     transform: none;
 }
 
-.btn-hmm.secondary {
-    background-color: var(--observation);
+.btn-clear {
+    padding: 1rem;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.btn-hmm.secondary:hover {
-    background-color: var(--observation-border);
+.btn-clear:hover {
+    background-color: #c0392b;
 }
 
 /* ==============================================================================
  * RESPONSIVE DESIGN
  * ==============================================================================
  */
+
 @media (max-width: 1024px) {
     .hmm-container {
         grid-template-columns: 250px 1fr;
         gap: 1rem;
+    }
+    
+    .parameters-section {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -661,21 +716,22 @@
         position: static;
     }
     
-    .hmm-visualization {
+    .hmm-architecture {
         height: 400px;
+        padding: 1rem;
     }
     
-    .algorithm-selector {
+    .states-row {
+        gap: 1rem;
+    }
+    
+    .hmm-state {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .algorithm-comparison {
         grid-template-columns: 1fr;
-    }
-    
-    .state-sequence {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .state-arrow {
-        transform: rotate(90deg);
     }
 }
 
@@ -692,7 +748,24 @@
         flex-direction: column;
     }
     
-    .probability-value {
-        font-size: 2rem;
+    .observation-sequence {
+        padding: 1rem;
+    }
+    
+    .viterbi-path {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .viterbi-arrow {
+        transform: rotate(90deg);
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .btn-run {
+        min-width: auto;
     }
 }

@@ -1,492 +1,649 @@
-<?php
-/**
+/*
  * ==============================================================================
- * FUNCIONES AUXILIARES
+ * PROYECTO FINAL - MODELOS PROBABILISTAS
  * Universidad Michoacana de San Nicolás de Hidalgo
- * Archivo: includes/functions.php
- * ==============================================================================
- * 
- * Este archivo contiene funciones útiles para todo el proyecto
- */
-
-// Evitar acceso directo al archivo
-if (!defined('INCLUDED')) {
-    define('INCLUDED', true);
-}
-
-/**
- * ==============================================================================
- * FUNCIONES DE SEGURIDAD
+ * Estilos Principales (style.css)
  * ==============================================================================
  */
 
-/**
- * Limpia y sanitiza una cadena de texto
- * @param string $data - Datos a limpiar
- * @return string - Datos limpios
- */
-function sanitizeInput($data) {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
-    return $data;
-}
-
-/**
- * Valida un email
- * @param string $email - Email a validar
- * @return bool - True si es válido
- */
-function validateEmail($email) {
-    return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
-}
-
-/**
- * Valida un número
- * @param mixed $number - Número a validar
- * @return bool - True si es un número válido
- */
-function validateNumber($number) {
-    return is_numeric($number);
-}
-
-/**
- * Valida un rango numérico
- * @param float $number - Número a validar
- * @param float $min - Valor mínimo
- * @param float $max - Valor máximo
- * @return bool - True si está en el rango
- */
-function validateRange($number, $min, $max) {
-    return is_numeric($number) && $number >= $min && $number <= $max;
-}
-
-/**
- * ==============================================================================
- * FUNCIONES DE UTILIDAD GENERAL
+/* ==============================================================================
+ * VARIABLES CSS (Para fácil personalización)
  * ==============================================================================
  */
-
-/**
- * Obtiene la página actual
- * @return string - Nombre del archivo actual
- */
-function getCurrentPage() {
-    return basename($_SERVER['PHP_SELF']);
-}
-
-/**
- * Verifica si una página está activa
- * @param string|array $page - Página(s) a verificar
- * @return bool - True si está activa
- */
-function isPageActive($page) {
-    $currentPage = getCurrentPage();
-    $pages = is_array($page) ? $page : [$page];
+:root {
+    /* Colores principales */
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --success-color: #27ae60;
+    --warning-color: #f39c12;
+    --info-color: #16a085;
     
-    foreach ($pages as $p) {
-        if ($currentPage === $p || $currentPage === str_replace('.html', '.php', $p)) {
-            return true;
-        }
-    }
-    return false;
+    /* Colores de fondo */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-dark: #2c3e50;
+    --bg-light: #ecf0f1;
+    
+    /* Colores de texto */
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --text-light: #ffffff;
+    --text-muted: #95a5a6;
+    
+    /* Colores de módulos */
+    --bayesian-color: #3498db;
+    --markov-color: #9b59b6;
+    --hmm-color: #16a085;
+    
+    /* Espaciado */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-xxl: 3rem;
+    
+    /* Tipografía */
+    --font-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-mono: 'Courier New', Courier, monospace;
+    --font-size-base: 16px;
+    --font-size-sm: 0.875rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    
+    /* Bordes */
+    --border-radius: 8px;
+    --border-radius-sm: 4px;
+    --border-radius-lg: 12px;
+    
+    /* Sombras */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.15);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.2);
+    
+    /* Transiciones */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
 }
 
-/**
- * Genera una URL completa
- * @param string $path - Ruta relativa
- * @return string - URL completa
- */
-function getFullUrl($path = '') {
-    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
-    $host = $_SERVER['HTTP_HOST'];
-    $baseDir = dirname($_SERVER['SCRIPT_NAME']);
-    return $protocol . '://' . $host . $baseDir . '/' . $path;
-}
-
-/**
- * Redirige a otra página
- * @param string $url - URL de destino
- */
-function redirect($url) {
-    header("Location: $url");
-    exit();
-}
-
-/**
- * ==============================================================================
- * FUNCIONES DE FORMATO
- * ==============================================================================
- */
-
-/**
- * Formatea un número con decimales
- * @param float $number - Número a formatear
- * @param int $decimals - Cantidad de decimales
- * @return string - Número formateado
- */
-function formatNumber($number, $decimals = 2) {
-    return number_format($number, $decimals, '.', ',');
-}
-
-/**
- * Formatea una fecha
- * @param string $date - Fecha a formatear
- * @param string $format - Formato deseado
- * @return string - Fecha formateada
- */
-function formatDate($date, $format = 'd/m/Y') {
-    $timestamp = strtotime($date);
-    return date($format, $timestamp);
-}
-
-/**
- * Convierte un array a JSON
- * @param array $data - Array a convertir
- * @param bool $pretty - Si se debe formatear bonito
- * @return string - JSON resultante
- */
-function arrayToJson($data, $pretty = false) {
-    $options = $pretty ? JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE : JSON_UNESCAPED_UNICODE;
-    return json_encode($data, $options);
-}
-
-/**
- * Convierte JSON a array
- * @param string $json - JSON a convertir
- * @return array|null - Array resultante o null si hay error
- */
-function jsonToArray($json) {
-    return json_decode($json, true);
-}
-
-/**
- * ==============================================================================
- * FUNCIONES MATEMÁTICAS
+/* ==============================================================================
+ * RESET Y BASE
  * ==============================================================================
  */
-
-/**
- * Normaliza un array de valores (suma = 1)
- * @param array $values - Valores a normalizar
- * @return array - Valores normalizados
- */
-function normalize($values) {
-    $sum = array_sum($values);
-    if ($sum == 0) return $values;
-    
-    return array_map(function($v) use ($sum) {
-        return $v / $sum;
-    }, $values);
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/**
- * Valida una distribución de probabilidad
- * @param array $probabilities - Array de probabilidades
- * @param float $tolerance - Tolerancia para la suma
- * @return bool - True si es válida
- */
-function validateProbabilityDistribution($probabilities, $tolerance = 0.001) {
-    // Verificar que todos sean números entre 0 y 1
-    foreach ($probabilities as $p) {
-        if (!is_numeric($p) || $p < 0 || $p > 1) {
-            return false;
-        }
-    }
-    
-    // Verificar que sumen aproximadamente 1
-    $sum = array_sum($probabilities);
-    return abs($sum - 1.0) < $tolerance;
+html {
+    font-size: var(--font-size-base);
+    scroll-behavior: smooth;
 }
 
-/**
- * Valida una matriz estocástica
- * @param array $matrix - Matriz a validar
- * @param float $tolerance - Tolerancia
- * @return bool - True si es válida
- */
-function validateStochasticMatrix($matrix, $tolerance = 0.001) {
-    foreach ($matrix as $row) {
-        if (!validateProbabilityDistribution($row, $tolerance)) {
-            return false;
-        }
-    }
-    return true;
+body {
+    font-family: var(--font-primary);
+    color: var(--text-primary);
+    background-color: var(--bg-secondary);
+    line-height: 1.6;
+    overflow-x: hidden;
 }
 
-/**
- * Multiplica dos matrices
- * @param array $a - Primera matriz
- * @param array $b - Segunda matriz
- * @return array|null - Resultado o null si las dimensiones no coinciden
- */
-function multiplyMatrices($a, $b) {
-    $rowsA = count($a);
-    $colsA = count($a[0]);
-    $colsB = count($b[0]);
-    
-    if ($colsA !== count($b)) {
-        return null; // Dimensiones incompatibles
-    }
-    
-    $result = array_fill(0, $rowsA, array_fill(0, $colsB, 0));
-    
-    for ($i = 0; $i < $rowsA; $i++) {
-        for ($j = 0; $j < $colsB; $j++) {
-            for ($k = 0; $k < $colsA; $k++) {
-                $result[$i][$j] += $a[$i][$k] * $b[$k][$j];
-            }
-        }
-    }
-    
-    return $result;
-}
-
-/**
- * ==============================================================================
- * FUNCIONES DE MANEJO DE ARCHIVOS
+/* ==============================================================================
+ * TIPOGRAFÍA
  * ==============================================================================
  */
-
-/**
- * Lee un archivo JSON
- * @param string $filepath - Ruta del archivo
- * @return array|null - Contenido del archivo o null si hay error
- */
-function readJsonFile($filepath) {
-    if (!file_exists($filepath)) {
-        return null;
-    }
-    
-    $content = file_get_contents($filepath);
-    return jsonToArray($content);
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: var(--spacing-md);
+    color: var(--primary-color);
 }
 
-/**
- * Escribe un archivo JSON
- * @param string $filepath - Ruta del archivo
- * @param array $data - Datos a escribir
- * @param bool $pretty - Si se debe formatear bonito
- * @return bool - True si se escribió correctamente
- */
-function writeJsonFile($filepath, $data, $pretty = true) {
-    $json = arrayToJson($data, $pretty);
-    return file_put_contents($filepath, $json) !== false;
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1rem; }
+
+p {
+    margin-bottom: var(--spacing-md);
+    line-height: 1.7;
 }
 
-/**
- * Crea un directorio si no existe
- * @param string $path - Ruta del directorio
- * @return bool - True si se creó o ya existía
- */
-function ensureDirectoryExists($path) {
-    if (!is_dir($path)) {
-        return mkdir($path, 0755, true);
-    }
-    return true;
+a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    transition: color var(--transition-fast);
 }
 
-/**
- * ==============================================================================
- * FUNCIONES DE DEBUG
- * ==============================================================================
- */
-
-/**
- * Imprime una variable de forma legible
- * @param mixed $var - Variable a imprimir
- * @param bool $return - Si se debe retornar en lugar de imprimir
- * @return string|void
- */
-function debugPrint($var, $return = false) {
-    $output = '<pre>' . print_r($var, true) . '</pre>';
-    
-    if ($return) {
-        return $output;
-    } else {
-        echo $output;
-    }
+a:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
 }
 
-/**
- * Registra un mensaje en un archivo de log
- * @param string $message - Mensaje a registrar
- * @param string $logFile - Archivo de log
- */
-function logMessage($message, $logFile = 'debug.log') {
-    $timestamp = date('Y-m-d H:i:s');
-    $logEntry = "[$timestamp] $message" . PHP_EOL;
-    file_put_contents($logFile, $logEntry, FILE_APPEND);
+strong, b {
+    font-weight: 600;
 }
 
-/**
- * ==============================================================================
- * FUNCIONES DE SESIÓN (si se necesitan)
+code {
+    font-family: var(--font-mono);
+    background-color: var(--bg-light);
+    padding: 2px 6px;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.9em;
+}
+
+/* ==============================================================================
+ * CONTENEDORES
  * ==============================================================================
  */
-
-/**
- * Inicia una sesión de forma segura
- */
-function startSecureSession() {
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start([
-            'cookie_httponly' => true,
-            'cookie_secure' => isset($_SERVER['HTTPS']),
-            'cookie_samesite' => 'Strict'
-        ]);
-    }
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
 }
 
-/**
- * Establece una variable de sesión
- * @param string $key - Clave
- * @param mixed $value - Valor
- */
-function setSessionVar($key, $value) {
-    startSecureSession();
-    $_SESSION[$key] = $value;
+.container-fluid {
+    width: 100%;
+    padding: 0 var(--spacing-lg);
 }
 
-/**
- * Obtiene una variable de sesión
- * @param string $key - Clave
- * @param mixed $default - Valor por defecto
- * @return mixed - Valor almacenado o default
- */
-function getSessionVar($key, $default = null) {
-    startSecureSession();
-    return $_SESSION[$key] ?? $default;
-}
-
-/**
- * Destruye la sesión actual
- */
-function destroySession() {
-    if (session_status() === PHP_SESSION_ACTIVE) {
-        session_unset();
-        session_destroy();
-    }
-}
-
-/**
- * ==============================================================================
- * FUNCIONES ESPECÍFICAS DEL PROYECTO
+/* ==============================================================================
+ * NAVBAR (Barra de navegación)
  * ==============================================================================
  */
-
-/**
- * Valida los parámetros de una red bayesiana
- * @param array $network - Configuración de la red
- * @return array - ['valid' => bool, 'errors' => array]
- */
-function validateBayesianNetwork($network) {
-    $errors = [];
-    
-    // Validar que existan nodos
-    if (empty($network['nodes'])) {
-        $errors[] = 'La red debe tener al menos un nodo';
-    }
-    
-    // Validar CPTs
-    if (isset($network['cpts'])) {
-        foreach ($network['cpts'] as $cpt) {
-            if (!validateProbabilityDistribution(array_values($cpt['probabilities']))) {
-                $errors[] = "CPT inválida para el nodo {$cpt['nodeId']}";
-            }
-        }
-    }
-    
-    return [
-        'valid' => empty($errors),
-        'errors' => $errors
-    ];
+.navbar {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    padding: var(--spacing-md) 0;
+    box-shadow: var(--shadow-md);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
-/**
- * Valida una cadena de Markov
- * @param array $chain - Configuración de la cadena
- * @return array - ['valid' => bool, 'errors' => array]
- */
-function validateMarkovChain($chain) {
-    $errors = [];
-    
-    // Validar que existan estados
-    if (empty($chain['states'])) {
-        $errors[] = 'La cadena debe tener al menos un estado';
-    }
-    
-    // Validar matriz de transición
-    if (isset($chain['transitionMatrix'])) {
-        if (!validateStochasticMatrix($chain['transitionMatrix'])) {
-            $errors[] = 'La matriz de transición no es estocástica';
-        }
-    }
-    
-    // Validar distribución inicial
-    if (isset($chain['initialDistribution'])) {
-        if (!validateProbabilityDistribution($chain['initialDistribution'])) {
-            $errors[] = 'La distribución inicial no es válida';
-        }
-    }
-    
-    return [
-        'valid' => empty($errors),
-        'errors' => $errors
-    ];
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/**
- * Genera datos de ejemplo para pruebas
- * @param string $type - Tipo de modelo (bayesian, markov, hmm)
- * @return array - Datos de ejemplo
- */
-function generateExampleData($type) {
-    switch ($type) {
-        case 'bayesian':
-            return [
-                'nodes' => [
-                    ['id' => 'A', 'name' => 'Nodo A', 'states' => ['true', 'false']],
-                    ['id' => 'B', 'name' => 'Nodo B', 'states' => ['true', 'false']]
-                ],
-                'edges' => [
-                    ['from' => 'A', 'to' => 'B']
-                ]
-            ];
-            
-        case 'markov':
-            return [
-                'states' => ['Estado 1', 'Estado 2', 'Estado 3'],
-                'transitionMatrix' => [
-                    [0.7, 0.2, 0.1],
-                    [0.3, 0.5, 0.2],
-                    [0.2, 0.3, 0.5]
-                ],
-                'initialDistribution' => [0.33, 0.34, 0.33]
-            ];
-            
-        case 'hmm':
-            return [
-                'states' => ['Estado 1', 'Estado 2'],
-                'observations' => ['Obs 1', 'Obs 2'],
-                'transitionMatrix' => [
-                    [0.7, 0.3],
-                    [0.4, 0.6]
-                ],
-                'emissionMatrix' => [
-                    [0.9, 0.1],
-                    [0.2, 0.8]
-                ]
-            ];
-            
-        default:
-            return [];
-    }
+.nav-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
 }
 
-/**
- * ==============================================================================
- * FIN DEL ARCHIVO
+.nav-brand a {
+    color: var(--text-light);
+    text-decoration: none;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: var(--spacing-lg);
+    align-items: center;
+}
+
+.nav-menu li a {
+    color: var(--text-light);
+    text-decoration: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    transition: background-color var(--transition-fast);
+}
+
+.nav-menu li a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    text-decoration: none;
+}
+
+/* ==============================================================================
+ * HERO SECTION (Sección principal)
  * ==============================================================================
  */
-?>
+.hero-section {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: var(--text-light);
+    padding: var(--spacing-xxl) 0;
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.hero-section .main-title {
+    color: var(--text-light);
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-section .subtitle {
+    font-size: 1.25rem;
+    margin-bottom: var(--spacing-sm);
+    opacity: 0.95;
+}
+
+.hero-section .institution {
+    font-size: 1rem;
+    opacity: 0.85;
+}
+
+/* ==============================================================================
+ * SECCIONES DE CONTENIDO
+ * ==============================================================================
+ */
+.main-content {
+    margin-bottom: var(--spacing-xxl);
+}
+
+.intro-section,
+.modules-section,
+.features-section,
+.documentation-section,
+.info-section {
+    background-color: var(--bg-primary);
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.intro-section h2,
+.modules-section h2,
+.features-section h2,
+.documentation-section h2,
+.info-section h2 {
+    border-bottom: 3px solid var(--secondary-color);
+    padding-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+/* ==============================================================================
+ * GRID DE MÓDULOS
+ * ==============================================================================
+ */
+.modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-xl);
+}
+
+.module-card {
+    background-color: var(--bg-primary);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+    border-top: 5px solid var(--secondary-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.module-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.module-card.bayesian {
+    border-top-color: var(--bayesian-color);
+}
+
+.module-card.markov {
+    border-top-color: var(--markov-color);
+}
+
+.module-card.hmm {
+    border-top-color: var(--hmm-color);
+}
+
+.module-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.module-card h3 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-md);
+}
+
+.module-description {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-lg);
+    flex-grow: 1;
+}
+
+.module-features {
+    margin-bottom: var(--spacing-lg);
+}
+
+.module-features h4 {
+    font-size: 1rem;
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-secondary);
+}
+
+.module-features ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.module-features ul li {
+    padding: var(--spacing-xs) 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.module-examples {
+    background-color: var(--bg-light);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    margin-bottom: var(--spacing-lg);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* ==============================================================================
+ * BOTONES
+ * ==============================================================================
+ */
+.btn {
+    display: inline-block;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background-color: var(--secondary-color);
+    color: var(--text-light);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+}
+
+.btn-secondary {
+    background-color: var(--text-secondary);
+    color: var(--text-light);
+}
+
+.btn-secondary:hover {
+    background-color: var(--primary-color);
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    color: var(--text-light);
+}
+
+.btn-warning {
+    background-color: var(--warning-color);
+    color: var(--text-light);
+}
+
+.btn-danger {
+    background-color: var(--accent-color);
+    color: var(--text-light);
+}
+
+.btn-back {
+    background-color: var(--bg-light);
+    color: var(--text-primary);
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.9rem;
+}
+
+.btn-back:hover {
+    background-color: var(--text-secondary);
+    color: var(--text-light);
+}
+
+/* ==============================================================================
+ * GRID DE CARACTERÍSTICAS
+ * ==============================================================================
+ */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+}
+
+.feature-item {
+    text-align: center;
+    padding: var(--spacing-lg);
+    background-color: var(--bg-light);
+    border-radius: var(--border-radius);
+    transition: transform var(--transition-normal);
+}
+
+.feature-item:hover {
+    transform: translateY(-3px);
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.feature-item h4 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-sm);
+}
+
+.feature-item p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+
+/* ==============================================================================
+ * DOCUMENTACIÓN
+ * ==============================================================================
+ */
+.doc-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+}
+
+.doc-link {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-lg);
+    background-color: var(--bg-light);
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--secondary-color);
+    transition: all var(--transition-normal);
+    font-weight: 600;
+}
+
+.doc-link:hover {
+    background-color: var(--secondary-color);
+    color: var(--text-light);
+    text-decoration: none;
+    transform: translateX(5px);
+}
+
+/* ==============================================================================
+ * INFORMACIÓN
+ * ==============================================================================
+ */
+.info-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+.info-item {
+    padding: var(--spacing-md);
+    background-color: var(--bg-light);
+    border-radius: var(--border-radius-sm);
+}
+
+.info-item strong {
+    color: var(--primary-color);
+    display: block;
+    margin-bottom: var(--spacing-xs);
+}
+
+/* ==============================================================================
+ * FOOTER
+ * ==============================================================================
+ */
+.footer {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    padding: var(--spacing-xl) 0;
+    margin-top: var(--spacing-xxl);
+}
+
+.footer-content {
+    text-align: center;
+}
+
+.footer-content p {
+    margin-bottom: var(--spacing-sm);
+    opacity: 0.9;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.footer-links a {
+    color: var(--text-light);
+    opacity: 0.8;
+    transition: opacity var(--transition-fast);
+}
+
+.footer-links a:hover {
+    opacity: 1;
+}
+
+/* ==============================================================================
+ * UTILIDADES
+ * ==============================================================================
+ */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mt-1 { margin-top: var(--spacing-sm); }
+.mt-2 { margin-top: var(--spacing-md); }
+.mt-3 { margin-top: var(--spacing-lg); }
+.mt-4 { margin-top: var(--spacing-xl); }
+
+.mb-1 { margin-bottom: var(--spacing-sm); }
+.mb-2 { margin-bottom: var(--spacing-md); }
+.mb-3 { margin-bottom: var(--spacing-lg); }
+.mb-4 { margin-bottom: var(--spacing-xl); }
+
+.p-1 { padding: var(--spacing-sm); }
+.p-2 { padding: var(--spacing-md); }
+.p-3 { padding: var(--spacing-lg); }
+.p-4 { padding: var(--spacing-xl); }
+
+/* ==============================================================================
+ * RESPONSIVE DESIGN
+ * ==============================================================================
+ */
+
+/* Tablets */
+@media (max-width: 768px) {
+    .hero-section .main-title {
+        font-size: 2rem;
+    }
+    
+    .nav-menu {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+    
+    .modules-grid,
+    .features-grid,
+    .doc-links {
+        grid-template-columns: 1fr;
+    }
+    
+    .container {
+        padding: 0 var(--spacing-md);
+    }
+}
+
+/* Móviles */
+@media (max-width: 480px) {
+    .hero-section .main-title {
+        font-size: 1.75rem;
+    }
+    
+    .hero-section {
+        padding: var(--spacing-xl) 0;
+    }
+    
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
+    
+    .module-card,
+    .intro-section,
+    .modules-section,
+    .features-section {
+        padding: var(--spacing-lg);
+    }
+}
+
+/* ==============================================================================
+ * ANIMACIONES
+ * ==============================================================================
+ */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn var(--transition-slow) ease-out;
+}
+
+/* ==============================================================================
+ * MODO OSCURO (Opcional - para implementar después)
+ * ==============================================================================
+ */
+/*
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-primary: #1a1a1a;
+        --bg-secondary: #2c2c2c;
+        --text-primary: #f0f0f0;
+        --text-secondary: #b0b0b0;
+    }
+}
+*/

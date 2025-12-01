@@ -18,14 +18,17 @@
     --markov-dark: #6c3483;
     
     /* Colores para estados */
-    --state-default: #bb8fce;
-    --state-active: #FFD700;
-    --state-visited: #e8daef;
-    --state-border: #8e44ad;
+    --state-default: #d7bde2;
+    --state-initial: #52be80;
+    --state-current: #f39c12;
+    --state-final: #e74c3c;
+    --state-stationary: #3498db;
     
     /* Colores para transiciones */
-    --transition-weak: #d7bde2;
-    --transition-strong: #7d3c98;
+    --transition-low: #e8f8f5;
+    --transition-medium: #aed6f1;
+    --transition-high: #5dade2;
+    --transition-certain: #2874a6;
 }
 
 /* ==============================================================================
@@ -57,7 +60,7 @@
  */
 .markov-container {
     display: grid;
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 320px 1fr;
     gap: 2rem;
     margin-bottom: 2rem;
 }
@@ -95,6 +98,129 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+
+.sidebar-section h3::before {
+    content: "⛓️";
+    font-size: 1.2rem;
+}
+
+/* ==============================================================================
+ * CONTROLES DE ESTADOS
+ * ==============================================================================
+ */
+.state-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.state-input-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.state-input-group input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.state-input-group button {
+    padding: 0.75rem 1rem;
+    background-color: var(--markov-primary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.state-input-group button:hover {
+    background-color: var(--markov-secondary);
+    transform: translateY(-2px);
+}
+
+/* ==============================================================================
+ * LISTA DE ESTADOS
+ * ==============================================================================
+ */
+.states-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.state-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    background-color: #f8f9fa;
+    border-left: 4px solid var(--markov-primary);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.state-item:hover {
+    background-color: var(--markov-light);
+    color: white;
+    transform: translateX(5px);
+}
+
+.state-item.initial {
+    border-left-color: var(--state-initial);
+    background-color: rgba(82, 190, 128, 0.1);
+}
+
+.state-item.current {
+    border-left-color: var(--state-current);
+    background-color: rgba(243, 156, 18, 0.1);
+}
+
+.state-name {
+    font-weight: 600;
+}
+
+.state-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    background-color: var(--markov-primary);
+    color: white;
+}
+
+.state-actions {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.btn-icon {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.btn-icon.delete:hover {
+    background-color: #e74c3c;
+    color: white;
 }
 
 /* ==============================================================================
@@ -159,10 +285,10 @@
 }
 
 /* ==============================================================================
- * VISUALIZACIÓN DE RED
+ * VISUALIZACIÓN DEL GRAFO
  * ==============================================================================
  */
-.network-visualization {
+.graph-visualization {
     width: 100%;
     height: 600px;
     border: 2px solid #e0e0e0;
@@ -171,56 +297,56 @@
     position: relative;
 }
 
-.network-controls {
+.graph-legend {
     position: absolute;
     top: 10px;
-    right: 10px;
-    display: flex;
-    gap: 0.5rem;
+    left: 10px;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     z-index: 10;
 }
 
-.network-controls button {
-    background-color: white;
-    border: 1px solid #ddd;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+.graph-legend h4 {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    color: var(--markov-dark);
 }
 
-.network-controls button:hover {
-    background-color: var(--markov-primary);
-    color: white;
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+    font-size: 0.85rem;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 2px solid #333;
 }
 
 /* ==============================================================================
- * EDITOR DE MATRIZ DE TRANSICIÓN
+ * MATRIZ DE TRANSICIÓN
  * ==============================================================================
  */
-.matrix-editor {
-    background-color: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-}
-
-.matrix-editor h3 {
-    color: var(--markov-primary);
-    margin-bottom: 1rem;
-}
-
-.matrix-container {
+.transition-matrix-container {
     overflow-x: auto;
-    margin-top: 1rem;
 }
 
 .transition-matrix {
     width: 100%;
     border-collapse: collapse;
     background-color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+}
+
+.transition-matrix thead {
+    background-color: var(--markov-primary);
+    color: white;
 }
 
 .transition-matrix th,
@@ -228,242 +354,137 @@
     padding: 1rem;
     text-align: center;
     border: 1px solid #dee2e6;
+    min-width: 80px;
 }
 
-.transition-matrix thead th {
-    background-color: var(--markov-primary);
-    color: white;
+.transition-matrix th {
     font-weight: 600;
+    font-size: 0.95rem;
 }
 
-.transition-matrix tbody th {
-    background-color: var(--markov-light);
-    color: white;
-    font-weight: 600;
+.transition-matrix tbody tr:hover {
+    background-color: rgba(155, 89, 182, 0.1);
 }
 
-.transition-matrix td input {
-    width: 80px;
+.transition-matrix td {
+    position: relative;
+}
+
+.transition-matrix input[type="number"] {
+    width: 100%;
     padding: 0.5rem;
     border: 1px solid #ddd;
     border-radius: 4px;
     text-align: center;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
 }
 
-.transition-matrix td input:focus {
+.transition-matrix input[type="number"]:focus {
     outline: none;
     border-color: var(--markov-primary);
-    box-shadow: 0 0 0 3px rgba(155, 89, 182, 0.1);
-}
-
-.transition-matrix tbody tr:hover {
     background-color: rgba(155, 89, 182, 0.05);
 }
 
-/* ==============================================================================
- * DISTRIBUCIÓN INICIAL
- * ==============================================================================
- */
-.distribution-editor {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-    border-left: 4px solid var(--markov-primary);
+/* Color coding para probabilidades */
+.probability-cell {
+    position: relative;
 }
 
-.distribution-inputs {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
+.probability-cell.low {
+    background-color: var(--transition-low);
 }
 
-.state-input {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+.probability-cell.medium {
+    background-color: var(--transition-medium);
 }
 
-.state-input label {
-    font-weight: 600;
-    color: var(--markov-dark);
-    font-size: 0.9rem;
+.probability-cell.high {
+    background-color: var(--transition-high);
 }
 
-.state-input input {
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 1rem;
-}
-
-/* ==============================================================================
- * SIMULACIÓN
- * ==============================================================================
- */
-.simulation-panel {
-    background-color: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 8px;
-}
-
-.simulation-controls {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.control-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.control-group label {
-    font-weight: 600;
-    color: var(--markov-dark);
-}
-
-.control-group input,
-.control-group select {
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-}
-
-.simulation-trajectory {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-top: 1rem;
-    min-height: 200px;
-}
-
-.trajectory-path {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    align-items: center;
-    margin-top: 1rem;
-}
-
-.trajectory-state {
-    padding: 0.75rem 1.5rem;
-    background-color: var(--state-default);
+.probability-cell.certain {
+    background-color: var(--transition-certain);
     color: white;
-    border-radius: 8px;
     font-weight: 600;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    animation: stateAppear 0.3s ease;
-}
-
-@keyframes stateAppear {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-.trajectory-arrow {
-    font-size: 1.5rem;
-    color: var(--markov-primary);
 }
 
 /* ==============================================================================
- * ANÁLISIS
+ * VALIDACIÓN DE MATRIZ
  * ==============================================================================
  */
-.analysis-panel {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-}
-
-.analysis-section {
-    margin-bottom: 2rem;
-    padding: 1.5rem;
+.matrix-validation {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
     background-color: #f8f9fa;
     border-radius: 8px;
+    margin-bottom: 1rem;
 }
 
-.analysis-section h4 {
+.validation-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+}
+
+.validation-status.valid {
+    color: #27ae60;
+}
+
+.validation-status.invalid {
+    color: #e74c3c;
+}
+
+.validation-icon {
+    font-size: 1.5rem;
+}
+
+/* ==============================================================================
+ * PROBABILIDADES ESTACIONARIAS
+ * ==============================================================================
+ */
+.stationary-distribution {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 1.5rem;
+}
+
+.stationary-distribution h3 {
     color: var(--markov-primary);
     margin-bottom: 1rem;
 }
 
-.metric-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-.metric-card {
-    background-color: white;
-    padding: 1rem;
-    border-radius: 6px;
-    border-left: 4px solid var(--markov-primary);
-}
-
-.metric-label {
-    font-size: 0.9rem;
-    color: var(--markov-dark);
-    margin-bottom: 0.5rem;
-}
-
-.metric-value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--markov-primary);
-}
-
-/* ==============================================================================
- * DISTRIBUCIÓN ESTACIONARIA
- * ==============================================================================
- */
-.stationary-distribution {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-top: 1rem;
-}
-
-.distribution-bars {
+.stationary-bars {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    margin-top: 1rem;
 }
 
-.distribution-bar {
+.stationary-bar-item {
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
-.bar-label {
+.stationary-label {
     min-width: 100px;
     font-weight: 600;
     color: var(--markov-dark);
 }
 
-.bar-container {
+.stationary-bar-wrapper {
     flex: 1;
-    height: 30px;
+    height: 40px;
     background-color: #e0e0e0;
-    border-radius: 15px;
+    border-radius: 20px;
     overflow: hidden;
     position: relative;
 }
 
-.bar-fill {
+.stationary-bar-fill {
     height: 100%;
     background: linear-gradient(90deg, var(--markov-secondary), var(--markov-light));
     transition: width 0.5s ease;
@@ -473,63 +494,187 @@
     padding-right: 1rem;
     color: white;
     font-weight: 600;
+}
+
+.stationary-value {
+    min-width: 80px;
+    text-align: right;
+    font-weight: 600;
+    color: var(--markov-primary);
+    font-size: 1.1rem;
+}
+
+/* ==============================================================================
+ * SIMULACIÓN
+ * ==============================================================================
+ */
+.simulation-controls {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.simulation-params {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.param-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.param-group label {
+    font-weight: 600;
+    color: var(--markov-dark);
     font-size: 0.9rem;
 }
 
-/* ==============================================================================
- * GRÁFICOS
- * ==============================================================================
- */
-.chart-container {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-top: 1rem;
+.param-group input,
+.param-group select {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
 }
 
-.chart-canvas {
-    max-width: 100%;
-    height: 400px;
-}
-
-/* ==============================================================================
- * BOTONES DE ACCIÓN
- * ==============================================================================
- */
-.action-buttons {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
-    flex-wrap: wrap;
-}
-
-.btn-markov {
+.btn-simulate {
+    width: 100%;
+    padding: 1rem;
     background-color: var(--markov-primary);
     color: white;
-    padding: 0.75rem 1.5rem;
     border: none;
     border-radius: 8px;
-    cursor: pointer;
     font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.btn-markov:hover {
+.btn-simulate:hover {
     background-color: var(--markov-secondary);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.btn-markov:disabled {
-    background-color: #ccc;
+.btn-simulate:disabled {
+    background-color: #95a5a6;
     cursor: not-allowed;
     transform: none;
+}
+
+/* ==============================================================================
+ * RESULTADOS DE SIMULACIÓN
+ * ==============================================================================
+ */
+.simulation-results {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--markov-primary);
+}
+
+.simulation-path {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.path-state {
+    padding: 0.5rem 1rem;
+    background-color: var(--markov-light);
+    color: white;
+    border-radius: 20px;
+    font-weight: 600;
+    animation: slideIn 0.3s ease;
+}
+
+.path-arrow {
+    color: var(--markov-primary);
+    font-weight: 700;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ==============================================================================
+ * ESTADÍSTICAS
+ * ==============================================================================
+ */
+.statistics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.stat-card {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    border-top: 4px solid var(--markov-primary);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--markov-dark);
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--markov-primary);
+}
+
+/* ==============================================================================
+ * CONVERGENCIA
+ * ==============================================================================
+ */
+.convergence-chart {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 1.5rem;
+}
+
+.convergence-chart h4 {
+    color: var(--markov-primary);
+    margin-bottom: 1rem;
+}
+
+.chart-placeholder {
+    width: 100%;
+    height: 300px;
+    background-color: #f8f9fa;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #95a5a6;
 }
 
 /* ==============================================================================
  * RESPONSIVE DESIGN
  * ==============================================================================
  */
+
 @media (max-width: 1024px) {
     .markov-container {
         grid-template-columns: 250px 1fr;
@@ -546,16 +691,19 @@
         position: static;
     }
     
-    .network-visualization {
+    .graph-visualization {
         height: 400px;
     }
     
-    .simulation-controls {
+    .simulation-params {
         grid-template-columns: 1fr;
     }
     
-    .metric-grid {
-        grid-template-columns: 1fr;
+    .transition-matrix th,
+    .transition-matrix td {
+        padding: 0.5rem;
+        min-width: 60px;
+        font-size: 0.85rem;
     }
 }
 
@@ -572,12 +720,16 @@
         flex-direction: column;
     }
     
-    .trajectory-path {
+    .graph-visualization {
+        height: 300px;
+    }
+    
+    .stationary-bar-item {
         flex-direction: column;
         align-items: flex-start;
     }
     
-    .trajectory-arrow {
-        transform: rotate(90deg);
+    .stationary-bar-wrapper {
+        width: 100%;
     }
 }

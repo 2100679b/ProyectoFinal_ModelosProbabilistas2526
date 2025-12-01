@@ -1,16 +1,37 @@
 <?php
 /**
  * ==============================================================================
- * HEADER - ENCABEZADO HTML
+ * HEADER - Encabezado HTML
  * Universidad Michoacana de San Nicolás de Hidalgo
- * Archivo: includes/header.php
+ * Archivo de encabezado común para todas las páginas
  * ==============================================================================
  */
 
-// Obtener el título de la página (puede ser pasado como variable)
-$pageTitle = isset($pageTitle) ? $pageTitle : 'Modelos Probabilistas';
-$pageDescription = isset($pageDescription) ? $pageDescription : 'Proyecto de Redes Bayesianas, Cadenas de Markov y Modelos Ocultos de Markov';
-$currentPage = basename($_SERVER['PHP_SELF']);
+// Verificar que config.php esté cargado
+if (!defined('ROOT_PATH')) {
+    die('Error: config.php debe ser incluido primero');
+}
+
+// Detectar el módulo actual basado en la ruta
+$currentPath = $_SERVER['PHP_SELF'];
+$currentModule = '';
+$pageTitle = APP_NAME;
+
+if (strpos($currentPath, '/bayesian/') !== false) {
+    $currentModule = 'bayesian';
+    $pageTitle = 'Redes Bayesianas - ' . APP_NAME;
+} elseif (strpos($currentPath, '/markov/') !== false) {
+    $currentModule = 'markov';
+    $pageTitle = 'Cadenas de Markov - ' . APP_NAME;
+} elseif (strpos($currentPath, '/hmm/') !== false) {
+    $currentModule = 'hmm';
+    $pageTitle = 'Modelos Ocultos de Markov - ' . APP_NAME;
+}
+
+// Permitir sobreescribir el título desde la página
+if (isset($customPageTitle)) {
+    $pageTitle = $customPageTitle . ' - ' . APP_NAME;
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -19,55 +40,73 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     
-    <!-- Título y Descripción -->
-    <title><?php echo $pageTitle; ?> | UMSNH</title>
-    <meta name="description" content="<?php echo $pageDescription; ?>">
-    <meta name="keywords" content="redes bayesianas, cadenas de markov, modelos ocultos de markov, probabilidad, inteligencia artificial">
-    <meta name="author" content="Universidad Michoacana de San Nicolás de Hidalgo">
+    <!-- Título -->
+    <title><?php echo htmlspecialchars($pageTitle); ?></title>
     
-    <!-- Open Graph Meta Tags para redes sociales -->
-    <meta property="og:title" content="<?php echo $pageTitle; ?>">
-    <meta property="og:description" content="<?php echo $pageDescription; ?>">
-    <meta property="og:type" content="website">
+    <!-- Meta descripción -->
+    <meta name="description" content="Implementación de algoritmos para Redes Bayesianas, Cadenas de Markov y Modelos Ocultos de Markov">
+    <meta name="keywords" content="redes bayesianas, cadenas de markov, hmm, modelos probabilistas, UMSNH">
+    <meta name="author" content="<?php echo APP_AUTHOR; ?>">
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <!-- Favicon (opcional - crear después) -->
+    <link rel="icon" type="image/png" href="<?php echo img('favicon.png'); ?>">
     
-    <!-- Estilos CSS -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- CSS Principal -->
+    <link rel="stylesheet" href="<?php echo css('style.css'); ?>">
     
-    <?php
-    // Cargar estilos específicos según la página
-    if ($currentPage === 'bayesian.php' || $currentPage === 'bayesian.html') {
-        echo '<link rel="stylesheet" href="assets/css/bayesian.css">';
-    } elseif ($currentPage === 'markov.php' || $currentPage === 'markov.html') {
-        echo '<link rel="stylesheet" href="assets/css/markov.css">';
-    } elseif ($currentPage === 'hmm.php' || $currentPage === 'hmm.html') {
-        echo '<link rel="stylesheet" href="assets/css/hmm.css">';
+    <!-- CSS Específico del módulo -->
+    <?php if ($currentModule): ?>
+        <link rel="stylesheet" href="<?php echo css($currentModule . '.css'); ?>">
+    <?php endif; ?>
+    
+    <!-- CSS Adicional (si se define en la página) -->
+    <?php if (isset($additionalCSS) && is_array($additionalCSS)): ?>
+        <?php foreach ($additionalCSS as $cssFile): ?>
+            <link rel="stylesheet" href="<?php echo css($cssFile); ?>">
+        <?php endforeach; ?>
+    <?php endif; ?>
+    
+    <!-- Vis.js para visualización de grafos (solo si se necesita) -->
+    <?php if (isset($useVisNetwork) && $useVisNetwork): ?>
+        <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+        <style>
+            /* Estilos para vis-network */
+            .vis-network {
+                border: 2px solid #e0e0e0;
+                border-radius: 8px;
+            }
+        </style>
+    <?php endif; ?>
+    
+    <!-- Chart.js para gráficas (solo si se necesita) -->
+    <?php if (isset($useCharts) && $useCharts): ?>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <?php endif; ?>
+    
+    <!-- JavaScript personalizado en el head (si se define) -->
+    <?php if (isset($headScripts) && is_array($headScripts)): ?>
+        <?php foreach ($headScripts as $script): ?>
+            <script src="<?php echo js($script); ?>"></script>
+        <?php endforeach; ?>
+    <?php endif; ?>
+    
+    <!-- Estilos inline adicionales (si se definen) -->
+    <?php if (isset($inlineStyles)): ?>
+        <style>
+            <?php echo $inlineStyles; ?>
+        </style>
+    <?php endif; ?>
+</head>
+<body class="<?php echo $currentModule ? 'module-' . $currentModule : 'page-home'; ?>">
+
+    <!-- Navbar -->
+    <?php 
+    // Incluir navbar si existe
+    $navbarPath = includePath('includes/navbar.php');
+    if (file_exists($navbarPath)) {
+        require_once $navbarPath;
     }
     ?>
     
-    <!-- Librerías externas -->
-    <!-- Vis.js para visualización de redes -->
-    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
-    <link href="https://unpkg.com/vis-network/styles/vis-network.min.css" rel="stylesheet" type="text/css">
-    
-    <!-- Chart.js para gráficos -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
-    
-    <!-- Font Awesome para iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts (opcional) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <?php
-    // Incluir la barra de navegación
-    include_once 'navbar.php';
-    ?>
-    
-    <!-- Inicio del contenido principal -->
-    <main class="main-content">
+    <!-- Contenedor principal -->
+    <main class="main-wrapper">

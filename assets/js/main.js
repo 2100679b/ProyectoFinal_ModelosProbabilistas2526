@@ -1,481 +1,530 @@
 /**
  * ==============================================================================
- * PROYECTO FINAL - FUNCIONES GENERALES
+ * JAVASCRIPT PRINCIPAL
  * Universidad Michoacana de San Nicolás de Hidalgo
- * Archivo: main.js
+ * Script principal para funcionalidades comunes
  * ==============================================================================
  */
 
 // ==============================================================================
-// INICIALIZACIÓN DEL PROYECTO
+// CONFIGURACIÓN GLOBAL
 // ==============================================================================
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Proyecto de Modelos Probabilistas cargado');
-    initializeNavigation();
-    initializeSmoothScroll();
-    initializeAnimations();
-});
+
+const AppConfig = {
+    name: 'Modelos Probabilistas',
+    version: '1.0.0',
+    debug: true, // Cambiar a false en producción
+    apiTimeout: 10000 // Timeout para peticiones AJAX en ms
+};
 
 // ==============================================================================
-// NAVEGACIÓN
+// UTILIDADES GENERALES
 // ==============================================================================
-function initializeNavigation() {
-    // Resaltar elemento activo en la navegación
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    const navLinks = document.querySelectorAll('.nav-menu a');
-    
-    navLinks.forEach(link => {
-        const href = link.getAttribute('href');
-        if (href === currentPage || (currentPage === '' && href === 'index.html')) {
-            link.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-        }
-    });
+
+/**
+ * Imprime mensajes de debug en consola
+ */
+function debug(...args) {
+    if (AppConfig.debug) {
+        console.log('[DEBUG]', ...args);
+    }
+}
+
+/**
+ * Muestra un mensaje de error en consola
+ */
+function logError(...args) {
+    console.error('[ERROR]', ...args);
+}
+
+/**
+ * Formatea un número como probabilidad
+ */
+function formatProbability(prob, decimals = 6) {
+    return parseFloat(prob).toFixed(decimals);
+}
+
+/**
+ * Formatea un número como porcentaje
+ */
+function formatPercentage(prob, decimals = 2) {
+    return (prob * 100).toFixed(decimals) + '%';
+}
+
+/**
+ * Valida que un valor sea un número entre 0 y 1
+ */
+function isValidProbability(value) {
+    const num = parseFloat(value);
+    return !isNaN(num) && num >= 0 && num <= 1;
+}
+
+/**
+ * Genera un ID único
+ */
+function generateId() {
+    return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 }
 
 // ==============================================================================
-// SCROLL SUAVE
+// MANEJO DE ALERTAS Y NOTIFICACIONES
 // ==============================================================================
-function initializeSmoothScroll() {
-    const links = document.querySelectorAll('a[href^="#"]');
-    
-    links.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href').substring(1);
-            const targetElement = document.getElementById(targetId);
-            
-            if (targetElement) {
-                targetElement.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-}
 
-// ==============================================================================
-// ANIMACIONES DE ENTRADA
-// ==============================================================================
-function initializeAnimations() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+/**
+ * Muestra una alerta en la página
+ */
+function showAlert(message, type = 'info', duration = 5000) {
+    const icons = {
+        'info': 'ℹ️',
+        'success': '✅',
+        'warning': '⚠️',
+        'error': '❌'
     };
-
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('fade-in');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-
-    // Observar elementos animables
-    const animatableElements = document.querySelectorAll(
-        '.module-card, .feature-item, .doc-link'
-    );
     
-    animatableElements.forEach(el => observer.observe(el));
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type} fade-in`;
+    alert.innerHTML = `${icons[type] || icons.info} ${message}`;
+    alert.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        z-index: 9999;
+        max-width: 400px;
+        animation: slideInRight 0.3s ease;
+    `;
+    
+    document.body.appendChild(alert);
+    
+    // Auto-eliminar después de duration
+    if (duration > 0) {
+        setTimeout(() => {
+            alert.style.animation = 'slideOutRight 0.3s ease';
+            setTimeout(() => alert.remove(), 300);
+        }, duration);
+    }
+    
+    return alert;
+}
+
+/**
+ * Muestra un mensaje de éxito
+ */
+function showSuccess(message, duration = 3000) {
+    return showAlert(message, 'success', duration);
+}
+
+/**
+ * Muestra un mensaje de error
+ */
+function showError(message, duration = 5000) {
+    return showAlert(message, 'error', duration);
+}
+
+/**
+ * Muestra un mensaje de advertencia
+ */
+function showWarning(message, duration = 4000) {
+    return showAlert(message, 'warning', duration);
+}
+
+/**
+ * Muestra un mensaje informativo
+ */
+function showInfo(message, duration = 3000) {
+    return showAlert(message, 'info', duration);
 }
 
 // ==============================================================================
-// UTILIDADES MATEMÁTICAS
+// MANEJO DE LOADING
 // ==============================================================================
-const MathUtils = {
-    /**
-     * Redondea un número a n decimales
-     */
-    round(number, decimals = 4) {
-        return Math.round(number * Math.pow(10, decimals)) / Math.pow(10, decimals);
-    },
 
-    /**
-     * Normaliza un vector de probabilidades
-     */
-    normalize(vector) {
-        const sum = vector.reduce((a, b) => a + b, 0);
-        return sum > 0 ? vector.map(v => v / sum) : vector;
-    },
+/**
+ * Muestra un spinner de carga
+ */
+function showLoading(container = document.body, message = 'Cargando...') {
+    const overlay = document.createElement('div');
+    overlay.className = 'loading-overlay';
+    overlay.innerHTML = `
+        <div class="spinner"></div>
+        <p style="color: #333; margin-top: 1rem; font-weight: 600;">${message}</p>
+    `;
+    overlay.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.9);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    `;
+    
+    container.style.position = 'relative';
+    container.appendChild(overlay);
+    
+    return overlay;
+}
 
-    /**
-     * Multiplica dos matrices
-     */
-    multiplyMatrices(A, B) {
-        const rowsA = A.length;
-        const colsA = A[0].length;
-        const colsB = B[0].length;
-        
-        const result = Array(rowsA).fill(null).map(() => Array(colsB).fill(0));
-        
-        for (let i = 0; i < rowsA; i++) {
-            for (let j = 0; j < colsB; j++) {
-                for (let k = 0; k < colsA; k++) {
-                    result[i][j] += A[i][k] * B[k][j];
-                }
-            }
-        }
-        
-        return result;
-    },
-
-    /**
-     * Genera una matriz identidad de tamaño n
-     */
-    identityMatrix(n) {
-        return Array(n).fill(null).map((_, i) => 
-            Array(n).fill(0).map((_, j) => i === j ? 1 : 0)
-        );
-    },
-
-    /**
-     * Calcula el producto punto de dos vectores
-     */
-    dotProduct(a, b) {
-        return a.reduce((sum, val, i) => sum + val * b[i], 0);
-    },
-
-    /**
-     * Genera un número aleatorio entre min y max
-     */
-    random(min = 0, max = 1) {
-        return Math.random() * (max - min) + min;
-    },
-
-    /**
-     * Muestrea de una distribución de probabilidad discreta
-     */
-    sampleDiscrete(probabilities) {
-        const rand = Math.random();
-        let cumulative = 0;
-        
-        for (let i = 0; i < probabilities.length; i++) {
-            cumulative += probabilities[i];
-            if (rand < cumulative) {
-                return i;
-            }
-        }
-        
-        return probabilities.length - 1;
-    }
-};
-
-// ==============================================================================
-// UTILIDADES DE UI
-// ==============================================================================
-const UIUtils = {
-    /**
-     * Muestra un mensaje de alerta
-     */
-    showAlert(message, type = 'info') {
-        const alertDiv = document.createElement('div');
-        alertDiv.className = `alert alert-${type}`;
-        alertDiv.textContent = message;
-        
-        const container = document.querySelector('.container');
-        if (container) {
-            container.insertBefore(alertDiv, container.firstChild);
-            
-            setTimeout(() => {
-                alertDiv.style.opacity = '0';
-                setTimeout(() => alertDiv.remove(), 300);
-            }, 3000);
-        }
-    },
-
-    /**
-     * Crea una tabla HTML desde datos
-     */
-    createTable(headers, rows, className = '') {
-        const table = document.createElement('table');
-        table.className = className;
-        
-        // Crear encabezado
-        const thead = document.createElement('thead');
-        const headerRow = document.createElement('tr');
-        headers.forEach(header => {
-            const th = document.createElement('th');
-            th.textContent = header;
-            headerRow.appendChild(th);
-        });
-        thead.appendChild(headerRow);
-        table.appendChild(thead);
-        
-        // Crear cuerpo
-        const tbody = document.createElement('tbody');
-        rows.forEach(row => {
-            const tr = document.createElement('tr');
-            row.forEach(cell => {
-                const td = document.createElement('td');
-                td.textContent = cell;
-                tr.appendChild(td);
-            });
-            tbody.appendChild(tr);
-        });
-        table.appendChild(tbody);
-        
-        return table;
-    },
-
-    /**
-     * Muestra un spinner de carga
-     */
-    showLoading(container) {
-        const overlay = document.createElement('div');
-        overlay.className = 'loading-overlay';
-        overlay.innerHTML = '<div class="spinner"></div>';
-        container.appendChild(overlay);
-        return overlay;
-    },
-
-    /**
-     * Oculta el spinner de carga
-     */
-    hideLoading(overlay) {
-        if (overlay && overlay.parentNode) {
-            overlay.parentNode.removeChild(overlay);
-        }
-    },
-
-    /**
-     * Formatea un número como porcentaje
-     */
-    formatPercent(value, decimals = 2) {
-        return (value * 100).toFixed(decimals) + '%';
-    },
-
-    /**
-     * Crea un botón con eventos
-     */
-    createButton(text, onClick, className = 'btn btn-primary') {
-        const button = document.createElement('button');
-        button.textContent = text;
-        button.className = className;
-        button.addEventListener('click', onClick);
-        return button;
-    }
-};
-
-// ==============================================================================
-// UTILIDADES DE DATOS
-// ==============================================================================
-const DataUtils = {
-    /**
-     * Exporta datos a formato JSON y descarga
-     */
-    exportJSON(data, filename = 'data.json') {
-        const json = JSON.stringify(data, null, 2);
-        const blob = new Blob([json], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        a.click();
-        
-        URL.revokeObjectURL(url);
-    },
-
-    /**
-     * Importa datos desde un archivo JSON
-     */
-    importJSON(file, callback) {
-        const reader = new FileReader();
-        
-        reader.onload = function(e) {
-            try {
-                const data = JSON.parse(e.target.result);
-                callback(data);
-            } catch (error) {
-                console.error('Error al parsear JSON:', error);
-                UIUtils.showAlert('Error al cargar el archivo', 'error');
-            }
-        };
-        
-        reader.readAsText(file);
-    },
-
-    /**
-     * Genera datos sintéticos para pruebas
-     */
-    generateRandomMatrix(rows, cols, min = 0, max = 1) {
-        const matrix = [];
-        
-        for (let i = 0; i < rows; i++) {
-            const row = [];
-            for (let j = 0; j < cols; j++) {
-                row.push(MathUtils.random(min, max));
-            }
-            matrix.push(MathUtils.normalize(row));
-        }
-        
-        return matrix;
-    },
-
-    /**
-     * Clona profundamente un objeto
-     */
-    deepClone(obj) {
-        return JSON.parse(JSON.stringify(obj));
-    }
-};
-
-// ==============================================================================
-// GESTIÓN DE TABS (Pestañas)
-// ==============================================================================
-class TabManager {
-    constructor(tabsContainerId) {
-        this.container = document.getElementById(tabsContainerId);
-        this.tabs = [];
-        this.panels = [];
-        this.activeIndex = 0;
-    }
-
-    /**
-     * Inicializa el sistema de tabs
-     */
-    initialize() {
-        this.tabs = Array.from(this.container.querySelectorAll('.tab-button'));
-        this.panels = Array.from(document.querySelectorAll('.tab-panel'));
-        
-        this.tabs.forEach((tab, index) => {
-            tab.addEventListener('click', () => this.switchTab(index));
-        });
-        
-        this.switchTab(0);
-    }
-
-    /**
-     * Cambia a una pestaña específica
-     */
-    switchTab(index) {
-        // Desactivar todos
-        this.tabs.forEach(tab => tab.classList.remove('active'));
-        this.panels.forEach(panel => panel.classList.remove('active'));
-        
-        // Activar el seleccionado
-        this.tabs[index].classList.add('active');
-        this.panels[index].classList.add('active');
-        
-        this.activeIndex = index;
-    }
-
-    /**
-     * Obtiene el índice de la pestaña activa
-     */
-    getActiveIndex() {
-        return this.activeIndex;
+/**
+ * Oculta el spinner de carga
+ */
+function hideLoading(overlay) {
+    if (overlay && overlay.parentNode) {
+        overlay.remove();
     }
 }
 
 // ==============================================================================
 // VALIDACIÓN DE FORMULARIOS
 // ==============================================================================
-const FormValidator = {
-    /**
-     * Valida que un campo no esté vacío
-     */
-    required(value) {
-        return value.trim() !== '';
-    },
 
-    /**
-     * Valida que un valor sea un número
-     */
-    isNumber(value) {
-        return !isNaN(parseFloat(value)) && isFinite(value);
-    },
-
-    /**
-     * Valida que un número esté en un rango
-     */
-    inRange(value, min, max) {
-        const num = parseFloat(value);
-        return num >= min && num <= max;
-    },
-
-    /**
-     * Valida una probabilidad (entre 0 y 1)
-     */
-    isProbability(value) {
-        return this.isNumber(value) && this.inRange(value, 0, 1);
-    },
-
-    /**
-     * Valida un array de probabilidades (deben sumar 1)
-     */
-    isProbabilityDistribution(values, tolerance = 0.001) {
-        if (!Array.isArray(values)) return false;
+/**
+ * Valida un formulario
+ */
+function validateForm(formElement) {
+    const inputs = formElement.querySelectorAll('input[required], select[required], textarea[required]');
+    let isValid = true;
+    let errors = [];
+    
+    inputs.forEach(input => {
+        // Limpiar errores previos
+        input.classList.remove('error');
         
-        const sum = values.reduce((a, b) => a + parseFloat(b), 0);
-        return Math.abs(sum - 1.0) < tolerance;
-    }
-};
+        // Validar campo vacío
+        if (!input.value.trim()) {
+            isValid = false;
+            input.classList.add('error');
+            errors.push(`El campo "${input.name}" es requerido`);
+        }
+        
+        // Validar tipo number
+        if (input.type === 'number') {
+            const value = parseFloat(input.value);
+            const min = input.min ? parseFloat(input.min) : -Infinity;
+            const max = input.max ? parseFloat(input.max) : Infinity;
+            
+            if (isNaN(value) || value < min || value > max) {
+                isValid = false;
+                input.classList.add('error');
+                errors.push(`El campo "${input.name}" debe estar entre ${min} y ${max}`);
+            }
+        }
+    });
+    
+    return { isValid, errors };
+}
+
+/**
+ * Limpia errores de validación de un formulario
+ */
+function clearFormErrors(formElement) {
+    formElement.querySelectorAll('.error').forEach(el => {
+        el.classList.remove('error');
+    });
+}
 
 // ==============================================================================
-// MANEJO DE ERRORES
+// PETICIONES AJAX
 // ==============================================================================
-window.addEventListener('error', function(e) {
-    console.error('Error capturado:', e.error);
-    // En producción, aquí podrías enviar el error a un servicio de logging
+
+/**
+ * Realiza una petición AJAX
+ */
+async function ajaxRequest(url, options = {}) {
+    const defaultOptions = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        timeout: AppConfig.apiTimeout
+    };
+    
+    const finalOptions = { ...defaultOptions, ...options };
+    
+    try {
+        const response = await fetch(url, finalOptions);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        logError('AJAX Error:', error);
+        throw error;
+    }
+}
+
+/**
+ * Petición GET
+ */
+async function get(url, params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    const fullUrl = queryString ? `${url}?${queryString}` : url;
+    
+    return ajaxRequest(fullUrl, { method: 'GET' });
+}
+
+/**
+ * Petición POST
+ */
+async function post(url, data = {}) {
+    return ajaxRequest(url, {
+        method: 'POST',
+        body: JSON.stringify(data)
+    });
+}
+
+// ==============================================================================
+// MANEJO DE TABS
+// ==============================================================================
+
+/**
+ * Inicializa sistema de tabs
+ */
+function initTabs(containerSelector) {
+    const container = document.querySelector(containerSelector);
+    if (!container) return;
+    
+    const tabButtons = container.querySelectorAll('.tab-button');
+    const tabPanels = container.querySelectorAll('.tab-panel');
+    
+    tabButtons.forEach((button, index) => {
+        button.addEventListener('click', () => {
+            // Remover active de todos
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabPanels.forEach(panel => panel.classList.remove('active'));
+            
+            // Activar el seleccionado
+            button.classList.add('active');
+            tabPanels[index].classList.add('active');
+            
+            debug('Tab cambiado:', index);
+        });
+    });
+}
+
+// ==============================================================================
+// MANEJO DE TABLAS
+// ==============================================================================
+
+/**
+ * Crea una tabla HTML a partir de datos
+ */
+function createTable(data, headers, options = {}) {
+    const table = document.createElement('table');
+    table.className = options.className || 'data-table';
+    
+    // Crear thead
+    if (headers && headers.length > 0) {
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        
+        headers.forEach(header => {
+            const th = document.createElement('th');
+            th.textContent = header;
+            headerRow.appendChild(th);
+        });
+        
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+    }
+    
+    // Crear tbody
+    const tbody = document.createElement('tbody');
+    
+    data.forEach(row => {
+        const tr = document.createElement('tr');
+        
+        row.forEach(cell => {
+            const td = document.createElement('td');
+            td.textContent = cell;
+            tr.appendChild(td);
+        });
+        
+        tbody.appendChild(tr);
+    });
+    
+    table.appendChild(tbody);
+    
+    return table;
+}
+
+// ==============================================================================
+// UTILIDADES DE LOCAL STORAGE
+// ==============================================================================
+
+/**
+ * Guarda datos en localStorage
+ */
+function saveToStorage(key, data) {
+    try {
+        localStorage.setItem(key, JSON.stringify(data));
+        return true;
+    } catch (error) {
+        logError('Error guardando en localStorage:', error);
+        return false;
+    }
+}
+
+/**
+ * Recupera datos de localStorage
+ */
+function loadFromStorage(key, defaultValue = null) {
+    try {
+        const data = localStorage.getItem(key);
+        return data ? JSON.parse(data) : defaultValue;
+    } catch (error) {
+        logError('Error cargando de localStorage:', error);
+        return defaultValue;
+    }
+}
+
+/**
+ * Elimina datos de localStorage
+ */
+function removeFromStorage(key) {
+    try {
+        localStorage.removeItem(key);
+        return true;
+    } catch (error) {
+        logError('Error eliminando de localStorage:', error);
+        return false;
+    }
+}
+
+// ==============================================================================
+// UTILIDADES DE ARRAYS Y OBJETOS
+// ==============================================================================
+
+/**
+ * Clona profundamente un objeto
+ */
+function deepClone(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
+
+/**
+ * Verifica si dos objetos son iguales
+ */
+function isEqual(obj1, obj2) {
+    return JSON.stringify(obj1) === JSON.stringify(obj2);
+}
+
+/**
+ * Suma todos los elementos de un array
+ */
+function sum(array) {
+    return array.reduce((acc, val) => acc + val, 0);
+}
+
+/**
+ * Promedio de un array
+ */
+function average(array) {
+    return array.length > 0 ? sum(array) / array.length : 0;
+}
+
+// ==============================================================================
+// ANIMACIONES CSS
+// ==============================================================================
+
+// Agregar estilos de animación
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+    
+    .error {
+        border-color: #e74c3c !important;
+        box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1) !important;
+    }
+`;
+document.head.appendChild(style);
+
+// ==============================================================================
+// INICIALIZACIÓN
+// ==============================================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    debug(`${AppConfig.name} v${AppConfig.version} inicializado`);
+    
+    // Inicializar tabs si existen
+    const tabContainers = document.querySelectorAll('[class*="-tabs"]');
+    tabContainers.forEach(container => {
+        initTabs('.' + container.className.split(' ')[0]);
+    });
+    
+    debug('Aplicación lista');
 });
 
 // ==============================================================================
-// UTILIDADES DE PERFORMANCE
+// EXPORTAR FUNCIONES GLOBALES
 // ==============================================================================
-const PerformanceUtils = {
-    /**
-     * Mide el tiempo de ejecución de una función
-     */
-    measureTime(fn, label = 'Operación') {
-        const start = performance.now();
-        const result = fn();
-        const end = performance.now();
-        console.log(`${label}: ${(end - start).toFixed(2)}ms`);
-        return result;
-    },
 
-    /**
-     * Debounce: retrasa la ejecución de una función
-     */
-    debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
+window.App = {
+    config: AppConfig,
+    utils: {
+        debug,
+        logError,
+        formatProbability,
+        formatPercentage,
+        isValidProbability,
+        generateId,
+        deepClone,
+        isEqual,
+        sum,
+        average
     },
-
-    /**
-     * Throttle: limita la frecuencia de ejecución de una función
-     */
-    throttle(func, limit) {
-        let inThrottle;
-        return function(...args) {
-            if (!inThrottle) {
-                func.apply(this, args);
-                inThrottle = true;
-                setTimeout(() => inThrottle = false, limit);
-            }
-        };
+    ui: {
+        showAlert,
+        showSuccess,
+        showError,
+        showWarning,
+        showInfo,
+        showLoading,
+        hideLoading,
+        initTabs,
+        createTable
+    },
+    validation: {
+        validateForm,
+        clearFormErrors
+    },
+    ajax: {
+        request: ajaxRequest,
+        get,
+        post
+    },
+    storage: {
+        save: saveToStorage,
+        load: loadFromStorage,
+        remove: removeFromStorage
     }
 };
 
-// ==============================================================================
-// EXPORTAR UTILIDADES
-// ==============================================================================
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        MathUtils,
-        UIUtils,
-        DataUtils,
-        TabManager,
-        FormValidator,
-        PerformanceUtils
-    };
-}
+debug('Objeto global App creado:', window.App);

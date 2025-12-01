@@ -1,0 +1,69 @@
+{
+  "name": "Generación de Texto Simple",
+  "description": "Cadena de Markov para generación de palabras basada en patrones",
+  "domain": "Procesamiento de Lenguaje Natural",
+  "states": [
+    {
+      "id": "Inicio",
+      "label": "Inicio",
+      "description": "Estado inicial de la frase"
+    },
+    {
+      "id": "Articulo",
+      "label": "Artículo",
+      "description": "El, La, Un, Una"
+    },
+    {
+      "id": "Sustantivo",
+      "label": "Sustantivo",
+      "description": "Gato, Perro, Casa"
+    },
+    {
+      "id": "Verbo",
+      "label": "Verbo",
+      "description": "Corre, Salta, Come"
+    },
+    {
+      "id": "Fin",
+      "label": "Fin",
+      "description": "Fin de la frase"
+    }
+  ],
+  "transitionMatrix": {
+    "Inicio": {
+      "Inicio": 0,
+      "Articulo": 0.8,
+      "Sustantivo": 0.2,
+      "Verbo": 0,
+      "Fin": 0
+    },
+    "Articulo": {
+      "Inicio": 0,
+      "Articulo": 0,
+      "Sustantivo": 1.0,
+      "Verbo": 0,
+      "Fin": 0
+    },
+    "Sustantivo": {
+      "Inicio": 0,
+      "Articulo": 0,
+      "Sustantivo": 0,
+      "Verbo": 0.7,
+      "Fin": 0.3
+    },
+    "Verbo": {
+      "Inicio": 0,
+      "Articulo": 0.4,
+      "Sustantivo": 0.2,
+      "Verbo": 0,
+      "Fin": 0.4
+    },
+    "Fin": {
+      "Inicio": 1.0,
+      "Articulo": 0,
+      "Sustantivo": 0,
+      "Verbo": 0,
+      "Fin": 0
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Predicción del Clima",
+  "description": "Modelo simple de predicción meteorológica con tres estados",
+  "domain": "Meteorología",
+  "states": [
+    {
+      "id": "Soleado",
+      "label": "Soleado",
+      "description": "Día despejado y soleado"
+    },
+    {
+      "id": "Nublado",
+      "label": "Nublado",
+      "description": "Día parcialmente nublado"
+    },
+    {
+      "id": "Lluvioso",
+      "label": "Lluvioso",
+      "description": "Día con lluvia"
+    }
+  ],
+  "transitionMatrix": {
+    "Soleado": {
+      "Soleado": 0.7,
+      "Nublado": 0.2,
+      "Lluvioso": 0.1
+    },
+    "Nublado": {
+      "Soleado": 0.3,
+      "Nublado": 0.4,
+      "Lluvioso": 0.3
+    },
+    "Lluvioso": {
+      "Soleado": 0.2,
+      "Nublado": 0.3,
+      "Lluvioso": 0.5
+    }
+  }
+}

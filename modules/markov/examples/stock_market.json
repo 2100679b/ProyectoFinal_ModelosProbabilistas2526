@@ -1,0 +1,39 @@
+{
+  "name": "Mercado de Valores Simplificado",
+  "description": "Modelo de tendencias del mercado de valores",
+  "domain": "Finanzas",
+  "states": [
+    {
+      "id": "Alza",
+      "label": "Alcista",
+      "description": "Mercado en tendencia alcista"
+    },
+    {
+      "id": "Estable",
+      "label": "Estable",
+      "description": "Mercado lateral sin tendencia clara"
+    },
+    {
+      "id": "Baja",
+      "label": "Bajista",
+      "description": "Mercado en tendencia bajista"
+    }
+  ],
+  "transitionMatrix": {
+    "Alza": {
+      "Alza": 0.6,
+      "Estable": 0.3,
+      "Baja": 0.1
+    },
+    "Estable": {
+      "Alza": 0.3,
+      "Estable": 0.4,
+      "Baja": 0.3
+    },
+    "Baja": {
+      "Alza": 0.1,
+      "Estable": 0.3,
+      "Baja": 0.6
+    }
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "name": "Red de Predicción Climática",
+  "description": "Modelo bayesiano para predicción meteorológica simple",
+  "domain": "Meteorología",
+  "nodes": [
+    {
+      "id": "EstacionDelAño",
+      "label": "Estación del Año",
+      "description": "Temporada climática actual"
+    },
+    {
+      "id": "Temperatura",
+      "label": "Temperatura",
+      "description": "Nivel de temperatura ambiente"
+    },
+    {
+      "id": "Nubosidad",
+      "label": "Nubosidad",
+      "description": "Cantidad de nubes en el cielo"
+    },
+    {
+      "id": "Lluvia",
+      "label": "Lluvia",
+      "description": "Precipitación pluvial"
+    }
+  ],
+  "edges": [
+    { "from": "EstacionDelAño", "to": "Temperatura" },
+    { "from": "EstacionDelAño", "to": "Nubosidad" },
+    { "from": "Temperatura", "to": "Lluvia" },
+    { "from": "Nubosidad", "to": "Lluvia" }
+  ],
+  "cpt": {
+    "EstacionDelAño": {
+      "verano": 0.25,
+      "otoño": 0.25,
+      "invierno": 0.25,
+      "primavera": 0.25
+    },
+    "Temperatura": {
+      "{\"EstacionDelAño\":\"verano\"}": {
+        "caliente": 0.70,
+        "templada": 0.25,
+        "fría": 0.05
+      },
+      "{\"EstacionDelAño\":\"otoño\"}": {
+        "caliente": 0.20,
+        "templada": 0.60,
+        "fría": 0.20
+      },
+      "{\"EstacionDelAño\":\"invierno\"}": {
+        "caliente": 0.05,
+        "templada": 0.25,
+        "fría": 0.70
+      },
+      "{\"EstacionDelAño\":\"primavera\"}": {
+        "caliente": 0.25,
+        "templada": 0.60,
+        "fría": 0.15
+      }
+    },
+    "Nubosidad": {
+      "{\"EstacionDelAño\":\"verano\"}": {
+        "despejado": 0.60,
+        "nublado": 0.30,
+        "muy_nublado": 0.10
+      },
+      "{\"EstacionDelAño\":\"otoño\"}": {
+        "despejado": 0.30,
+        "nublado": 0.50,
+        "muy_nublado": 0.20
+      },
+      "{\"EstacionDelAño\":\"invierno\"}": {
+        "despejado": 0.20,
+        "nublado": 0.40,
+        "muy_nublado": 0.40
+      },
+      "{\"EstacionDelAño\":\"primavera\"}": {
+        "despejado": 0.40,
+        "nublado": 0.40,
+        "muy_nublado": 0.20
+      }
+    },
+    "Lluvia": {
+      "{\"Temperatura\":\"caliente\",\"Nubosidad\":\"despejado\"}": {
+        "verdadero": 0.05,
+        "falso": 0.95
+      },
+      "{\"Temperatura\":\"caliente\",\"Nubosidad\":\"nublado\"}": {
+        "verdadero": 0.20,
+        "falso": 0.80
+      },
+      "{\"Temperatura\":\"caliente\",\"Nubosidad\":\"muy_nublado\"}": {
+        "verdadero": 0.50,
+        "falso": 0.50
+      },
+      "{\"Temperatura\":\"templada\",\"Nubosidad\":\"despejado\"}": {
+        "verdadero": 0.10,
+        "falso": 0.90
+      },
+      "{\"Temperatura\":\"templada\",\"Nubosidad\":\"nublado\"}": {
+        "verdadero": 0.40,
+        "falso": 0.60
+      },
+      "{\"Temperatura\":\"templada\",\"Nubosidad\":\"muy_nublado\"}": {
+        "verdadero": 0.70,
+        "falso": 0.30
+      },
+      "{\"Temperatura\":\"fría\",\"Nubosidad\":\"despejado\"}": {
+        "verdadero": 0.15,
+        "falso": 0.85
+      },
+      "{\"Temperatura\":\"fría\",\"Nubosidad\":\"nublado\"}": {
+        "verdadero": 0.60,
+        "falso": 0.40
+      },
+      "{\"Temperatura\":\"fría\",\"Nubosidad\":\"muy_nublado\"}": {
+        "verdadero": 0.85,
+        "falso": 0.15
+      }
+    }
+  }
+}

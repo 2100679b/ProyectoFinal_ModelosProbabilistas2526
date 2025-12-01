@@ -1,0 +1,86 @@
+{
+  "name": "Red de Alarma Antirrobo",
+  "description": "Modelo clásico de red bayesiana que representa la relación entre terremotos, robos y alarmas",
+  "domain": "Seguridad",
+  "nodes": [
+    {
+      "id": "Terremoto",
+      "label": "Terremoto",
+      "description": "Ocurrencia de un terremoto en la zona"
+    },
+    {
+      "id": "Robo",
+      "label": "Robo",
+      "description": "Ocurrencia de un robo en la propiedad"
+    },
+    {
+      "id": "Alarma",
+      "label": "Alarma",
+      "description": "La alarma antirrobo se activa"
+    },
+    {
+      "id": "JuanLlama",
+      "label": "Juan Llama",
+      "description": "El vecino Juan llama reportando la alarma"
+    },
+    {
+      "id": "MariaLlama",
+      "label": "María Llama",
+      "description": "La vecina María llama reportando la alarma"
+    }
+  ],
+  "edges": [
+    { "from": "Terremoto", "to": "Alarma" },
+    { "from": "Robo", "to": "Alarma" },
+    { "from": "Alarma", "to": "JuanLlama" },
+    { "from": "Alarma", "to": "MariaLlama" }
+  ],
+  "cpt": {
+    "Terremoto": {
+      "verdadero": 0.002,
+      "falso": 0.998
+    },
+    "Robo": {
+      "verdadero": 0.001,
+      "falso": 0.999
+    },
+    "Alarma": {
+      "{\"Terremoto\":\"verdadero\",\"Robo\":\"verdadero\"}": {
+        "verdadero": 0.95,
+        "falso": 0.05
+      },
+      "{\"Terremoto\":\"verdadero\",\"Robo\":\"falso\"}": {
+        "verdadero": 0.29,
+        "falso": 0.71
+      },
+      "{\"Terremoto\":\"falso\",\"Robo\":\"verdadero\"}": {
+        "verdadero": 0.94,
+        "falso": 0.06
+      },
+      "{\"Terremoto\":\"falso\",\"Robo\":\"falso\"}": {
+        "verdadero": 0.001,
+        "falso": 0.999
+      }
+    },
+    "JuanLlama": {
+      "{\"Alarma\":\"verdadero\"}": {
+        "verdadero": 0.90,
+        "falso": 0.10
+      },
+      "{\"Alarma\":\"falso\"}": {
+        "verdadero": 0.05,
+        "falso": 0.95
+      }
+    },
+    "MariaLlama": {
+      "{\"Alarma\":\"verdadero\"}": {
+        "verdadero": 0.70,
+        "falso": 0.30
+      },
+      "{\"Alarma\":\"falso\"}": {
+        "verdadero": 0.01,
+        "falso": 0.99
+      }
+    }
+  }
+}

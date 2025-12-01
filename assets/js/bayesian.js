@@ -1,404 +1,560 @@
 /**
- * ==============================================================================
- * REDES BAYESIANAS - LÓGICA PRINCIPAL
+ * JavaScript para Módulo de Redes Bayesianas
  * Universidad Michoacana de San Nicolás de Hidalgo
- * Archivo: bayesian.js
- * ==============================================================================
  */
 
-// ==============================================================================
-// CLASE PRINCIPAL: Red Bayesiana
-// ==============================================================================
-class BayesianNetwork {
-    constructor() {
-        this.nodes = new Map(); // Almacena los nodos
-        this.edges = new Map(); // Almacena las conexiones
-        this.cpts = new Map();  // Tablas de Probabilidad Condicional
-    }
+// ========== VARIABLES GLOBALES ==========
+let currentNetwork = null;
+let networkDiagram = null;
+let selectedQueryVariable = null;
+let evidenceVariables = {};
 
-    /**
-     * Agrega un nodo a la red
-     * @param {string} id - ID único del nodo
-     * @param {string} name - Nombre del nodo
-     * @param {Array} states - Estados posibles del nodo
-     */
-    addNode(id, name, states = ['true', 'false']) {
-        this.nodes.set(id, {
-            id: id,
-            name: name,
-            states: states,
-            parents: [],
-            children: []
+// ========== INICIALIZACIÓN ==========
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('✅ Módulo de Redes Bayesianas iniciado');
+    initTabs();
+    initNetworkDiagram();
+    initExampleButtons();
+});
+
+// ========== TABS ==========
+function initTabs() {
+    document.querySelectorAll('.bayesian-tabs .tab-button').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const tab = btn.dataset.tab;
+            if (tab) activateTab(tab);
         });
-        
-        // Inicializar CPT vacía
-        this.cpts.set(id, []);
-    }
-
-    /**
-     * Agrega una arista (conexión) entre dos nodos
-     * @param {string} fromId - ID del nodo padre
-     * @param {string} toId - ID del nodo hijo
-     */
-    addEdge(fromId, toId) {
-        if (!this.nodes.has(fromId) || !this.nodes.has(toId)) {
-            console.error('Uno o ambos nodos no existen');
-            return false;
-        }
-
-        // Verificar ciclos antes de agregar
-        if (this.wouldCreateCycle(fromId, toId)) {
-            console.error('Esta conexión crearía un ciclo');
-            return false;
-        }
-
-        // Agregar padre al nodo hijo
-        const childNode = this.nodes.get(toId);
-        if (!childNode.parents.includes(fromId)) {
-            childNode.parents.push(fromId);
-        }
-
-        // Agregar hijo al nodo padre
-        const parentNode = this.nodes.get(fromId);
-        if (!parentNode.children.includes(toId)) {
-            parentNode.children.push(toId);
-        }
-
-        return true;
-    }
-
-    /**
-     * Verifica si agregar una arista crearía un ciclo
-     */
-    wouldCreateCycle(fromId, toId) {
-        const visited = new Set();
-        const stack = [toId];
-
-        while (stack.length > 0) {
-            const current = stack.pop();
-            if (current === fromId) return true;
-            
-            if (!visited.has(current)) {
-                visited.add(current);
-                const node = this.nodes.get(current);
-                if (node && node.children) {
-                    stack.push(...node.children);
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Establece la Tabla de Probabilidad Condicional para un nodo
-     * @param {string} nodeId - ID del nodo
-     * @param {Array} cpt - Tabla de probabilidad condicional
-     */
-    setCPT(nodeId, cpt) {
-        if (!this.nodes.has(nodeId)) {
-            console.error('El nodo no existe');
-            return;
-        }
-        this.cpts.set(nodeId, cpt);
-    }
-
-    /**
-     * Genera una CPT vacía para un nodo
-     */
-    generateEmptyCPT(nodeId) {
-        const node = this.nodes.get(nodeId);
-        if (!node) return [];
-
-        const parents = node.parents;
-        const numRows = Math.pow(2, parents.length);
-        const cpt = [];
-
-        for (let i = 0; i < numRows; i++) {
-            const row = { conditions: {}, probabilities: {} };
-            
-            // Generar combinaciones de estados de padres
-            parents.forEach((parentId, index) => {
-                const bit = (i >> (parents.length - 1 - index)) & 1;
-                row.conditions[parentId] = bit === 1 ? 'true' : 'false';
-            });
-
-            // Inicializar probabilidades para cada estado del nodo
-            node.states.forEach(state => {
-                row.probabilities[state] = 0.5;
-            });
-
-            cpt.push(row);
-        }
-
-        return cpt;
-    }
-
-    /**
-     * Realiza inferencia por enumeración
-     * @param {string} queryVar - Variable a consultar
-     * @param {Object} evidence - Evidencia observada
-     */
-    enumerationInference(queryVar, evidence = {}) {
-        const node = this.nodes.get(queryVar);
-        if (!node) return null;
-
-        const results = {};
-        
-        // Calcular probabilidad para cada estado de la variable de consulta
-        node.states.forEach(state => {
-            const prob = this.enumerateAll(
-                Array.from(this.nodes.keys()),
-                { ...evidence, [queryVar]: state }
-            );
-            results[state] = prob;
-        });
-
-        // Normalizar
-        const sum = Object.values(results).reduce((a, b) => a + b, 0);
-        Object.keys(results).forEach(state => {
-            results[state] = sum > 0 ? results[state] / sum : 0;
-        });
-
-        return results;
-    }
-
-    /**
-     * Función auxiliar para enumeración recursiva
-     */
-    enumerateAll(vars, evidence) {
-        if (vars.length === 0) return 1.0;
-
-        const Y = vars[0];
-        const rest = vars.slice(1);
-
-        if (evidence.hasOwnProperty(Y)) {
-            // Y tiene un valor observado
-            return this.getProbability(Y, evidence[Y], evidence) * 
-                   this.enumerateAll(rest, evidence);
-        } else {
-            // Sumar sobre todos los valores posibles de Y
-            const node = this.nodes.get(Y);
-            let sum = 0;
-            
-            node.states.forEach(state => {
-                const newEvidence = { ...evidence, [Y]: state };
-                sum += this.getProbability(Y, state, newEvidence) * 
-                       this.enumerateAll(rest, newEvidence);
-            });
-            
-            return sum;
-        }
-    }
-
-    /**
-     * Obtiene la probabilidad de un nodo dado su estado y evidencia
-     */
-    getProbability(nodeId, state, evidence) {
-        const node = this.nodes.get(nodeId);
-        const cpt = this.cpts.get(nodeId);
-        
-        if (!node || !cpt || cpt.length === 0) return 0.5;
-
-        // Si no tiene padres, usar probabilidad marginal
-        if (node.parents.length === 0) {
-            const entry = cpt[0];
-            return entry.probabilities[state] || 0.5;
-        }
-
-        // Buscar la fila correspondiente en la CPT
-        const row = cpt.find(entry => {
-            return node.parents.every(parentId => {
-                return entry.conditions[parentId] === evidence[parentId];
-            });
-        });
-
-        return row ? (row.probabilities[state] || 0.5) : 0.5;
-    }
-
-    /**
-     * Algoritmo de Eliminación de Variables
-     */
-    variableElimination(queryVar, evidence = {}) {
-        // Simplificación: usar enumeración por ahora
-        // En una implementación completa, aquí iría el algoritmo de eliminación
-        return this.enumerationInference(queryVar, evidence);
-    }
-
-    /**
-     * Exportar red a formato JSON
-     */
-    toJSON() {
-        return {
-            nodes: Array.from(this.nodes.entries()).map(([id, node]) => ({
-                id,
-                ...node
-            })),
-            edges: this.getEdges(),
-            cpts: Array.from(this.cpts.entries()).map(([id, cpt]) => ({
-                nodeId: id,
-                cpt: cpt
-            }))
-        };
-    }
-
-    /**
-     * Obtener lista de aristas
-     */
-    getEdges() {
-        const edges = [];
-        this.nodes.forEach((node, nodeId) => {
-            node.parents.forEach(parentId => {
-                edges.push({ from: parentId, to: nodeId });
-            });
-        });
-        return edges;
-    }
-
-    /**
-     * Importar red desde JSON
-     */
-    fromJSON(data) {
-        this.nodes.clear();
-        this.edges.clear();
-        this.cpts.clear();
-
-        // Importar nodos
-        data.nodes.forEach(node => {
-            this.nodes.set(node.id, {
-                id: node.id,
-                name: node.name,
-                states: node.states,
-                parents: node.parents || [],
-                children: node.children || []
-            });
-        });
-
-        // Importar CPTs
-        data.cpts.forEach(({ nodeId, cpt }) => {
-            this.cpts.set(nodeId, cpt);
-        });
-    }
+    });
 }
 
-// ==============================================================================
-// EJEMPLOS PREDEFINIDOS
-// ==============================================================================
-const BAYESIAN_EXAMPLES = {
-    sprinkler: {
-        name: "Sprinkler (Aspersor)",
-        description: "Ejemplo clásico: Lluvia, Aspersor y Césped Mojado",
-        network: {
-            nodes: [
-                { id: 'rain', name: 'Lluvia', states: ['true', 'false'] },
-                { id: 'sprinkler', name: 'Aspersor', states: ['true', 'false'] },
-                { id: 'wet', name: 'Césped Mojado', states: ['true', 'false'] }
-            ],
-            edges: [
-                { from: 'rain', to: 'sprinkler' },
-                { from: 'rain', to: 'wet' },
-                { from: 'sprinkler', to: 'wet' }
-            ],
-            cpts: [
-                {
-                    nodeId: 'rain',
-                    cpt: [{
-                        conditions: {},
-                        probabilities: { 'true': 0.2, 'false': 0.8 }
-                    }]
-                },
-                {
-                    nodeId: 'sprinkler',
-                    cpt: [
-                        {
-                            conditions: { 'rain': 'true' },
-                            probabilities: { 'true': 0.01, 'false': 0.99 }
-                        },
-                        {
-                            conditions: { 'rain': 'false' },
-                            probabilities: { 'true': 0.4, 'false': 0.6 }
-                        }
-                    ]
-                },
-                {
-                    nodeId: 'wet',
-                    cpt: [
-                        {
-                            conditions: { 'rain': 'true', 'sprinkler': 'true' },
-                            probabilities: { 'true': 0.99, 'false': 0.01 }
-                        },
-                        {
-                            conditions: { 'rain': 'true', 'sprinkler': 'false' },
-                            probabilities: { 'true': 0.8, 'false': 0.2 }
-                        },
-                        {
-                            conditions: { 'rain': 'false', 'sprinkler': 'true' },
-                            probabilities: { 'true': 0.9, 'false': 0.1 }
-                        },
-                        {
-                            conditions: { 'rain': 'false', 'sprinkler': 'false' },
-                            probabilities: { 'true': 0.0, 'false': 1.0 }
-                        }
-                    ]
-                }
-            ]
-        }
-    },
+function activateTab(tabId) {
+    console.log('📑 Activando tab:', tabId);
     
-    medical: {
-        name: "Diagnóstico Médico",
-        description: "Modelo simple de diagnóstico médico",
-        network: {
-            nodes: [
-                { id: 'disease', name: 'Enfermedad', states: ['true', 'false'] },
-                { id: 'symptom1', name: 'Fiebre', states: ['true', 'false'] },
-                { id: 'symptom2', name: 'Tos', states: ['true', 'false'] }
-            ],
-            edges: [
-                { from: 'disease', to: 'symptom1' },
-                { from: 'disease', to: 'symptom2' }
-            ],
-            cpts: [
-                {
-                    nodeId: 'disease',
-                    cpt: [{
-                        conditions: {},
-                        probabilities: { 'true': 0.01, 'false': 0.99 }
-                    }]
-                },
-                {
-                    nodeId: 'symptom1',
-                    cpt: [
-                        {
-                            conditions: { 'disease': 'true' },
-                            probabilities: { 'true': 0.8, 'false': 0.2 }
-                        },
-                        {
-                            conditions: { 'disease': 'false' },
-                            probabilities: { 'true': 0.1, 'false': 0.9 }
-                        }
-                    ]
-                },
-                {
-                    nodeId: 'symptom2',
-                    cpt: [
-                        {
-                            conditions: { 'disease': 'true' },
-                            probabilities: { 'true': 0.7, 'false': 0.3 }
-                        },
-                        {
-                            conditions: { 'disease': 'false' },
-                            probabilities: { 'true': 0.05, 'false': 0.95 }
-                        }
-                    ]
-                }
-            ]
+    // Desactivar todos
+    document.querySelectorAll('.bayesian-tabs .tab-button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => {
+        p.classList.remove('active');
+        p.style.display = 'none';
+    });
+    
+    // Activar seleccionado
+    const btn = document.querySelector(`.bayesian-tabs .tab-button[data-tab="${tabId}"]`);
+    const panel = document.getElementById(`tab-${tabId}`);
+    
+    if (btn) btn.classList.add('active');
+    if (panel) {
+        panel.classList.add('active');
+        panel.style.display = 'block';
+        
+        // IMPORTANTE: Solo cargar CPT cuando se activa el tab
+        if (tabId === 'probabilities' && currentNetwork) {
+            console.log('📊 Cargando CPTs...');
+            displayAllCPTs();
         }
     }
-};
-
-// ==============================================================================
-// EXPORTAR
-// ==============================================================================
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { BayesianNetwork, BAYESIAN_EXAMPLES };
 }
+
+// ========== DIAGRAMA VIS.JS ==========
+function initNetworkDiagram() {
+    const container = document.getElementById('network-visualization');
+    if (!container) {
+        console.error('❌ No se encontró #network-visualization');
+        return;
+    }
+    
+    const data = {
+        nodes: new vis.DataSet([]),
+        edges: new vis.DataSet([])
+    };
+    
+    const options = {
+        nodes: {
+            shape: 'box',
+            size: 25,
+            font: { size: 14, color: '#1e40af' },
+            borderWidth: 2,
+            color: {
+                background: '#dbeafe',
+                border: '#2563eb',
+                highlight: { background: '#2563eb', border: '#1d4ed8' }
+            }
+        },
+        edges: {
+            arrows: { to: { enabled: true, scaleFactor: 1.2 } },
+            color: { color: '#6b7280', highlight: '#2563eb' },
+            width: 2,
+            smooth: { type: 'cubicBezier' }
+        },
+        physics: {
+            enabled: true,
+            stabilization: { iterations: 200 },
+            barnesHut: {
+                gravitationalConstant: -2000,
+                springConstant: 0.04,
+                springLength: 150
+            }
+        },
+        interaction: {
+            hover: true,
+            tooltipDelay: 200,
+            dragNodes: true,
+            dragView: true,
+            zoomView: true
+        }
+    };
+    
+    networkDiagram = new vis.Network(container, data, options);
+    
+    networkDiagram.on('click', (params) => {
+        if (params.nodes.length > 0) {
+            showNodeDetails(params.nodes[0]);
+        }
+    });
+    
+    console.log('✅ Diagrama inicializado');
+}
+
+// ========== EJEMPLOS ==========
+function initExampleButtons() {
+    document.querySelectorAll('.btn-example').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const file = btn.dataset.example;
+            if (file) {
+                console.log('📂 Cargando ejemplo:', file);
+                loadExample(file);
+            }
+        });
+    });
+}
+
+function loadExample(name) {
+    // SOLUCIÓN: Construir URL correctamente
+    // Obtener BASE_URL desde el body data attribute (lo agregaremos en PHP)
+    const baseUrl = document.body.dataset.baseUrl || window.location.origin;
+    const url = `${baseUrl}/modules/bayesian/examples/${name}.json`;
+    
+    console.log('🔗 URL completa:', url);
+    
+    fetch(url)
+        .then(response => {
+            console.log('📡 Response status:', response.status);
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: No se pudo cargar ${name}.json`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('✅ Ejemplo cargado:', data);
+            currentNetwork = data;
+            renderNetwork(data);
+            updateQueryVariables(data);
+            showAlert('Ejemplo cargado: ' + (data.name || name), 'success');
+            activateTab('network');
+        })
+        .catch(error => {
+            console.error('❌ Error al cargar ejemplo:', error);
+            showAlert('Error: ' + error.message, 'error');
+        });
+}
+
+// ========== RENDER ==========
+function renderNetwork(net) {
+    if (!networkDiagram) {
+        console.error('❌ networkDiagram no inicializado');
+        return;
+    }
+    
+    const nodes = new vis.DataSet(
+        net.nodes.map(n => ({
+            id: n.id,
+            label: n.label || n.id,
+            title: n.description || n.label || n.id
+        }))
+    );
+    
+    const edges = new vis.DataSet(
+        net.edges.map(e => ({
+            from: e.from,
+            to: e.to,
+            label: e.label || ''
+        }))
+    );
+    
+    networkDiagram.setData({ nodes, edges });
+    
+    setTimeout(() => {
+        networkDiagram.fit({
+            animation: {
+                duration: 1000,
+                easingFunction: 'easeInOutQuad'
+            }
+        });
+    }, 100);
+    
+    updateNetworkInfo(net);
+    console.log('✅ Red renderizada:', net.name);
+}
+
+// ========== CPT ==========
+function displayAllCPTs() {
+    const container = document.getElementById('cpt-container');
+    
+    if (!container || !currentNetwork) {
+        console.error('❌ No se puede mostrar CPT');
+        return;
+    }
+    
+    if (!currentNetwork.cpt || Object.keys(currentNetwork.cpt).length === 0) {
+        container.innerHTML = `
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i> Sin tablas CPT definidas
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '<h3 style="color: #2563eb; margin-bottom: 20px;">Tablas de Probabilidad Condicional</h3>';
+    
+    currentNetwork.nodes.forEach(node => {
+        const cpt = currentNetwork.cpt[node.id];
+        if (!cpt) return;
+        
+        html += `
+            <div class="cpt-card" style="background: #fff; border: 2px solid #e5e7eb; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                <h4 style="color: #1e40af; margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-table"></i> ${node.label || node.id}
+                </h4>
+                <p style="color: #6b7280; margin-bottom: 15px; font-size: 0.95em;">${node.description || 'Sin descripción'}</p>
+                ${generateCPTTable(node.id, cpt)}
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+    console.log('✅ CPTs mostradas');
+}
+
+function generateCPTTable(nodeId, cptData) {
+    let html = '<div style="overflow-x: auto;"><table class="cpt-table" style="width: 100%; border-collapse: collapse; margin-top: 10px;">';
+    
+    const entries = Object.entries(cptData);
+    
+    // CPT simple (sin padres)
+    if (entries.length > 0 && typeof entries[0][1] === 'number') {
+        html += '<thead style="background: #2563eb; color: white;"><tr>';
+        html += '<th style="padding: 12px; border: 1px solid #ddd;">Valor</th>';
+        html += '<th style="padding: 12px; border: 1px solid #ddd;">Probabilidad</th>';
+        html += '</tr></thead><tbody>';
+        
+        entries.forEach(([k, p]) => {
+            const pct = (p * 100).toFixed(2);
+            html += `
+                <tr style="background: #f9fafb;">
+                    <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">${k}</td>
+                    <td style="padding: 12px; border: 1px solid #ddd; text-align: center;">
+                        <span style="color: #2563eb; font-weight: bold;">${p.toFixed(4)}</span>
+                        <span style="color: #6b7280; margin-left: 8px;">(${pct}%)</span>
+                    </td>
+                </tr>
+            `;
+        });
+    } else {
+        // CPT condicional (con padres)
+        html += '<thead style="background: #2563eb; color: white;"><tr>';
+        html += '<th style="padding: 12px; border: 1px solid #ddd;">Condición</th>';
+        html += '<th style="padding: 12px; border: 1px solid #ddd;">Distribución</th>';
+        html += '</tr></thead><tbody>';
+        
+        entries.forEach(([cond, dist]) => {
+            let condText = cond;
+            try {
+                const o = JSON.parse(cond);
+                condText = Object.entries(o).map(([k, v]) => `${k}=${v}`).join(', ');
+            } catch (e) {}
+            
+            html += `<tr style="background: #f9fafb;">`;
+            html += `<td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">${condText}</td>`;
+            html += `<td style="padding: 12px; border: 1px solid #ddd;">`;
+            html += '<div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">';
+            
+            Object.entries(dist).forEach(([v, p]) => {
+                const pct = (p * 100).toFixed(2);
+                html += `
+                    <div style="text-align: center;">
+                        <div style="font-size: 0.85em; color: #6b7280;">${v}</div>
+                        <div style="color: #2563eb; font-weight: bold; font-size: 1.1em;">${p.toFixed(3)}</div>
+                        <div style="font-size: 0.8em; color: #9ca3af;">${pct}%</div>
+                    </div>
+                `;
+            });
+            
+            html += '</div></td></tr>';
+        });
+    }
+    
+    html += '</tbody></table></div>';
+    return html;
+}
+
+// ========== UTILIDADES ==========
+function updateNetworkInfo(net) {
+    const info = document.getElementById('node-info');
+    const details = document.getElementById('node-details');
+    
+    if (!info || !details) return;
+    
+    info.style.display = 'block';
+    details.innerHTML = `
+        <div class="network-metadata">
+            <h5>${net.name || 'Red Bayesiana'}</h5>
+            <p>${net.description || ''}</p>
+            <div class="network-stats" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px;">
+                <div class="stat-item" style="background: #f3f4f6; padding: 10px; border-radius: 6px; text-align: center;">
+                    <div style="font-size: 0.9em; color: #6b7280;">Nodos</div>
+                    <div style="font-size: 1.5em; font-weight: bold; color: #2563eb;">${net.nodes.length}</div>
+                </div>
+                <div class="stat-item" style="background: #f3f4f6; padding: 10px; border-radius: 6px; text-align: center;">
+                    <div style="font-size: 0.9em; color: #6b7280;">Aristas</div>
+                    <div style="font-size: 1.5em; font-weight: bold; color: #2563eb;">${net.edges.length}</div>
+                </div>
+                <div class="stat-item" style="background: #f3f4f6; padding: 10px; border-radius: 6px; text-align: center;">
+                    <div style="font-size: 0.9em; color: #6b7280;">Dominio</div>
+                    <div style="font-size: 1em; font-weight: bold; color: #2563eb;">${net.domain || 'General'}</div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function updateQueryVariables(net) {
+    const qv = document.getElementById('query-variables');
+    const ev = document.getElementById('evidence-variables');
+    
+    if (qv) {
+        qv.innerHTML = '';
+        net.nodes.forEach(n => {
+            const b = document.createElement('button');
+            b.className = 'btn btn-outline-primary btn-sm';
+            b.style.margin = '5px';
+            b.textContent = n.label || n.id;
+            b.onclick = () => selectQueryVariable(n.id, n.label || n.id);
+            qv.appendChild(b);
+        });
+    }
+    
+    if (ev) {
+        ev.innerHTML = '';
+        net.nodes.forEach(n => {
+            const b = document.createElement('button');
+            b.className = 'btn btn-outline-secondary btn-sm';
+            b.style.margin = '5px';
+            b.textContent = n.label || n.id;
+            b.onclick = () => selectEvidenceVariable(n.id, n.label || n.id);
+            ev.appendChild(b);
+        });
+    }
+}
+
+function showNodeDetails(nodeId) {
+    if (!currentNetwork) return;
+    
+    const node = currentNetwork.nodes.find(n => n.id === nodeId);
+    if (!node) return;
+    
+    const info = document.getElementById('node-info');
+    const details = document.getElementById('node-details');
+    
+    if (info && details) {
+        info.style.display = 'block';
+        details.innerHTML = `
+            <h5 style="color: #2563eb; margin-bottom: 10px;">${node.label || node.id}</h5>
+            <p style="color: #6b7280; margin-bottom: 15px;">${node.description || 'Sin descripción'}</p>
+        `;
+        
+        if (currentNetwork.cpt && currentNetwork.cpt[nodeId]) {
+            details.innerHTML += '<h6 style="color: #1e40af; margin-top: 15px; margin-bottom: 10px;">Tabla CPT:</h6>';
+            details.innerHTML += generateCPTTable(nodeId, currentNetwork.cpt[nodeId]);
+        }
+    }
+}
+
+function selectQueryVariable(nodeId, label) {
+    selectedQueryVariable = nodeId;
+    
+    document.querySelectorAll('#query-variables .btn').forEach(b => {
+        b.classList.remove('btn-primary');
+        b.classList.add('btn-outline-primary');
+    });
+    
+    event.target.classList.remove('btn-outline-primary');
+    event.target.classList.add('btn-primary');
+    
+    showAlert('Variable seleccionada: ' + label, 'info');
+}
+
+function selectEvidenceVariable(nodeId, label) {
+    if (evidenceVariables[nodeId]) {
+        delete evidenceVariables[nodeId];
+        event.target.classList.remove('btn-secondary');
+        event.target.classList.add('btn-outline-secondary');
+    } else {
+        const v = prompt(`Valor conocido para ${label}:`);
+        if (v) {
+            evidenceVariables[nodeId] = v;
+            event.target.classList.remove('btn-outline-secondary');
+            event.target.classList.add('btn-secondary');
+            showAlert(`Evidencia: ${label} = ${v}`, 'success');
+        }
+    }
+}
+
+function runInference() {
+    if (!currentNetwork) {
+        showAlert('No hay red cargada', 'warning');
+        return;
+    }
+    
+    if (!selectedQueryVariable) {
+        showAlert('Selecciona una variable primero', 'warning');
+        return;
+    }
+    
+    showAlert('Función de inferencia en desarrollo', 'info');
+    activateTab('results');
+}
+
+// ========== MENSAJES ==========
+function showAlert(msg, type = 'info') {
+    const colors = {
+        success: '#10b981',
+        error: '#ef4444',
+        warning: '#f59e0b',
+        info: '#3b82f6'
+    };
+    
+    const icons = {
+        success: 'check-circle',
+        error: 'exclamation-circle',
+        warning: 'exclamation-triangle',
+        info: 'info-circle'
+    };
+    
+    const div = document.createElement('div');
+    div.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 10000;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        animation: slideInRight 0.3s ease;
+    `;
+    div.style.backgroundColor = colors[type] || colors.info;
+    div.innerHTML = `<i class="fas fa-${icons[type]}"></i><span>${msg}</span>`;
+    
+    document.body.appendChild(div);
+    
+    setTimeout(() => {
+        div.style.opacity = '0';
+        div.style.transform = 'translateX(400px)';
+        setTimeout(() => div.remove(), 300);
+    }, 4000);
+}
+
+// ========== ACCIONES RÁPIDAS ==========
+function createNewNetwork() {
+    if (currentNetwork && !confirm('¿Descartar red actual?')) return;
+    currentNetwork = { name: 'Nueva Red', nodes: [], edges: [], cpt: {} };
+    renderNetwork(currentNetwork);
+    showAlert('Nueva red creada', 'success');
+    activateTab('network');
+}
+
+function exportNetwork() {
+    if (!currentNetwork) {
+        showAlert('No hay red para exportar', 'warning');
+        return;
+    }
+    
+    const dataStr = JSON.stringify(currentNetwork, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = (currentNetwork.name || 'red_bayesiana').replace(/\s+/g, '_') + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    showAlert('Red exportada', 'success');
+}
+
+function addNode() {
+    const name = prompt('Nombre del nodo:');
+    if (!name) return;
+    if (!currentNetwork) createNewNetwork();
+    
+    const id = name.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+    if (currentNetwork.nodes.find(n => n.id === id)) {
+        showAlert('Nodo duplicado', 'warning');
+        return;
+    }
+    
+    currentNetwork.nodes.push({ id, label: name, description: '' });
+    renderNetwork(currentNetwork);
+    updateQueryVariables(currentNetwork);
+    showAlert('Nodo agregado: ' + name, 'success');
+}
+
+function addEdge() {
+    if (!currentNetwork || currentNetwork.nodes.length < 2) {
+        showAlert('Necesitas al menos 2 nodos', 'warning');
+        return;
+    }
+    
+    const nodesList = currentNetwork.nodes.map(n => n.id).join(', ');
+    const from = prompt(`Nodo origen (${nodesList}):`);
+    const to = prompt(`Nodo destino (${nodesList}):`);
+    
+    if (!from || !to) return;
+    
+    if (!currentNetwork.nodes.find(n => n.id === from) || !currentNetwork.nodes.find(n => n.id === to)) {
+        showAlert('Nodos no existen', 'error');
+        return;
+    }
+    
+    currentNetwork.edges.push({ from, to });
+    renderNetwork(currentNetwork);
+    showAlert('Arista agregada', 'success');
+}
+
+function removeSelected() {
+    showAlert('Función en desarrollo', 'info');
+}
+
+function saveNetwork() {
+    exportNetwork();
+}
+
+function fitNetwork() {
+    networkDiagram?.fit({
+        animation: {
+            duration: 500,
+            easingFunction: 'easeInOutQuad'
+        }
+    });
+}
+
+// ========== ANIMACIÓN ==========
+const bayesianStyle = document.createElement('style');
+bayesianStyle.textContent = `
+    @keyframes slideInRight {
+        from { opacity: 0; transform: translateX(400px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+`;
+document.head.appendChild(bayesianStyle);

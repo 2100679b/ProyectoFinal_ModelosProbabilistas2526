@@ -1,164 +1,220 @@
-/*
- * ==============================================================================
- * MODELOS OCULTOS DE MARKOV (HMM) - ESTILOS ESPECÍFICOS
+/**
+ * Estilos para Módulo de HMM
  * Universidad Michoacana de San Nicolás de Hidalgo
- * Estilos para el módulo de HMM (hmm.css)
- * ==============================================================================
  */
 
-/* ==============================================================================
- * VARIABLES ESPECÍFICAS DE HMM
- * ==============================================================================
- */
+/* ========================================
+   VARIABLES CSS
+   ======================================== */
 :root {
-    /* Colores específicos para HMM */
-    --hmm-primary: #16a085;
-    --hmm-secondary: #138d75;
-    --hmm-light: #48c9b0;
-    --hmm-dark: #0e6655;
-    
-    /* Colores para estados ocultos */
-    --hidden-state-1: #3498db;
-    --hidden-state-2: #e74c3c;
-    --hidden-state-3: #f39c12;
-    --hidden-state-4: #9b59b6;
-    
-    /* Colores para observaciones */
-    --observation-1: #1abc9c;
-    --observation-2: #2ecc71;
-    --observation-3: #f1c40f;
-    --observation-4: #e67e22;
-    
-    /* Colores para algoritmos */
-    --forward-color: #3498db;
-    --backward-color: #e74c3c;
-    --viterbi-color: #f39c12;
+    --hmm-primary: #9333ea;
+    --hmm-secondary: #7e22ce;
+    --hmm-light: #f3e8ff;
+    --hmm-dark: #581c87;
+    --hmm-accent: #e9d5ff;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --border-color: #e5e7eb;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* ==============================================================================
- * HEADER DEL MÓDULO
- * ==============================================================================
- */
-.hmm-header {
-    background: linear-gradient(135deg, var(--hmm-primary) 0%, var(--hmm-secondary) 100%);
-    color: white;
-    padding: 2rem;
-    border-radius: 12px;
-    margin-bottom: 2rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.hmm-header h1 {
-    color: white;
-    margin-bottom: 0.5rem;
-}
-
-.hmm-header p {
-    opacity: 0.95;
-    margin-bottom: 0;
-}
-
-/* ==============================================================================
- * CONTENEDOR PRINCIPAL
- * ==============================================================================
- */
+/* ========================================
+   CONTENEDOR PRINCIPAL
+   ======================================== */
 .hmm-container {
     display: grid;
     grid-template-columns: 300px 1fr;
-    gap: 2rem;
-    margin-bottom: 2rem;
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-/* ==============================================================================
- * PANEL LATERAL
- * ==============================================================================
- */
+/* ========================================
+   HEADER MEJORADO
+   ======================================== */
+.hmm-header {
+    background: linear-gradient(135deg, #9333ea 0%, #c026d3 100%);
+    color: #ffffff !important;
+    padding: 50px 40px;
+    border-radius: 16px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 25px rgba(147, 51, 234, 0.3);
+    grid-column: 1 / -1;
+    position: relative;
+    overflow: hidden;
+}
+
+.hmm-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+    animation: headerGlow 10s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes headerGlow {
+    0%, 100% { transform: translate(-25%, -25%); }
+    50% { transform: translate(0%, 0%); }
+}
+
+.hmm-header h1 {
+    font-size: 2.75em;
+    margin-bottom: 12px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+    z-index: 1;
+    letter-spacing: -0.02em;
+    color: #ffffff !important;
+}
+
+.hmm-header h1 i {
+    font-size: 1.2em;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    color: #ffffff !important;
+}
+
+.hmm-header p {
+    font-size: 1.15em;
+    opacity: 0.98;
+    margin: 0;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+    font-weight: 400;
+    color: #ffffff !important;
+}
+
+/* ========================================
+   SIDEBAR
+   ======================================== */
 .hmm-sidebar {
-    background-color: white;
-    padding: 1.5rem;
+    background: white;
+    padding: 20px;
     border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-sm);
     height: fit-content;
     position: sticky;
-    top: 80px;
+    top: 20px;
 }
 
 .sidebar-section {
-    margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 30px;
 }
 
 .sidebar-section:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
     margin-bottom: 0;
 }
 
 .sidebar-section h3 {
-    font-size: 1.1rem;
     color: var(--hmm-primary);
-    margin-bottom: 1rem;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    font-weight: 700;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 8px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--hmm-light);
 }
 
-.sidebar-section h3::before {
-    content: "🔍";
-    font-size: 1.2rem;
+/* Botones de ejemplo */
+.example-buttons,
+.algorithm-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-/* ==============================================================================
- * ÁREA PRINCIPAL
- * ==============================================================================
- */
+.btn-example {
+    background: #f9fafb;
+    border: 2px solid var(--border-color);
+    padding: 12px 15px;
+    border-radius: 8px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-primary);
+}
+
+.btn-example:hover {
+    background: var(--hmm-light);
+    border-color: var(--hmm-primary);
+    transform: translateX(5px);
+}
+
+.btn-example:active {
+    transform: translateX(3px);
+}
+
+/* ========================================
+   ÁREA PRINCIPAL
+   ======================================== */
 .hmm-main {
-    background-color: white;
+    background: white;
     border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-sm);
     overflow: hidden;
 }
 
-/* ==============================================================================
- * TABS
- * ==============================================================================
- */
+/* ========================================
+   TABS
+   ======================================== */
 .hmm-tabs {
     display: flex;
-    background-color: #f8f9fa;
-    border-bottom: 2px solid #e0e0e0;
+    border-bottom: 2px solid var(--border-color);
+    background: #f9fafb;
 }
 
 .tab-button {
     flex: 1;
-    padding: 1rem;
-    background-color: transparent;
+    padding: 15px 20px;
     border: none;
+    background: transparent;
     cursor: pointer;
-    font-weight: 600;
-    color: #6c757d;
     transition: all 0.3s ease;
+    font-weight: 600;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     border-bottom: 3px solid transparent;
 }
 
 .tab-button:hover {
-    background-color: rgba(22, 160, 133, 0.1);
+    background: #f3f4f6;
     color: var(--hmm-primary);
 }
 
 .tab-button.active {
+    background: white;
     color: var(--hmm-primary);
     border-bottom-color: var(--hmm-primary);
-    background-color: white;
 }
 
-/* ==============================================================================
- * CONTENIDO DE TABS
- * ==============================================================================
- */
+.tab-button i {
+    font-size: 1.1em;
+}
+
+/* ========================================
+   CONTENIDO DE TABS
+   ======================================== */
 .tab-content {
-    padding: 2rem;
+    padding: 25px;
 }
 
 .tab-panel {
@@ -170,602 +226,208 @@
     animation: fadeIn 0.3s ease;
 }
 
-/* ==============================================================================
- * ARQUITECTURA HMM (Visualización de dos capas)
- * ==============================================================================
- */
-.hmm-architecture {
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.tab-panel h3 {
+    color: var(--hmm-secondary);
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    font-weight: 700;
+}
+
+/* ========================================
+   VISUALIZACIÓN
+   ======================================== */
+.diagram-controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.hmm-visualization {
     width: 100%;
     height: 500px;
-    border: 2px solid #e0e0e0;
+    border: 2px solid var(--border-color);
     border-radius: 8px;
-    background-color: #fafafa;
+    background: #fafafa;
     position: relative;
-    padding: 2rem;
 }
 
-.hmm-layer {
-    margin-bottom: 3rem;
+.hmm-info-panel {
+    margin-top: 20px;
+    padding: 20px;
+    background: var(--hmm-light);
+    border-radius: 8px;
+    border-left: 4px solid var(--hmm-primary);
 }
 
-.hmm-layer h4 {
-    text-align: center;
-    color: var(--hmm-dark);
-    margin-bottom: 1rem;
-    font-size: 1rem;
-}
-
-.states-row {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    align-items: center;
-}
-
-.hmm-state {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
+.hmm-info-panel h4 {
+    color: var(--hmm-secondary);
+    margin-bottom: 15px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    position: relative;
-    transition: all 0.3s ease;
+    gap: 8px;
 }
 
-.hmm-state:hover {
-    transform: scale(1.1);
+#hmm-details {
+    color: var(--text-primary);
+    line-height: 1.8;
 }
 
-.hmm-state.hidden {
-    background-color: var(--hmm-primary);
+/* ========================================
+   OBSERVACIONES
+   ======================================== */
+.observation-builder {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
 }
 
-.hmm-state.observation {
-    background-color: var(--hmm-light);
-}
-
-.state-label {
-    font-size: 1.1rem;
-}
-
-.state-arrow {
-    color: #95a5a6;
-    font-size: 2rem;
-}
-
-/* ==============================================================================
- * MATRICES DE PARÁMETROS
- * ==============================================================================
- */
-.parameters-section {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.parameter-box {
-    background-color: #f8f9fa;
-    padding: 1.5rem;
+.observation-section {
+    background: #f9fafb;
+    padding: 20px;
     border-radius: 8px;
-    border-top: 4px solid var(--hmm-primary);
+    border: 1px solid var(--border-color);
 }
 
-.parameter-box h4 {
-    color: var(--hmm-primary);
-    margin-bottom: 1rem;
-    font-size: 1rem;
+.observation-section h4 {
+    color: var(--hmm-secondary);
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.parameter-description {
-    font-size: 0.85rem;
-    color: #6c757d;
-    margin-bottom: 1rem;
-}
-
-/* Matriz pequeña dentro del box */
-.mini-matrix {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.85rem;
-}
-
-.mini-matrix th,
-.mini-matrix td {
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    text-align: center;
-}
-
-.mini-matrix thead {
-    background-color: var(--hmm-primary);
-    color: white;
-}
-
-.mini-matrix input[type="number"] {
-    width: 100%;
-    padding: 0.25rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    text-align: center;
-}
-
-/* ==============================================================================
- * SECUENCIA DE OBSERVACIONES
- * ==============================================================================
- */
+.observation-selector,
 .observation-sequence {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    border: 2px solid var(--hmm-light);
-    margin-bottom: 1.5rem;
-}
-
-.observation-sequence h4 {
-    color: var(--hmm-primary);
-    margin-bottom: 1rem;
-}
-
-.sequence-input {
     display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
     flex-wrap: wrap;
-}
-
-.sequence-input input {
-    flex: 1;
-    min-width: 200px;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-}
-
-.sequence-display {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
+    gap: 10px;
     min-height: 60px;
-    padding: 1rem;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-}
-
-.observation-token {
-    padding: 0.5rem 1rem;
-    background-color: var(--hmm-light);
-    color: white;
-    border-radius: 20px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    animation: slideIn 0.3s ease;
-}
-
-.observation-token .remove-btn {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-weight: 700;
-    padding: 0 0.25rem;
-}
-
-.observation-token .remove-btn:hover {
-    color: #e74c3c;
-}
-
-/* ==============================================================================
- * ALGORITMOS
- * ==============================================================================
- */
-.algorithm-section {
-    margin-bottom: 2rem;
-}
-
-.algorithm-selector {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.algorithm-card {
-    padding: 1.5rem;
-    background-color: white;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: center;
-}
-
-.algorithm-card:hover {
-    border-color: var(--hmm-primary);
-    transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.algorithm-card.selected {
-    border-color: var(--hmm-primary);
-    background-color: rgba(22, 160, 133, 0.1);
-}
-
-.algorithm-card.forward {
-    border-top: 4px solid var(--forward-color);
-}
-
-.algorithm-card.viterbi {
-    border-top: 4px solid var(--viterbi-color);
-}
-
-.algorithm-card.forward-backward {
-    border-top: 4px solid var(--backward-color);
-}
-
-.algorithm-icon {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-}
-
-.algorithm-name {
-    font-weight: 600;
-    color: var(--hmm-dark);
-    margin-bottom: 0.5rem;
-}
-
-.algorithm-description {
-    font-size: 0.85rem;
-    color: #6c757d;
-}
-
-/* ==============================================================================
- * RESULTADOS - TRELLIS (Diagrama de enrejado)
- * ==============================================================================
- */
-.trellis-container {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    overflow-x: auto;
-}
-
-.trellis-diagram {
-    min-width: 600px;
-    display: flex;
-    gap: 3rem;
-}
-
-.trellis-column {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-}
-
-.trellis-time-label {
-    font-weight: 600;
-    color: var(--hmm-primary);
-    margin-bottom: 0.5rem;
-}
-
-.trellis-observation {
-    padding: 0.5rem 1rem;
-    background-color: var(--hmm-light);
-    color: white;
-    border-radius: 20px;
-    font-weight: 600;
-}
-
-.trellis-states {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-}
-
-.trellis-node {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background-color: var(--hmm-primary);
-    color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.85rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    position: relative;
-}
-
-.trellis-node.highlight {
-    background-color: var(--viterbi-color);
-    box-shadow: 0 0 0 4px rgba(243, 156, 18, 0.3);
-}
-
-.trellis-probability {
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
-}
-
-/* ==============================================================================
- * TABLA DE PROBABILIDADES FORWARD/BACKWARD
- * ==============================================================================
- */
-.probability-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-}
-
-.probability-table thead {
-    background-color: var(--hmm-primary);
-    color: white;
-}
-
-.probability-table th,
-.probability-table td {
-    padding: 0.75rem;
-    border: 1px solid #dee2e6;
-    text-align: center;
-}
-
-.probability-table tbody tr:nth-child(even) {
-    background-color: #f8f9fa;
-}
-
-.probability-table tbody tr:hover {
-    background-color: rgba(22, 160, 133, 0.1);
-}
-
-.prob-value {
-    font-family: 'Courier New', monospace;
-    font-size: 0.9rem;
-}
-
-.prob-value.high {
-    color: var(--hmm-primary);
-    font-weight: 700;
-}
-
-/* ==============================================================================
- * SECUENCIA VITERBI (Resultado)
- * ==============================================================================
- */
-.viterbi-result {
-    background-color: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 8px;
-    border-left: 4px solid var(--viterbi-color);
-    margin-top: 1.5rem;
-}
-
-.viterbi-result h4 {
-    color: var(--viterbi-color);
-    margin-bottom: 1rem;
-}
-
-.viterbi-path {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-}
-
-.viterbi-state {
-    padding: 0.75rem 1.5rem;
-    background-color: var(--viterbi-color);
-    color: white;
-    border-radius: 25px;
-    font-weight: 600;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    animation: slideIn 0.3s ease;
-}
-
-.viterbi-arrow {
-    color: var(--viterbi-color);
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
-.viterbi-probability {
-    margin-top: 1rem;
-    padding: 1rem;
-    background-color: white;
+    padding: 15px;
+    background: white;
     border-radius: 6px;
+    border: 2px dashed var(--border-color);
+}
+
+/* ========================================
+   ALERTAS
+   ======================================== */
+.alert {
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+}
+
+.alert i {
+    font-size: 1.2em;
+}
+
+.alert-info {
+    background: var(--hmm-light);
+    border-left: 4px solid var(--hmm-primary);
+    color: var(--hmm-secondary);
+}
+
+.alert-success {
+    background: #d1fae5;
+    border-left: 4px solid #10b981;
+    color: #065f46;
+}
+
+.alert-warning {
+    background: #fef3c7;
+    border-left: 4px solid #f59e0b;
+    color: #92400e;
+}
+
+.alert-error {
+    background: #fee2e2;
+    border-left: 4px solid #ef4444;
+    color: #991b1b;
+}
+
+/* ========================================
+   UTILIDADES
+   ======================================== */
+.text-muted {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.text-center {
     text-align: center;
 }
 
-.viterbi-probability strong {
-    color: var(--viterbi-color);
-}
-
-.viterbi-probability .value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--viterbi-color);
-}
-
-/* ==============================================================================
- * COMPARACIÓN DE ALGORITMOS
- * ==============================================================================
- */
-.algorithm-comparison {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin-top: 2rem;
-}
-
-.comparison-card {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.comparison-card h5 {
-    color: var(--hmm-primary);
-    margin-bottom: 1rem;
-}
-
-.comparison-metrics {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.metric-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.5rem;
-    background-color: #f8f9fa;
-    border-radius: 4px;
-}
-
-.metric-label {
-    font-weight: 600;
-    color: #6c757d;
-}
-
-.metric-value {
-    color: var(--hmm-primary);
-    font-weight: 600;
-}
-
-/* ==============================================================================
- * BOTONES DE ACCIÓN
- * ==============================================================================
- */
-.action-buttons {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
-    flex-wrap: wrap;
-}
-
-.btn-run {
-    flex: 1;
-    min-width: 150px;
-    padding: 1rem;
-    background-color: var(--hmm-primary);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-run:hover {
-    background-color: var(--hmm-secondary);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.btn-run:disabled {
-    background-color: #95a5a6;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.btn-clear {
-    padding: 1rem;
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-clear:hover {
-    background-color: #c0392b;
-}
-
-/* ==============================================================================
- * RESPONSIVE DESIGN
- * ==============================================================================
- */
-
+/* ========================================
+   RESPONSIVE
+   ======================================== */
 @media (max-width: 1024px) {
-    .hmm-container {
-        grid-template-columns: 250px 1fr;
-        gap: 1rem;
-    }
-    
-    .parameters-section {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 768px) {
     .hmm-container {
         grid-template-columns: 1fr;
     }
     
     .hmm-sidebar {
-        position: static;
+        position: relative;
+        top: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .hmm-header {
+        padding: 35px 25px;
     }
     
-    .hmm-architecture {
+    .hmm-header h1 {
+        font-size: 2em;
+    }
+    
+    .hmm-tabs {
+        overflow-x: auto;
+    }
+    
+    .tab-button {
+        flex: none;
+        min-width: 120px;
+        font-size: 0.9em;
+    }
+    
+    .tab-content {
+        padding: 15px;
+    }
+    
+    .hmm-visualization {
         height: 400px;
-        padding: 1rem;
-    }
-    
-    .states-row {
-        gap: 1rem;
-    }
-    
-    .hmm-state {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .algorithm-comparison {
-        grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 480px) {
+    .hmm-container {
+        padding: 10px;
+    }
+    
     .hmm-header {
-        padding: 1.5rem 1rem;
+        padding: 25px 20px;
     }
     
-    .tab-content {
-        padding: 1rem;
-    }
-    
-    .hmm-tabs {
+    .hmm-header h1 {
+        font-size: 1.6em;
         flex-direction: column;
+        gap: 10px;
     }
     
-    .observation-sequence {
-        padding: 1rem;
-    }
-    
-    .viterbi-path {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .viterbi-arrow {
-        transform: rotate(90deg);
-    }
-    
-    .action-buttons {
-        flex-direction: column;
-    }
-    
-    .btn-run {
-        min-width: auto;
+    .hmm-visualization {
+        height: 300px;
     }
 }

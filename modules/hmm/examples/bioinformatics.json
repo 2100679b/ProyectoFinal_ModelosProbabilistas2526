@@ -1,0 +1,79 @@
+{
+  "name": "Predicción de Genes (CpG Islands)",
+  "description": "Modelo HMM para identificar islas CpG en secuencias de ADN",
+  "domain": "Bioinformática",
+  "hiddenStates": [
+    {
+      "id": "Rica",
+      "label": "Región Rica en CG",
+      "description": "Isla CpG (región rica en citosina-guanina)"
+    },
+    {
+      "id": "Pobre",
+      "label": "Región Pobre en CG",
+      "description": "Región no-CpG (baja frecuencia CG)"
+    }
+  ],
+  "observations": [
+    {
+      "id": "A",
+      "label": "Adenina",
+      "description": "Nucleótido Adenina"
+    },
+    {
+      "id": "C",
+      "label": "Citosina",
+      "description": "Nucleótido Citosina"
+    },
+    {
+      "id": "G",
+      "label": "Guanina",
+      "description": "Nucleótido Guanina"
+    },
+    {
+      "id": "T",
+      "label": "Timina",
+      "description": "Nucleótido Timina"
+    }
+  ],
+  "transitionMatrix": {
+    "Rica": {
+      "Rica": 0.9,
+      "Pobre": 0.1
+    },
+    "Pobre": {
+      "Rica": 0.05,
+      "Pobre": 0.95
+    }
+  },
+  "emissionMatrix": {
+    "Rica": {
+      "A": 0.2,
+      "C": 0.3,
+      "G": 0.3,
+      "T": 0.2
+    },
+    "Pobre": {
+      "A": 0.3,
+      "C": 0.2,
+      "G": 0.2,
+      "T": 0.3
+    }
+  },
+  "initialProbabilities": {
+    "Rica": 0.2,
+    "Pobre": 0.8
+  },
+  "exampleSequences": [
+    {
+      "name": "Secuencia con isla CpG",
+      "observations": ["A", "T", "C", "G", "C", "G", "G", "C", "T", "A"],
+      "expectedStates": ["Pobre", "Pobre", "Rica", "Rica", "Rica", "Rica", "Rica", "Rica", "Pobre", "Pobre"]
+    },
+    {
+      "name": "Secuencia sin isla CpG",
+      "observations": ["A", "T", "A", "T", "T", "A", "A", "T"],
+      "expectedStates": ["Pobre", "Pobre", "Pobre", "Pobre", "Pobre", "Pobre", "Pobre", "Pobre"]
+    }
+  ]
+}

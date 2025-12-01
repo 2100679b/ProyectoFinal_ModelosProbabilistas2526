@@ -1,86 +1,64 @@
-proyecto-modelos-probabilistas/
+C:\xampp\htdocs\modelos-probabilistas\
 │
-├── index.php                          # Página principal con menú de navegación
-├── config.php                         # Configuración general
-├── README.md                          # Instrucciones del proyecto
-├── .gitignore                         # Archivos a ignorar en Git
+├── 📁 config.php                          # Configuración global
 │
-├── assets/                            # Recursos estáticos
-│   ├── css/
-│   │   ├── style.css                  # Estilos principales
-│   │   ├── bayesian.css               # Estilos específicos RB
-│   │   ├── markov.css                 # Estilos específicos CM
-│   │   └── hmm.css                    # Estilos específicos HMM
+├── 📁 includes/
+│   ├── header.php                         # <head> común
+│   ├── navbar.php                         # Navegación principal
+│   └── footer.php                         # Scripts JS comunes
+│
+├── 📁 assets/
+│   ├── 📁 css/
+│   │   ├── styles.css                     # Estilos globales
+│   │   ├── bayesian.css                   # Estilos Redes Bayesianas
+│   │   ├── markov.css                     # Estilos Cadenas de Markov
+│   │   └── hmm.css                        # Estilos HMM
 │   │
-│   ├── js/
-│   │   ├── main.js                    # JavaScript principal
-│   │   ├── visualization.js           # Visualización de grafos (común)
-│   │   ├── bayesian.js                # Lógica cliente RB
-│   │   ├── markov.js                  # Lógica cliente CM
-│   │   └── hmm.js                     # Lógica cliente HMM
+│   ├── 📁 js/
+│   │   ├── main.js                        # JavaScript global
+│   │   ├── bayesian.js                    # JS Redes Bayesianas
+│   │   ├── markov.js                      # JS Cadenas de Markov
+│   │   └── hmm.js                         # JS HMM
 │   │
-│   └── img/
-│       ├── logo.png
-│       └── ejemplos/                  # Capturas de pantalla
+│   └── 📁 images/
+│       └── logo.png                       # Logo (opcional)
 │
-├── modules/                           # Módulos principales
+├── 📁 modules/
 │   │
-│   ├── bayesian/                      # REDES BAYESIANAS
-│   │   ├── index.php                  # Interfaz principal RB
-│   │   ├── algorithms/
-│   │   │   ├── enumeration.php        # Algoritmo de Enumeración
-│   │   │   └── variable_elimination.php # Eliminación de Variables
-│   │   ├── network.php                # Clase para manejar la red
-│   │   ├── visualization.php          # Generación de visualización
-│   │   └── examples/
-│   │       ├── alarm.json             # Ejemplo: Alarma-Terremoto-Ladrón
-│   │       ├── medical.json           # Ejemplo: Red Médica
-│   │       ├── diagnostic.json        # Ejemplo: Diagnóstico de Fallas
-│   │       └── weather.json           # Ejemplo: Predicción Climática
+│   ├── 📁 bayesian/                       # MÓDULO 1: Redes Bayesianas
+│   │   ├── index.php                      # Interfaz principal
+│   │   ├── visualization.php              # API visualización
+│   │   ├── model.php                      # Modelo y operaciones
+│   │   ├── 📁 algorithms/
+│   │   │   ├── inference.php              # Inferencia bayesiana
+│   │   │   ├── probability.php            # Cálculos de probabilidad
+│   │   │   └── learning.php               # Aprendizaje de parámetros
+│   │   └── 📁 examples/
+│   │       ├── alarm.json                 # Sistema de alarma
+│   │       ├── medical.json               # Diagnóstico médico
+│   │       ├── spam.json                  # Filtro de spam
+│   │       └── student.json               # Rendimiento estudiantil
 │   │
-│   ├── markov/                        # CADENAS DE MARKOV
-│   │   ├── index.php                  # Interfaz principal CM
-│   │   ├── algorithms/
-│   │   │   ├── first_order.php        # Cadenas de Markov primer orden
-│   │   │   ├── transition_matrix.php  # Matriz de transición
-│   │   │   └── stationary.php         # Probabilidades estacionarias
-│   │   ├── chain.php                  # Clase para cadena de Markov
-│   │   ├── visualization.php          # Generación de grafo
-│   │   └── examples/
-│   │       ├── weather.json           # Ejemplo: Clima
-│   │       ├── customer.json          # Ejemplo: Comportamiento cliente
-│   │       └── stock.json             # Ejemplo: Mercado valores
+│   ├── 📁 markov/                         # MÓDULO 2: Cadenas de Markov
+│   │   ├── index.php                      # Interfaz principal
+│   │   └── 📁 examples/
+│   │       ├── weather.json               # Predicción del clima
+│   │       ├── text_generation.json       # Generación de texto
+│   │       ├── stock_market.json          # Mercado de valores
+│   │       └── customer_behavior.json     # Comportamiento del cliente
 │   │
-│   └── hmm/                           # MODELOS OCULTOS DE MARKOV
-│       ├── index.php                  # Interfaz principal HMM
-│       ├── algorithms/
-│       │   ├── forward.php            # Algoritmo Forward
-│       │   ├── viterbi.php            # Algoritmo Viterbi
-│       │   └── forward_backward.php   # Algoritmo Forward-Backward
-│       ├── model.php                  # Clase para HMM
-│       ├── visualization.php          # Visualización estados
-│       └── examples/
-│           ├── weather_robot.json     # Ejemplo: Robot y clima
-│           ├── speech.json            # Ejemplo: Reconocimiento voz
-│           └── bioinformatics.json    # Ejemplo: Secuencias ADN
+│   └── 📁 hmm/                            # MÓDULO 3: Modelos Ocultos de Markov
+│       ├── index.php                      # Interfaz principal
+│       ├── visualization.php              # API visualización
+│       ├── model.php                      # Modelo y operaciones
+│       ├── 📁 algorithms/
+│       │   ├── forward.php                # Algoritmo Forward (α)
+│       │   ├── viterbi.php                # Algoritmo Viterbi
+│       │   └── baum_welch.php             # Algoritmo Baum-Welch (EM)
+│       └── 📁 examples/
+│           ├── weather_prediction.json    # Predicción climática
+│           ├── speech_recognition.json    # Reconocimiento de voz
+│           ├── bioinformatics.json        # Análisis genético
+│           └── stock_trading.json         # Trading algorítmico
 │
-├── includes/                          # Archivos comunes
-│   ├── header.php                     # Header común
-│   ├── footer.php                     # Footer común
-│   ├── navbar.php                     # Menú de navegación
-│   └── functions.php                  # Funciones auxiliares comunes
-│
-├── lib/                               # Librerías externas
-│   ├── vis-network/                   # Para visualización de grafos
-│   └── chart.js/                      # Para gráficas (opcional)
-│
-├── docs/                              # Documentación
-│   ├── manual_usuario.pdf             # Manual de usuario
-│   ├── documentacion_tecnica.pdf      # Documentación técnica
-│   ├── ejemplos_uso.md                # Ejemplos de uso
-│   └── diagramas/                     # Diagramas UML, etc.
-│
-└── tests/                             # Pruebas (opcional)
-    ├── bayesian_tests.php
-    ├── markov_tests.php
-    └── hmm_tests.php
+└── 📁 index.php                           # Página principal (home)

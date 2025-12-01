@@ -1,0 +1,86 @@
+{
+  "name": "Red de Diagnóstico de Fallas",
+  "description": "Sistema de diagnóstico para fallas en equipos mecánicos",
+  "domain": "Ingeniería",
+  "nodes": [
+    {
+      "id": "FallaMotor",
+      "label": "Falla del Motor",
+      "description": "El motor presenta problemas"
+    },
+    {
+      "id": "FallaBateria",
+      "label": "Falla de Batería",
+      "description": "La batería está descargada o dañada"
+    },
+    {
+      "id": "NoArranca",
+      "label": "No Arranca",
+      "description": "El vehículo no enciende"
+    },
+    {
+      "id": "RuidoAnormal",
+      "label": "Ruido Anormal",
+      "description": "Se escuchan ruidos extraños"
+    },
+    {
+      "id": "LucesDebiles",
+      "label": "Luces Débiles",
+      "description": "Las luces del tablero están tenues"
+    }
+  ],
+  "edges": [
+    { "from": "FallaMotor", "to": "NoArranca" },
+    { "from": "FallaMotor", "to": "RuidoAnormal" },
+    { "from": "FallaBateria", "to": "NoArranca" },
+    { "from": "FallaBateria", "to": "LucesDebiles" }
+  ],
+  "cpt": {
+    "FallaMotor": {
+      "verdadero": 0.05,
+      "falso": 0.95
+    },
+    "FallaBateria": {
+      "verdadero": 0.10,
+      "falso": 0.90
+    },
+    "NoArranca": {
+      "{\"FallaMotor\":\"verdadero\",\"FallaBateria\":\"verdadero\"}": {
+        "verdadero": 0.98,
+        "falso": 0.02
+      },
+      "{\"FallaMotor\":\"verdadero\",\"FallaBateria\":\"falso\"}": {
+        "verdadero": 0.70,
+        "falso": 0.30
+      },
+      "{\"FallaMotor\":\"falso\",\"FallaBateria\":\"verdadero\"}": {
+        "verdadero": 0.80,
+        "falso": 0.20
+      },
+      "{\"FallaMotor\":\"falso\",\"FallaBateria\":\"falso\"}": {
+        "verdadero": 0.05,
+        "falso": 0.95
+      }
+    },
+    "RuidoAnormal": {
+      "{\"FallaMotor\":\"verdadero\"}": {
+        "verdadero": 0.85,
+        "falso": 0.15
+      },
+      "{\"FallaMotor\":\"falso\"}": {
+        "verdadero": 0.10,
+        "falso": 0.90
+      }
+    },
+    "LucesDebiles": {
+      "{\"FallaBateria\":\"verdadero\"}": {
+        "verdadero": 0.90,
+        "falso": 0.10
+      },
+      "{\"FallaBateria\":\"falso\"}": {
+        "verdadero": 0.05,
+        "falso": 0.95
+      }
+    }
+  }
+}

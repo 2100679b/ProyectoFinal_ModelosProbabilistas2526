@@ -1,0 +1,86 @@
+proyecto-modelos-probabilistas/
+│
+├── index.php                          # Página principal con menú de navegación
+├── config.php                         # Configuración general
+├── README.md                          # Instrucciones del proyecto
+├── .gitignore                         # Archivos a ignorar en Git
+│
+├── assets/                            # Recursos estáticos
+│   ├── css/
+│   │   ├── style.css                  # Estilos principales
+│   │   ├── bayesian.css               # Estilos específicos RB
+│   │   ├── markov.css                 # Estilos específicos CM
+│   │   └── hmm.css                    # Estilos específicos HMM
+│   │
+│   ├── js/
+│   │   ├── main.js                    # JavaScript principal
+│   │   ├── visualization.js           # Visualización de grafos (común)
+│   │   ├── bayesian.js                # Lógica cliente RB
+│   │   ├── markov.js                  # Lógica cliente CM
+│   │   └── hmm.js                     # Lógica cliente HMM
+│   │
+│   └── img/
+│       ├── logo.png
+│       └── ejemplos/                  # Capturas de pantalla
+│
+├── modules/                           # Módulos principales
+│   │
+│   ├── bayesian/                      # REDES BAYESIANAS
+│   │   ├── index.php                  # Interfaz principal RB
+│   │   ├── algorithms/
+│   │   │   ├── enumeration.php        # Algoritmo de Enumeración
+│   │   │   └── variable_elimination.php # Eliminación de Variables
+│   │   ├── network.php                # Clase para manejar la red
+│   │   ├── visualization.php          # Generación de visualización
+│   │   └── examples/
+│   │       ├── alarm.json             # Ejemplo: Alarma-Terremoto-Ladrón
+│   │       ├── medical.json           # Ejemplo: Red Médica
+│   │       ├── diagnostic.json        # Ejemplo: Diagnóstico de Fallas
+│   │       └── weather.json           # Ejemplo: Predicción Climática
+│   │
+│   ├── markov/                        # CADENAS DE MARKOV
+│   │   ├── index.php                  # Interfaz principal CM
+│   │   ├── algorithms/
+│   │   │   ├── first_order.php        # Cadenas de Markov primer orden
+│   │   │   ├── transition_matrix.php  # Matriz de transición
+│   │   │   └── stationary.php         # Probabilidades estacionarias
+│   │   ├── chain.php                  # Clase para cadena de Markov
+│   │   ├── visualization.php          # Generación de grafo
+│   │   └── examples/
+│   │       ├── weather.json           # Ejemplo: Clima
+│   │       ├── customer.json          # Ejemplo: Comportamiento cliente
+│   │       └── stock.json             # Ejemplo: Mercado valores
+│   │
+│   └── hmm/                           # MODELOS OCULTOS DE MARKOV
+│       ├── index.php                  # Interfaz principal HMM
+│       ├── algorithms/
+│       │   ├── forward.php            # Algoritmo Forward
+│       │   ├── viterbi.php            # Algoritmo Viterbi
+│       │   └── forward_backward.php   # Algoritmo Forward-Backward
+│       ├── model.php                  # Clase para HMM
+│       ├── visualization.php          # Visualización estados
+│       └── examples/
+│           ├── weather_robot.json     # Ejemplo: Robot y clima
+│           ├── speech.json            # Ejemplo: Reconocimiento voz
+│           └── bioinformatics.json    # Ejemplo: Secuencias ADN
+│
+├── includes/                          # Archivos comunes
+│   ├── header.php                     # Header común
+│   ├── footer.php                     # Footer común
+│   ├── navbar.php                     # Menú de navegación
+│   └── functions.php                  # Funciones auxiliares comunes
+│
+├── lib/                               # Librerías externas
+│   ├── vis-network/                   # Para visualización de grafos
+│   └── chart.js/                      # Para gráficas (opcional)
+│
+├── docs/                              # Documentación
+│   ├── manual_usuario.pdf             # Manual de usuario
+│   ├── documentacion_tecnica.pdf      # Documentación técnica
+│   ├── ejemplos_uso.md                # Ejemplos de uso
+│   └── diagramas/                     # Diagramas UML, etc.
+│
+└── tests/                             # Pruebas (opcional)
+    ├── bayesian_tests.php
+    ├── markov_tests.php
+    └── hmm_tests.php

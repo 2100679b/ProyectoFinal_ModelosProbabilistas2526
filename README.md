@@ -154,7 +154,7 @@ ProyectoFinal_ModelosProbabilistas2526/
 1. **Descargar el proyecto**
    ```bash
    # Con Git
-   git clone [URL_DEL_REPOSITORIO] ProyectoFinal_ModelosProbabilistas2526
+   git clone https://github.com/2100679b/ProyectoFinal_ModelosProbabilistas2526
    cd ProyectoFinal_ModelosProbabilistas2526
    
    # O descargar ZIP y extraer
@@ -181,7 +181,7 @@ ProyectoFinal_ModelosProbabilistas2526/
 2. **Clonar el proyecto**
    ```bash
    cd ~
-   git clone [URL_DEL_REPOSITORIO] ProyectoFinal_ModelosProbabilistas2526
+   git clone https://github.com/2100679b/ProyectoFinal_ModelosProbabilistas2526
    cd ProyectoFinal_ModelosProbabilistas2526
    ```
 

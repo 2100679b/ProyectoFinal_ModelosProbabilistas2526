@@ -1,0 +1,175 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {chapter}{Resumen}{1}{chapter*.1}%
+\contentsline {chapter}{Lista de Figuras}{6}{chapter*.3}%
+\contentsline {chapter}{Lista de Tablas}{7}{chapter*.4}%
+\contentsline {chapter}{\numberline {1}Manual de Usuario}{8}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Introducción}{8}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}Alcance del Proyecto}{8}{subsection.1.1.1}%
+\contentsline {section}{\numberline {1.2}Requisitos del Sistema}{8}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}Software Necesario}{9}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}Verificación del Entorno}{9}{subsection.1.2.2}%
+\contentsline {section}{\numberline {1.3}Instalación}{9}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Descarga del Proyecto}{9}{subsection.1.3.1}%
+\contentsline {subsubsection}{Opción 1: Clonar desde Git}{9}{section*.6}%
+\contentsline {subsubsection}{Opción 2: Descarga Directa}{10}{lstnumber.1.2.5}%
+\contentsline {subsection}{\numberline {1.3.2}Estructura del Proyecto}{10}{subsection.1.3.2}%
+\contentsline {section}{\numberline {1.4}Ejecución}{11}{section.1.4}%
+\contentsline {subsection}{\numberline {1.4.1}Servidor Integrado de PHP (Recomendado)}{11}{subsection.1.4.1}%
+\contentsline {subsubsection}{Usar Puerto Diferente}{11}{lstnumber.-1.2}%
+\contentsline {subsubsection}{Detener el Servidor}{11}{lstnumber.-2.4}%
+\contentsline {subsection}{\numberline {1.4.2}Verificación de la Instalación}{12}{subsection.1.4.2}%
+\contentsline {subsubsection}{Checklist de Verificación}{12}{section*.7}%
+\contentsline {section}{\numberline {1.5}Guía de Uso}{12}{section.1.5}%
+\contentsline {subsection}{\numberline {1.5.1}Interfaz Principal}{12}{subsection.1.5.1}%
+\contentsline {subsection}{\numberline {1.5.2}Módulo: Redes Bayesianas}{13}{subsection.1.5.2}%
+\contentsline {subsubsection}{Crear una Nueva Red}{13}{section*.8}%
+\contentsline {subsubsection}{Realizar Consultas}{13}{Item.16}%
+\contentsline {subsection}{\numberline {1.5.3}Módulo: Cadenas de Markov}{13}{subsection.1.5.3}%
+\contentsline {subsubsection}{Configuración}{13}{section*.9}%
+\contentsline {subsubsection}{Operaciones Disponibles}{13}{Item.24}%
+\contentsline {subsection}{\numberline {1.5.4}Módulo: HMM}{14}{subsection.1.5.4}%
+\contentsline {subsubsection}{Definir Modelo}{14}{section*.10}%
+\contentsline {subsubsection}{Algoritmos Disponibles}{14}{Item.29}%
+\contentsline {section}{\numberline {1.6}Ejemplos Pre-cargados}{14}{section.1.6}%
+\contentsline {subsection}{\numberline {1.6.1}Cómo Cargar Ejemplos}{14}{subsection.1.6.1}%
+\contentsline {subsection}{\numberline {1.6.2}Ejemplos de Redes Bayesianas}{15}{subsection.1.6.2}%
+\contentsline {subsection}{\numberline {1.6.3}Ejemplos de Cadenas de Markov}{15}{subsection.1.6.3}%
+\contentsline {subsection}{\numberline {1.6.4}Ejemplos de HMM}{15}{subsection.1.6.4}%
+\contentsline {section}{\numberline {1.7}Solución de Problemas}{15}{section.1.7}%
+\contentsline {subsection}{\numberline {1.7.1}El servidor no inicia}{15}{subsection.1.7.1}%
+\contentsline {subsection}{\numberline {1.7.2}Errores al cargar la página}{16}{subsection.1.7.2}%
+\contentsline {subsection}{\numberline {1.7.3}Los cálculos no funcionan}{16}{subsection.1.7.3}%
+\contentsline {subsection}{\numberline {1.7.4}Problemas de visualización}{16}{subsection.1.7.4}%
+\contentsline {chapter}{\numberline {2}Explicación de los Algoritmos}{17}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Fundamentos Teóricos}{17}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Probabilidad Condicional}{17}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Teorema de Bayes}{17}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}Redes Bayesianas}{17}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Definición Formal}{17}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Propiedad de Factorización}{18}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Algoritmo de Enumeración}{18}{subsection.2.2.3}%
+\contentsline {subsubsection}{Objetivo}{18}{section*.12}%
+\contentsline {subsubsection}{Fórmula}{18}{section*.12}%
+\contentsline {subsubsection}{Algoritmo}{18}{equation.2.4}%
+\contentsline {subsubsection}{Complejidad}{19}{lstnumber.2.1.15}%
+\contentsline {subsection}{\numberline {2.2.4}Eliminación de Variables}{19}{subsection.2.2.4}%
+\contentsline {subsubsection}{Idea Principal}{19}{section*.13}%
+\contentsline {subsubsection}{Proceso}{19}{section*.13}%
+\contentsline {subsubsection}{Ejemplo}{19}{Item.42}%
+\contentsline {subsubsection}{Complejidad}{20}{equation.2.5}%
+\contentsline {section}{\numberline {2.3}Cadenas de Markov}{20}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Definición}{20}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Matriz de Transición}{20}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}Distribución Estacionaria}{20}{subsection.2.3.3}%
+\contentsline {subsubsection}{Cálculo Iterativo (Power Method)}{21}{equation.2.8}%
+\contentsline {subsubsection}{Método Algebraico (Eigenvector)}{21}{lstnumber.2.2.15}%
+\contentsline {section}{\numberline {2.4}Modelos Ocultos de Markov}{21}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Componentes del Modelo}{21}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Tres Problemas Fundamentales}{21}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}Algoritmo Forward}{22}{subsection.2.4.3}%
+\contentsline {subsubsection}{Variable Forward}{22}{section*.14}%
+\contentsline {subsubsection}{Recursión}{22}{equation.2.10}%
+\contentsline {subsubsection}{Complejidad}{22}{equation.2.13}%
+\contentsline {subsection}{\numberline {2.4.4}Algoritmo Viterbi}{23}{subsection.2.4.4}%
+\contentsline {subsubsection}{Variable Delta}{23}{section*.15}%
+\contentsline {subsubsection}{Recursión}{23}{equation.2.14}%
+\contentsline {subsubsection}{Complejidad}{23}{equation.2.18}%
+\contentsline {subsection}{\numberline {2.4.5}Algoritmo Forward-Backward}{23}{subsection.2.4.5}%
+\contentsline {subsubsection}{Variable Backward}{23}{section*.16}%
+\contentsline {subsubsection}{Recursión Backward}{24}{equation.2.19}%
+\contentsline {subsubsection}{Probabilidad Suavizada (Smoothing)}{24}{equation.2.21}%
+\contentsline {chapter}{\numberline {3}Decisiones de Diseño}{25}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Arquitectura del Sistema}{25}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Patrón MVC Simplificado}{25}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Beneficios de esta Arquitectura}{25}{subsection.3.1.2}%
+\contentsline {section}{\numberline {3.2}Tecnologías Seleccionadas}{26}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Backend: PHP Puro}{26}{subsection.3.2.1}%
+\contentsline {subsubsection}{Justificación}{26}{section*.18}%
+\contentsline {subsubsection}{Alternativas Consideradas y Descartadas}{26}{section*.18}%
+\contentsline {subsection}{\numberline {3.2.2}Frontend: HTML5 + CSS3 + JavaScript Vanilla}{26}{subsection.3.2.2}%
+\contentsline {subsubsection}{Características}{26}{section*.20}%
+\contentsline {section}{\numberline {3.3}Representación de Datos}{27}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Redes Bayesianas}{27}{subsection.3.3.1}%
+\contentsline {subsubsection}{Clase Nodo}{27}{section*.21}%
+\contentsline {subsubsection}{Formato JSON de Ejemplo}{27}{lstnumber.3.1.24}%
+\contentsline {subsection}{\numberline {3.3.2}Cadenas de Markov}{28}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}HMM}{29}{subsection.3.3.3}%
+\contentsline {section}{\numberline {3.4}Manejo de Precisión Numérica}{30}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Problema: Underflow}{30}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Solución: Aritmética Logarítmica}{30}{subsection.3.4.2}%
+\contentsline {section}{\numberline {3.5}Optimizaciones}{31}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Memoización (Cache de Resultados)}{31}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Orden de Eliminación Heurístico}{32}{subsection.3.5.2}%
+\contentsline {section}{\numberline {3.6}Validación y Seguridad}{33}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Validación Dual (Cliente-Servidor)}{33}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}Manejo de Errores y Excepciones}{33}{subsection.3.6.2}%
+\contentsline {chapter}{\numberline {4}Ejemplos de Uso Detallados}{35}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Red Alarma-Terremoto-Ladrón}{35}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Planteamiento del Problema}{35}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Probabilidades A Priori}{35}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}CPT: P(Alarma | Terremoto, Ladrón)}{36}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.1.4}CPT: P(Juan|Alarma), P(María|Alarma)}{36}{subsection.4.1.4}%
+\contentsline {subsection}{\numberline {4.1.5}Consulta 1: P(Ladrón | Juan=true)}{36}{subsection.4.1.5}%
+\contentsline {subsubsection}{Planteamiento}{36}{section*.25}%
+\contentsline {subsubsection}{Cálculo con Enumeración}{37}{section*.25}%
+\contentsline {subsubsection}{Resultado}{37}{equation.4.1}%
+\contentsline {subsection}{\numberline {4.1.6}Consulta 2: P(Ladrón | Juan=true, María=true)}{37}{subsection.4.1.6}%
+\contentsline {subsubsection}{Planteamiento}{37}{section*.26}%
+\contentsline {subsubsection}{Resultado}{37}{section*.26}%
+\contentsline {subsection}{\numberline {4.1.7}Código PHP Completo}{37}{subsection.4.1.7}%
+\contentsline {section}{\numberline {4.2}Cadena de Markov: Predicción Climática}{39}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Definición del Modelo}{39}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Matriz de Transición}{39}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Distribución Estacionaria}{39}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}Simulación de 10 Días}{39}{subsection.4.2.4}%
+\contentsline {subsection}{\numberline {4.2.5}Código PHP}{40}{subsection.4.2.5}%
+\contentsline {section}{\numberline {4.3}HMM: Inferencia de Estados de Ánimo}{41}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Descripción del Modelo}{41}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Componentes del Modelo}{41}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Parámetros}{41}{subsection.4.3.3}%
+\contentsline {subsubsection}{Probabilidades Iniciales ($\pi $)}{41}{section*.29}%
+\contentsline {subsubsection}{Matriz de Transiciones (A)}{41}{equation.4.3}%
+\contentsline {subsubsection}{Matriz de Emisiones (B)}{42}{table.caption.30}%
+\contentsline {subsection}{\numberline {4.3.4}Problema 1: Algoritmo Forward}{42}{subsection.4.3.4}%
+\contentsline {subsubsection}{Secuencia Observada}{42}{section*.32}%
+\contentsline {subsubsection}{Pregunta}{42}{section*.32}%
+\contentsline {subsubsection}{Cálculo}{42}{section*.32}%
+\contentsline {subsection}{\numberline {4.3.5}Problema 2: Algoritmo Viterbi}{43}{subsection.4.3.5}%
+\contentsline {subsubsection}{Pregunta}{43}{section*.33}%
+\contentsline {subsubsection}{Resultado}{43}{section*.33}%
+\contentsline {subsection}{\numberline {4.3.6}Código PHP Completo}{44}{subsection.4.3.6}%
+\contentsline {subsection}{\numberline {4.3.7}Salida Esperada}{45}{subsection.4.3.7}%
+\contentsline {chapter}{\numberline {5}Conclusiones y Trabajo Futuro}{47}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Logros Alcanzados}{47}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}Técnicos}{47}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}Educativos}{48}{subsection.5.1.2}%
+\contentsline {section}{\numberline {5.2}Aprendizajes Clave}{48}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Teóricos}{48}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Prácticos}{48}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3}De Ingeniería}{48}{subsection.5.2.3}%
+\contentsline {section}{\numberline {5.3}Limitaciones Actuales}{49}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Técnicas}{49}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}De Usabilidad}{49}{subsection.5.3.2}%
+\contentsline {section}{\numberline {5.4}Trabajo Futuro}{49}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Mejoras Inmediatas (Corto Plazo)}{49}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Extensiones Avanzadas (Mediano Plazo)}{50}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}Investigación (Largo Plazo)}{51}{subsection.5.4.3}%
+\contentsline {section}{\numberline {5.5}Impacto y Aplicaciones}{51}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}Educativo}{51}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}Investigación}{51}{subsection.5.5.2}%
+\contentsline {subsection}{\numberline {5.5.3}Industrial}{52}{subsection.5.5.3}%
+\contentsline {section}{\numberline {5.6}Reflexión Final}{52}{section.5.6}%
+\contentsline {chapter}{\numberline {A}Instalación de PHP por Sistema Operativo}{53}{appendix.Alph1}%
+\contentsline {section}{\numberline {A.1}Windows}{53}{section.Alph1.1}%
+\contentsline {subsection}{\numberline {A.1.1}Descarga e Instalación}{53}{subsection.Alph1.1.1}%
+\contentsline {subsection}{\numberline {A.1.2}Configurar PATH}{53}{subsection.Alph1.1.2}%
+\contentsline {subsection}{\numberline {A.1.3}Verificación}{54}{subsection.Alph1.1.3}%
+\contentsline {subsection}{\numberline {A.1.4}Habilitar Extensiones (Opcional)}{54}{subsection.Alph1.1.4}%
+\contentsline {section}{\numberline {A.2}Linux (Ubuntu/Debian)}{54}{section.Alph1.2}%
+\contentsline {subsection}{\numberline {A.2.1}Instalación desde Repositorios}{54}{subsection.Alph1.2.1}%
+\contentsline {subsection}{\numberline {A.2.2}Instalación de Versión Específica}{54}{subsection.Alph1.2.2}%
+\contentsline {section}{\numberline {A.3}macOS}{55}{section.Alph1.3}%
+\contentsline {subsection}{\numberline {A.3.1}Verificar PHP Preinstalado}{55}{subsection.Alph1.3.1}%
+\contentsline {subsection}{\numberline {A.3.2}Instalación con Homebrew}{55}{subsection.Alph1.3.2}%
+\contentsline {chapter}{\numberline {B}Glosario de Términos}{56}{appendix.Alph2}%
+\contentsline {chapter}{\numberline {C}Referencias Bibliográficas}{57}{appendix.Alph3}%

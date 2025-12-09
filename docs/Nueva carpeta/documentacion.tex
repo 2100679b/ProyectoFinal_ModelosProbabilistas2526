@@ -1,0 +1,1325 @@
+\documentclass[12pt, a4paper, oneside]{book}
+
+% ===================================
+% PAQUETES ESENCIALES
+% ===================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{geometry}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{multirow}
+
+% ===================================
+% CONFIGURACION DE PAGINA
+% ===================================
+\geometry{
+    a4paper,
+    left=30mm,
+    right=25mm,
+    top=30mm,
+    bottom=30mm,
+    headheight=15pt
+}
+
+% Eliminar paginas en blanco
+\let\cleardoublepage\clearpage
+
+% ===================================
+% COLORES PERSONALIZADOS
+% ===================================
+\definecolor{azuloscuro}{RGB}{0, 51, 102}
+\definecolor{azulclaro}{RGB}{51, 102, 153}
+\definecolor{verdecode}{RGB}{0, 128, 0}
+\definecolor{grisclaro}{RGB}{245, 245, 245}
+\definecolor{naranja}{RGB}{230, 126, 34}
+
+% ===================================
+% CONFIGURACION DE HYPERREF
+% ===================================
+\hypersetup{
+    colorlinks=true,
+    linkcolor=azuloscuro,
+    filecolor=azuloscuro,
+    urlcolor=azulclaro,
+    citecolor=azuloscuro,
+    bookmarksdepth=3,
+    pdfstartview=FitH
+}
+
+% ===================================
+% ESTILO DE HEADERS Y FOOTERS
+% ===================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\nouppercase{\leftmark}}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Estilo para primeras paginas de capitulo
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyfoot[C]{\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+}
+
+% ===================================
+% FORMATO DE TITULOS
+% ===================================
+\titleformat{\chapter}[display]
+    {\normalfont\huge\bfseries\color{azuloscuro}}
+    {\filleft\Large\chaptertitlename~\thechapter}
+    {1ex}
+    {\titlerule\vspace{1ex}\filleft}
+    [\vspace{1ex}\titlerule]
+
+\titleformat{\section}
+    {\normalfont\Large\bfseries\color{azuloscuro}}
+    {\thesection}{1em}{}
+
+\titleformat{\subsection}
+    {\normalfont\large\bfseries\color{azulclaro}}
+    {\thesubsection}{1em}{}
+
+% ===================================
+% CAJAS DESTACADAS
+% ===================================
+\newtcolorbox{notabox}[1][]{
+    colback=grisclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Nota,
+    #1
+}
+
+\newtcolorbox{ejemplobox}[1][]{
+    colback=blue!5,
+    colframe=azulclaro,
+    fonttitle=\bfseries,
+    title=Ejemplo,
+    #1
+}
+
+\newtcolorbox{importantebox}[1][]{
+    colback=red!5,
+    colframe=red!75!black,
+    fonttitle=\bfseries,
+    title=Importante,
+    #1
+}
+
+% ===================================
+% CONFIGURACION DE CODIGO
+% ===================================
+\lstset{
+    language=PHP,
+    basicstyle=\small\ttfamily,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=8pt,
+    showstringspaces=false,
+    frame=single,
+    framesep=5pt,
+    rulecolor=\color{azuloscuro},
+    backgroundcolor=\color{grisclaro},
+    tabsize=4,
+    captionpos=b,
+    breaklines=true,
+    breakatwhitespace=false,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{verdecode}\itshape,
+    morecomment=[l][\color{magenta}]{\#},
+    xleftmargin=15pt,
+    xrightmargin=5pt
+}
+
+% Estilo para codigo inline
+\newcommand{\codigo}[1]{\texttt{\color{azuloscuro}#1}}
+
+% ===================================
+% METADATOS
+% ===================================
+\title{\textbf{Proyecto Final\\Modelos Probabilisticos}}
+\author{Nombres de Integrantes}
+\date{Diciembre 2025}
+
+% ===================================
+% INICIO DEL DOCUMENTO
+% ===================================
+\begin{document}
+
+% ===================================
+% PORTADA PERSONALIZADA
+% ===================================
+\begin{titlepage}
+    \begin{center}
+        \vspace*{1cm}
+        
+        % Logo o escudo (si tienes uno, descomenta)
+        % \includegraphics[width=0.3\textwidth]{assets/img/logo_umich.png}\\[1cm]
+        
+        {\LARGE\bfseries Universidad Michoacana de San Nicolas de Hidalgo}\\[0.5cm]
+        {\Large Facultad de Ingenieria Electrica}\\[0.3cm]
+        {\large Ingenieria en Computacion}\\[2cm]
+        
+        \rule{\textwidth}{1.5pt}\\[0.3cm]
+        {\Huge\bfseries Proyecto Final}\\[0.2cm]
+        {\LARGE\bfseries Modelos Probabilisticos}\\[0.2cm]
+        \rule{\textwidth}{1.5pt}\\[1.5cm]
+        
+        {\Large\textbf{Implementacion de Algoritmos para}\\[0.2cm]
+        \textbf{Modelos Graficos Probabilistas}}\\[2cm]
+        
+        \begin{minipage}{0.4\textwidth}
+            \begin{flushleft}
+                \textbf{Integrantes:}\\
+                Nombre Integrante 1\\
+                Nombre Integrante 2
+            \end{flushleft}
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.4\textwidth}
+            \begin{flushright}
+                \textbf{Profesor:}\\
+                Dr. Mauricio Reyes
+            \end{flushright}
+        \end{minipage}\\[3cm]
+        
+        \vfill
+        
+        {\large Morelia, Michoacan\\
+        Noviembre - Diciembre 2025}
+    \end{center}
+\end{titlepage}
+
+% ===================================
+% TABLA DE CONTENIDOS
+% ===================================
+\tableofcontents
+\clearpage
+
+% ===================================
+% LISTA DE FIGURAS Y TABLAS
+% ===================================
+% \listoffigures
+% \listoftables
+% \clearpage
+
+% ===================================
+% CAPITULO 1: MANUAL DE USUARIO
+% ===================================
+\chapter{Manual de Usuario}
+\label{ch:manual}
+
+\section{Introduccion}
+
+Este manual proporciona las instrucciones necesarias para instalar, configurar y utilizar el sistema de Modelos Probabilisticos desarrollado como proyecto final.
+
+\begin{notabox}
+El proyecto implementa 11 algoritmos fundamentales distribuidos en tres modulos principales: Redes Bayesianas (RB), Cadenas de Markov (CM) y Modelos Ocultos de Markov (HMM).
+\end{notabox}
+
+\subsection{Alcance del Proyecto}
+
+Este sistema permite:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Redes Bayesianas}: Inferencia exacta mediante enumeracion y eliminacion de variables
+    \item \textbf{Cadenas de Markov}: Analisis de transiciones y calculo de distribuciones estacionarias
+    \item \textbf{Modelos Ocultos de Markov}: Decodificacion de secuencias y suavizado probabilistico
+\end{itemize}
+
+\section{Requisitos del Sistema}
+
+\subsection{Software Necesario}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Componente} & \textbf{Version Minima} & \textbf{Recomendada} \\ \midrule
+PHP & 7.4 & 8.0 o superior \\
+Navegador Web & Cualquiera reciente & Chrome/Firefox \\
+Git (opcional) & 2.0 & Ultima version \\ \bottomrule
+\end{tabular}
+\caption{Requisitos de software}
+\end{table}
+
+\subsection{Verificacion del Entorno}
+
+Abra una terminal y ejecute:
+
+\begin{lstlisting}[language=bash, frame=single]
+# Verificar PHP
+php -v
+
+# Verificar Git
+git --version
+\end{lstlisting}
+
+\begin{importantebox}
+Si PHP no esta instalado, consulte el Apendice A para instrucciones de instalacion segun su sistema operativo.
+\end{importantebox}
+
+\section{Instalacion}
+
+\subsection{Descarga del Proyecto}
+
+\subsubsection{Opcion 1: Clonar desde Git}
+
+\begin{lstlisting}[language=bash, frame=single]
+git clone https://github.com/usuario/ProyectoFinal_ModelosProbabilistas2526.git
+cd ProyectoFinal_ModelosProbabilistas2526
+\end{lstlisting}
+
+\subsubsection{Opcion 2: Descarga Directa}
+
+Descargue el archivo ZIP y extraigalo en la ubicacion deseada.
+
+\subsection{Estructura del Proyecto}
+
+\begin{lstlisting}[language=bash, frame=single, basicstyle=\small\ttfamily]
+ProyectoFinal_ModelosProbabilistas2526/
+|-- index.php              # Pagina principal
+|-- assets/                # Recursos estaticos
+|   |-- css/              # Hojas de estilo
+|   |-- js/               # Scripts JavaScript
+|   |-- img/              # Imagenes
+|-- modules/              # Modulos de algoritmos
+|   |-- bayesian/         # Redes Bayesianas
+|   |-- markov/           # Cadenas de Markov
+|   |-- hmm/              # HMM
+|-- includes/             # Archivos PHP comunes
+|-- docs/                 # Documentacion
+|-- tests/                # Pruebas
+\end{lstlisting}
+
+\section{Ejecucion}
+
+\subsection{Servidor Integrado de PHP}
+
+La forma mas sencilla es usar el servidor web integrado:
+
+\begin{lstlisting}[language=bash, frame=single]
+# Navegar al directorio del proyecto
+cd ProyectoFinal_ModelosProbabilistas2526
+
+# Iniciar servidor
+php -S localhost:8000
+\end{lstlisting}
+
+Luego abra su navegador en: \url{http://localhost:8000}
+
+\subsection{Usando Apache/Nginx}
+
+Copie el proyecto al directorio web:
+
+\begin{itemize}
+    \item \textbf{Windows (XAMPP)}: \codigo{C:\textbackslash xampp\textbackslash htdocs\textbackslash}
+    \item \textbf{Linux}: \codigo{/var/www/html/}
+    \item \textbf{macOS (MAMP)}: \codigo{/Applications/MAMP/htdocs/}
+\end{itemize}
+
+\section{Guia de Uso}
+
+\subsection{Interfaz Principal}
+
+La pagina principal presenta tres modulos:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Redes Bayesianas} - Inferencia probabilistica exacta
+    \item \textbf{Cadenas de Markov} - Analisis de transiciones
+    \item \textbf{Modelos HMM} - Decodificacion de secuencias
+\end{enumerate}
+
+\subsection{Modulo: Redes Bayesianas}
+
+\subsubsection{Crear una Nueva Red}
+
+\begin{enumerate}[leftmargin=*]
+    \item Seleccione numero de nodos (5-15)
+    \item Defina relaciones padre-hijo
+    \item Ingrese probabilidades condicionales (CPT)
+    \item Valide que las probabilidades sumen 1.0
+\end{enumerate}
+
+\subsubsection{Realizar Consultas}
+
+\begin{enumerate}[leftmargin=*]
+    \item Seleccione variable(s) de consulta
+    \item Defina evidencia observada (opcional)
+    \item Elija algoritmo: Enumeracion o Eliminacion de Variables
+    \item Presione ``Calcular''
+\end{enumerate}
+
+\begin{ejemplobox}
+\textbf{Consulta tipica:} \\
+Variables: \codigo{P(Ladron | ...)} \\
+Evidencia: \codigo{Juan=true, Maria=true} \\
+Resultado: Distribucion de probabilidad de Ladron
+\end{ejemplobox}
+
+\subsection{Modulo: Cadenas de Markov}
+
+\subsubsection{Configuracion}
+
+\begin{enumerate}[leftmargin=*]
+    \item Especifique numero de estados
+    \item Ingrese matriz de transicion
+    \item (Opcional) Distribucion inicial
+\end{enumerate}
+
+\subsubsection{Operaciones Disponibles}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Simular}: Genere secuencias de estados
+    \item \textbf{Calcular Estacionaria}: Distribucion limite
+    \item \textbf{Visualizar Grafo}: Diagrama de transiciones
+\end{itemize}
+
+\subsection{Modulo: HMM}
+
+\subsubsection{Definir Modelo}
+
+\begin{enumerate}[leftmargin=*]
+    \item Estados ocultos
+    \item Observaciones posibles
+    \item Probabilidades iniciales ($\pi$)
+    \item Matriz de transicion (A)
+    \item Matriz de emision (B)
+\end{enumerate}
+
+\subsubsection{Algoritmos}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Algoritmo} & \textbf{Proposito} \\ \midrule
+Forward & Probabilidad de secuencia observada \\
+Viterbi & Secuencia de estados mas probable \\
+Forward-Backward & Suavizado de probabilidades \\ \bottomrule
+\end{tabular}
+\caption{Algoritmos disponibles en HMM}
+\end{table}
+
+\section{Ejemplos Pre-cargados}
+
+El sistema incluye ejemplos demostrativos. Para cargarlos:
+
+\begin{enumerate}[leftmargin=*]
+    \item Seleccione ``Ejemplos'' en el menu
+    \item Elija el modelo deseado
+    \item Explore y modifique parametros
+\end{enumerate}
+
+\subsection{Ejemplos de Redes Bayesianas}
+
+\begin{itemize}[leftmargin=*]
+    \item Red Alarma-Terremoto-Ladron
+    \item Red Medica (Sintomas-Enfermedades)
+    \item Red de Diagnostico de Fallas
+    \item Red Climatica
+\end{itemize}
+
+\subsection{Ejemplos de Cadenas de Markov}
+
+\begin{itemize}[leftmargin=*]
+    \item Clima Simple (Soleado/Nublado/Lluvioso)
+    \item Navegacion Web
+    \item Estados de Animo
+\end{itemize}
+
+\subsection{Ejemplos de HMM}
+
+\begin{itemize}[leftmargin=*]
+    \item Clima Oculto
+    \item Reconocimiento de Actividades
+\end{itemize}
+
+\section{Solucion de Problemas}
+
+\subsection{El servidor no inicia}
+
+\begin{itemize}[leftmargin=*]
+    \item Verifique instalacion de PHP: \codigo{php -v}
+    \item Pruebe otro puerto: \codigo{php -S localhost:8080}
+    \item Revise permisos de archivos
+\end{itemize}
+
+\subsection{Errores al cargar la pagina}
+
+\begin{itemize}[leftmargin=*]
+    \item Verifique ruta correcta del proyecto
+    \item Revise logs de error: \codigo{php -S localhost:8000 2>\&1}
+    \item Verifique extension \codigo{.php} en archivos
+\end{itemize}
+
+\subsection{Los calculos no funcionan}
+
+\begin{itemize}[leftmargin=*]
+    \item Verifique que probabilidades sumen 1.0
+    \item Asegurese de que la red no tenga ciclos
+    \item Revise consola del navegador (F12)
+\end{itemize}
+
+% ===================================
+% CAPITULO 2: ALGORITMOS
+% ===================================
+\chapter{Explicacion de los Algoritmos}
+\label{ch:algoritmos}
+
+\section{Fundamentos Teoricos}
+
+\subsection{Probabilidad Condicional}
+
+La probabilidad condicional $P(A|B)$ representa la probabilidad de $A$ dado que $B$ ha ocurrido:
+
+\begin{equation}
+P(A|B) = \frac{P(A \cap B)}{P(B)}, \quad P(B) > 0
+\end{equation}
+
+\subsection{Teorema de Bayes}
+
+El teorema fundamental que sustenta la inferencia probabilistica:
+
+\begin{tcolorbox}[colback=blue!5,colframe=azuloscuro,title=Teorema de Bayes]
+\begin{equation}
+P(H|E) = \frac{P(E|H) \cdot P(H)}{P(E)}
+\end{equation}
+
+Donde:
+\begin{itemize}[noitemsep]
+    \item $P(H|E)$ = Probabilidad posterior (hipotesis dado evidencia)
+    \item $P(E|H)$ = Verosimilitud (evidencia dado hipotesis)
+    \item $P(H)$ = Probabilidad a priori
+    \item $P(E)$ = Evidencia (constante de normalizacion)
+\end{itemize}
+\end{tcolorbox}
+
+\section{Redes Bayesianas}
+
+\subsection{Definicion Formal}
+
+Una Red Bayesiana es un par $\mathcal{B} = (G, \Theta)$ donde:
+
+\begin{itemize}[leftmargin=*]
+    \item $G = (V, E)$ es un grafo aciclico dirigido (DAG)
+    \item $V$ = conjunto de nodos (variables aleatorias)
+    \item $E$ = conjunto de aristas (dependencias)
+    \item $\Theta$ = parametros (tablas de probabilidad condicional)
+\end{itemize}
+
+\subsection{Propiedad de Factorizacion}
+
+La distribucion conjunta se factoriza como:
+
+\begin{equation}
+P(X_1, X_2, \ldots, X_n) = \prod_{i=1}^{n} P(X_i | \text{Padres}(X_i))
+\end{equation}
+
+\subsection{Algoritmo de Enumeracion}
+
+\subsubsection{Objetivo}
+
+Calcular $P(X | \mathbf{e})$ donde $X$ es la variable de consulta y $\mathbf{e}$ es la evidencia.
+
+\subsubsection{Formula}
+
+\begin{equation}
+P(X | \mathbf{e}) = \alpha \sum_{\mathbf{y}} P(X, \mathbf{y}, \mathbf{e})
+\end{equation}
+
+donde $\alpha = 1/P(\mathbf{e})$ es la constante de normalizacion y $\mathbf{y}$ son variables ocultas.
+
+\subsubsection{Algoritmo}
+
+\begin{lstlisting}[caption={Pseudocodigo: Enumeracion}]
+ENUMERACION-PREGUNTAR(X, e, bn):
+    Q(X) = distribucion vacia sobre X
+    para cada valor xi de X:
+        Q(xi) = ENUMERAR-TODO(bn.VARS, extend(e, X, xi))
+    retornar NORMALIZAR(Q(X))
+
+ENUMERAR-TODO(vars, e):
+    si vars esta vacia:
+        retornar 1.0
+    Y = PRIMERO(vars)
+    si Y tiene valor asignado en e:
+        retornar P(y | padres(Y)) * ENUMERAR-TODO(RESTO(vars), e)
+    sino:
+        retornar suma_y [P(y | padres(Y)) * 
+                        ENUMERAR-TODO(RESTO(vars), extend(e, Y, y))]
+\end{lstlisting}
+
+\subsubsection{Complejidad}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Tiempo}: $O(d^n)$ donde $d$ es dominio y $n$ variables
+    \item \textbf{Espacio}: $O(n)$ por profundidad de recursion
+\end{itemize}
+
+\subsection{Eliminacion de Variables}
+
+\subsubsection{Idea Principal}
+
+Mejora la eficiencia factorizando y sumando variables una por una en orden optimo.
+
+\subsubsection{Proceso}
+
+\begin{enumerate}[leftmargin=*]
+    \item Elegir orden de eliminacion
+    \item Para cada variable $Y$ a eliminar:
+        \begin{itemize}
+            \item Multiplicar factores que contienen $Y$
+            \item Sumar sobre $Y$: $\tau = \sum_y f_1(y) \cdot f_2(y) \cdots$
+            \item Agregar $\tau$ al conjunto de factores
+        \end{itemize}
+    \item Multiplicar factores restantes y normalizar
+\end{enumerate}
+
+\subsubsection{Ejemplo}
+
+Red: $A \rightarrow B \rightarrow C$, Consulta: $P(C|a)$
+
+\begin{align}
+P(C|a) &= \alpha \sum_b P(a) P(b|a) P(C|b) \notag \\
+       &= \alpha P(a) \sum_b [P(b|a) \cdot P(C|b)] \notag \\
+       &= \alpha P(a) \cdot f_B(C)
+\end{align}
+
+donde $f_B(C) = \sum_b P(b|a) P(C|b)$ es el factor resultante.
+
+\subsubsection{Complejidad}
+
+Depende del orden. Con buen orden puede ser exponencialmente mas eficiente.
+
+\section{Cadenas de Markov}
+
+\subsection{Definicion}
+
+Un proceso estocastico $\{X_t\}_{t \geq 0}$ es una Cadena de Markov si satisface:
+
+\begin{equation}
+P(X_{t+1} = j | X_t = i, X_{t-1}, \ldots, X_0) = P(X_{t+1} = j | X_t = i)
+\end{equation}
+
+Esto es la \textbf{propiedad de Markov} (independencia del pasado).
+
+\subsection{Matriz de Transicion}
+
+Matriz estocastica $P$ donde $P_{ij} = P(X_{t+1} = j | X_t = i)$:
+
+\begin{equation}
+P = \begin{pmatrix}
+p_{11} & p_{12} & \cdots & p_{1n} \\
+p_{21} & p_{22} & \cdots & p_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+p_{n1} & p_{n2} & \cdots & p_{nn}
+\end{pmatrix}
+\end{equation}
+
+Debe cumplir: $\sum_{j=1}^{n} p_{ij} = 1$ para todo $i$.
+
+\subsection{Distribucion Estacionaria}
+
+Vector $\pi$ que satisface:
+
+\begin{equation}
+\pi = \pi P \quad \text{y} \quad \sum_i \pi_i = 1
+\end{equation}
+
+\subsubsection{Calculo Iterativo}
+
+\begin{lstlisting}[caption={Algoritmo: Distribucion Estacionaria}]
+CALCULAR-ESTACIONARIA(P, epsilon=1e-6):
+    n = numero de estados
+    pi = [1/n, 1/n, ..., 1/n]  # Distribucion uniforme
+    
+    repetir:
+        pi_nuevo = pi * P
+        diferencia = ||pi_nuevo - pi||
+        si diferencia < epsilon:
+            retornar pi_nuevo
+        pi = pi_nuevo
+        
+    retornar pi
+\end{lstlisting}
+
+\subsubsection{Metodo Algebraico}
+
+Resolver sistema lineal:
+\begin{equation}
+\begin{cases}
+\pi (P - I) = 0 \\
+\sum_i \pi_i = 1
+\end{cases}
+\end{equation}
+
+\section{Modelos Ocultos de Markov}
+
+\subsection{Componentes del Modelo}
+
+Un HMM $\lambda = (A, B, \pi)$ consiste en:
+
+\begin{itemize}[leftmargin=*]
+    \item $N$ estados ocultos: $S = \{s_1, \ldots, s_N\}$
+    \item $M$ observaciones: $O = \{o_1, \ldots, o_M\}$
+    \item $\pi$: Probabilidades iniciales, $\pi_i = P(q_1 = s_i)$
+    \item $A$: Matriz transicion, $a_{ij} = P(q_{t+1} = s_j | q_t = s_i)$
+    \item $B$: Matriz emision, $b_j(k) = P(o_t = v_k | q_t = s_j)$
+\end{itemize}
+
+\subsection{Tres Problemas Fundamentales}
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Evaluacion}: $P(O|\lambda)$ - Algoritmo Forward
+    \item \textbf{Decodificacion}: $\arg\max_Q P(Q|O,\lambda)$ - Algoritmo Viterbi
+    \item \textbf{Aprendizaje}: $\arg\max_\lambda P(O|\lambda)$ - Algoritmo Baum-Welch
+\end{enumerate}
+
+\subsection{Algoritmo Forward}
+
+\subsubsection{Variable Forward}
+
+\begin{equation}
+\alpha_t(i) = P(o_1, o_2, \ldots, o_t, q_t = s_i | \lambda)
+\end{equation}
+
+Probabilidad de observar secuencia parcial y estar en estado $s_i$ en tiempo $t$.
+
+\subsubsection{Recursion}
+
+\begin{tcolorbox}[colback=green!5,colframe=verdecode,title=Algoritmo Forward]
+\textbf{Inicializacion} ($t=1$):
+\begin{equation}
+\alpha_1(i) = \pi_i \cdot b_i(o_1), \quad 1 \leq i \leq N
+\end{equation}
+
+\textbf{Induccion} ($2 \leq t \leq T$):
+\begin{equation}
+\alpha_t(j) = \left[\sum_{i=1}^{N} \alpha_{t-1}(i) \cdot a_{ij}\right] \cdot b_j(o_t)
+\end{equation}
+
+\textbf{Terminacion}:
+\begin{equation}
+P(O|\lambda) = \sum_{i=1}^{N} \alpha_T(i)
+\end{equation}
+\end{tcolorbox}
+
+\subsubsection{Complejidad}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Tiempo}: $O(N^2T)$ vs $O(N^T)$ naive
+    \item \textbf{Espacio}: $O(NT)$
+\end{itemize}
+
+\subsection{Algoritmo Viterbi}
+
+\subsubsection{Variable Delta}
+
+\begin{equation}
+\delta_t(i) = \max_{q_1,\ldots,q_{t-1}} P(q_1, \ldots, q_{t-1}, q_t = s_i, o_1, \ldots, o_t | \lambda)
+\end{equation}
+
+Maxima probabilidad de estar en $s_i$ en tiempo $t$.
+
+\subsubsection{Recursion}
+
+\begin{tcolorbox}[colback=orange!5,colframe=naranja,title=Algoritmo Viterbi]
+\textbf{Inicializacion}:
+\begin{align}
+\delta_1(i) &= \pi_i \cdot b_i(o_1) \\
+\psi_1(i) &= 0
+\end{align}
+
+\textbf{Recursion}:
+\begin{align}
+\delta_t(j) &= \max_{1 \leq i \leq N} [\delta_{t-1}(i) \cdot a_{ij}] \cdot b_j(o_t) \\
+\psi_t(j) &= \arg\max_{1 \leq i \leq N} [\delta_{t-1}(i) \cdot a_{ij}]
+\end{align}
+
+\textbf{Terminacion}:
+\begin{align}
+P^* &= \max_{1 \leq i \leq N} [\delta_T(i)] \\
+q_T^* &= \arg\max_{1 \leq i \leq N} [\delta_T(i)]
+\end{align}
+
+\textbf{Backtracking} ($t = T-1, \ldots, 1$):
+\begin{equation}
+q_t^* = \psi_{t+1}(q_{t+1}^*)
+\end{equation}
+\end{tcolorbox}
+
+\subsection{Algoritmo Forward-Backward}
+
+\subsubsection{Variable Backward}
+
+\begin{equation}
+\beta_t(i) = P(o_{t+1}, \ldots, o_T | q_t = s_i, \lambda)
+\end{equation}
+
+\subsubsection{Probabilidad Suavizada}
+
+\begin{equation}
+\gamma_t(i) = P(q_t = s_i | O, \lambda) = \frac{\alpha_t(i) \cdot \beta_t(i)}{\sum_{j=1}^{N} \alpha_t(j) \cdot \beta_t(j)}
+\end{equation}
+
+% ===================================
+% CAPITULO 3: DECISIONES DE DISENO
+% ===================================
+\chapter{Decisiones de Diseno}
+\label{ch:diseno}
+
+\section{Arquitectura del Sistema}
+
+\subsection{Patron MVC Simplificado}
+
+\begin{figure}[H]
+\centering
+\begin{tcolorbox}[width=0.8\textwidth,colback=white,colframe=azuloscuro]
+\begin{center}
+\textbf{Modelo} (modules/) \\
+$\downarrow$ \\
+\textbf{Controlador} (includes/, *.php) \\
+$\downarrow$ \\
+\textbf{Vista} (assets/, HTML)
+\end{center}
+\end{tcolorbox}
+\caption{Arquitectura MVC del proyecto}
+\end{figure}
+
+\subsection{Beneficios}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Separacion de responsabilidades}
+    \item \textbf{Facilidad de mantenimiento}
+    \item \textbf{Modularidad y reusabilidad}
+    \item \textbf{Testabilidad independiente}
+\end{itemize}
+
+\section{Tecnologias Seleccionadas}
+
+\subsection{Backend: PHP}
+
+\subsubsection{Justificacion}
+
+\begin{itemize}[leftmargin=*]
+    \item Amplia disponibilidad en servidores
+    \item Sin necesidad de compilacion
+    \item Servidor integrado para desarrollo
+    \item Soporte robusto de OOP
+    \item Sintaxis clara y accesible
+\end{itemize}
+
+\subsection{Frontend: HTML5 + CSS3 + JavaScript}
+
+\subsubsection{Caracteristicas}
+
+\begin{itemize}[leftmargin=*]
+    \item HTML5 semantico
+    \item CSS3 con Grid y Flexbox
+    \item JavaScript ES6+
+    \item Responsive design
+\end{itemize}
+
+\section{Representacion de Datos}
+
+\subsection{Redes Bayesianas}
+
+\begin{lstlisting}[caption={Estructura de Nodo}]
+class Nodo {
+    public $nombre;
+    public $padres = [];
+    public $cpt = [];  // Tabla probabilidad condicional
+    
+    public function getProbabilidad($valor, $evidencia) {
+        // Buscar en CPT segun padres
+        $key = $this->generarClave($evidencia);
+        return $this->cpt[$key][$valor];
+    }
+}
+\end{lstlisting}
+
+\subsection{Cadenas de Markov}
+
+\begin{lstlisting}[caption={Matriz de Transicion}]
+class MarkovChain {
+    private $estados = [];
+    private $matriz = [];  // matriz[i][j] = P(j|i)
+    
+    public function __construct($matriz_transicion) {
+        $this->matriz = $matriz_transicion;
+        $this->validarMatriz();  // Suma filas = 1.0
+    }
+}
+\end{lstlisting}
+
+\subsection{HMM}
+
+\begin{lstlisting}[caption={Estructura HMM}]
+class HMM {
+    private $estados = [];
+    private $observaciones = [];
+    private $pi = [];   // Prob. iniciales
+    private $A = [];    // Matriz transicion
+    private $B = [];    // Matriz emision
+    
+    public function forward($secuencia_obs) {
+        // Implementacion algoritmo Forward
+    }
+}
+\end{lstlisting}
+
+\section{Manejo de Precision Numerica}
+
+\subsection{Problema: Underflow}
+
+Multiplicar muchas probabilidades pequeñas:
+\begin{equation}
+P = 0.001 \times 0.002 \times \cdots \times 0.001 \approx 0
+\end{equation}
+
+\subsection{Solucion: Log-Space}
+
+\begin{lstlisting}[caption={Aritmetica Logaritmica}]
+// En lugar de multiplicar
+$prob = $p1 * $p2 * $p3;
+
+// Sumar logaritmos
+$log_prob = log($p1) + log($p2) + log($p3);
+$prob = exp($log_prob);
+
+// Para comparar, no hace falta exp()
+if ($log_prob1 > $log_prob2) {
+    // prob1 > prob2
+}
+\end{lstlisting}
+
+\section{Optimizaciones}
+
+\subsection{Cache de Resultados}
+
+\begin{lstlisting}[caption={Memoizacion}]
+private $cache = [];
+
+public function calcular($query) {
+    $key = serialize($query);
+    
+    if (isset($this->cache[$key])) {
+        return $this->cache[$key];
+    }
+    
+    $resultado = $this->calcularReal($query);
+    $this->cache[$key] = $resultado;
+    
+    return $resultado;
+}
+\end{lstlisting}
+
+\subsection{Orden de Eliminacion Heuristico}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Min-degree}: Eliminar variables con menos conexiones
+    \item \textbf{Min-fill}: Minimizar aristas nuevas creadas
+    \item Reduce tamano de factores intermedios
+\end{itemize}
+
+\section{Validacion y Seguridad}
+
+\subsection{Validacion Cliente-Servidor}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Validacion} & \textbf{Cliente (JS)} & \textbf{Servidor (PHP)} \\ \midrule
+Probabilidades [0,1] & \checkmark & \checkmark \\
+Suma = 1.0 & \checkmark & \checkmark \\
+Sin ciclos en grafo & \checkmark & \checkmark \\
+Sanitizacion entrada & - & \checkmark \\ \bottomrule
+\end{tabular}
+\caption{Capas de validacion}
+\end{table}
+
+\subsection{Manejo de Errores}
+
+\begin{lstlisting}[caption={Excepciones Personalizadas}]
+class ProbabilityException extends Exception {}
+class GraphCycleException extends Exception {}
+
+try {
+    $red->addEdge($from, $to);
+} catch (GraphCycleException $e) {
+    echo "Error: La red contiene un ciclo";
+}
+\end{lstlisting}
+
+% ===================================
+% CAPITULO 4: EJEMPLOS
+% ===================================
+\chapter{Ejemplos de Uso}
+\label{ch:ejemplos}
+
+\section{Red Alarma-Terremoto-Ladron}
+
+\subsection{Planteamiento}
+
+Sistema de alarma que puede activarse por terremotos o ladrones.
+
+\begin{ejemplobox}
+\textbf{Estructura:}
+\begin{verbatim}
+    Terremoto -----> Alarma <----- Ladron
+                       |
+              +--------+--------+
+              |                 |
+            Juan              Maria
+\end{verbatim}
+\end{ejemplobox}
+
+\subsection{Probabilidades A Priori}
+
+\begin{itemize}[leftmargin=*]
+    \item $P(\text{Terremoto}) = 0.001$
+    \item $P(\text{Ladron}) = 0.01$
+\end{itemize}
+
+\subsection{CPT: P(Alarma | Terremoto, Ladron)}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}ccc@{}}
+\toprule
+\textbf{Terremoto} & \textbf{Ladron} & \textbf{P(Alarma=V)} \\ \midrule
+V & V & 0.95 \\
+V & F & 0.90 \\
+F & V & 0.85 \\
+F & F & 0.01 \\ \bottomrule
+\end{tabular}
+\caption{Tabla de probabilidad condicional de Alarma}
+\end{table}
+
+\subsection{CPT: P(Juan|Alarma), P(Maria|Alarma)}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}ccc@{}}
+\toprule
+\textbf{Alarma} & \textbf{P(Juan=V)} & \textbf{P(Maria=V)} \\ \midrule
+V & 0.90 & 0.70 \\
+F & 0.05 & 0.01 \\ \bottomrule
+\end{tabular}
+\caption{Probabilidades de que los vecinos llamen}
+\end{table}
+
+\subsection{Consulta 1: P(Ladron | Juan=V)}
+
+\subsubsection{Planteamiento}
+
+Si Juan llama, ¿cual es la probabilidad de que haya un ladron?
+
+\subsubsection{Calculo con Enumeracion}
+
+\begin{align*}
+P(L|J) &= \alpha \sum_t \sum_m \sum_a P(L, t, m, a, J) \\
+       &= \alpha \sum_t \sum_m \sum_a P(t) P(L) P(a|t,L) P(J|a) P(m|a)
+\end{align*}
+
+\subsubsection{Resultado}
+
+\begin{tcolorbox}[colback=green!5,colframe=verdecode]
+\textbf{Resultado}: $P(\text{Ladron=V} | \text{Juan=V}) \approx 0.016$ (1.6\%)
+\end{tcolorbox}
+
+\subsection{Consulta 2: P(Ladron | Juan=V, Maria=V)}
+
+\subsubsection{Resultado}
+
+\begin{tcolorbox}[colback=green!5,colframe=verdecode]
+\textbf{Resultado}: $P(\text{Ladron=V} | \text{Juan=V, Maria=V}) \approx 0.284$ (28.4\%)
+
+\textbf{Interpretacion}: La evidencia adicional aumenta significativamente la probabilidad de ladron.
+\end{tcolorbox}
+
+\section{Cadena de Markov: Clima}
+
+\subsection{Estados}
+
+\begin{itemize}[leftmargin=*]
+    \item Soleado (S)
+    \item Nublado (N)
+    \item Lluvioso (L)
+\end{itemize}
+
+\subsection{Matriz de Transicion}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lccc@{}}
+\toprule
+& \textbf{S} & \textbf{N} & \textbf{L} \\ \midrule
+\textbf{S} & 0.7 & 0.2 & 0.1 \\
+\textbf{N} & 0.3 & 0.4 & 0.3 \\
+\textbf{L} & 0.2 & 0.3 & 0.5 \\ \bottomrule
+\end{tabular}
+\caption{Probabilidades de transicion entre estados climaticos}
+\end{table}
+
+\subsection{Distribucion Estacionaria}
+
+\begin{align*}
+\pi_S &\approx 0.429 \quad (42.9\%) \\
+\pi_N &\approx 0.286 \quad (28.6\%) \\
+\pi_L &\approx 0.285 \quad (28.5\%)
+\end{align*}
+
+\subsection{Simulacion (10 dias)}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}cccccccccc@{}}
+\toprule
+Dia 1 & Dia 2 & Dia 3 & Dia 4 & Dia 5 & Dia 6 & Dia 7 & Dia 8 & Dia 9 & Dia 10 \\ \midrule
+S & S & N & L & L & N & S & S & S & N \\ \bottomrule
+\end{tabular}
+\caption{Ejemplo de simulacion comenzando en Soleado}
+\end{table}
+
+\section{HMM: Estados de Animo}
+
+\subsection{Modelo}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Estados ocultos}: Feliz, Triste
+    \item \textbf{Observaciones}: Caminar, Comprar, Limpiar
+\end{itemize}
+
+\subsection{Parametros}
+
+\textbf{Iniciales}: $\pi(\text{Feliz}) = 0.6$, $\pi(\text{Triste}) = 0.4$
+
+\textbf{Transiciones (A)}:
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lcc@{}}
+\toprule
+& \textbf{Feliz} & \textbf{Triste} \\ \midrule
+\textbf{Feliz} & 0.7 & 0.3 \\
+\textbf{Triste} & 0.4 & 0.6 \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Emisiones (B)}:
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lccc@{}}
+\toprule
+& \textbf{Caminar} & \textbf{Comprar} & \textbf{Limpiar} \\ \midrule
+\textbf{Feliz} & 0.6 & 0.3 & 0.1 \\
+\textbf{Triste} & 0.1 & 0.4 & 0.5 \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Problema: Algoritmo Viterbi}
+
+\textbf{Secuencia observada}: [Caminar, Comprar, Limpiar]
+
+\textbf{Pregunta}: ¿Cual es la secuencia de estados mas probable?
+
+\subsubsection{Resultado}
+
+\begin{tcolorbox}[colback=orange!5,colframe=naranja]
+\textbf{Secuencia mas probable}: [Feliz, Feliz, Triste]
+
+\textbf{Probabilidad}: 0.01512
+
+\textbf{Interpretacion}: La persona estaba feliz durante las dos primeras actividades, pero se puso triste al limpiar.
+\end{tcolorbox}
+
+\section{Codigo PHP}
+
+\subsection{Uso de BayesianNetwork}
+
+\begin{lstlisting}[caption={Ejemplo completo de Red Bayesiana}]
+<?php
+require_once 'modules/bayesian/BayesianNetwork.php';
+
+$red = new BayesianNetwork();
+
+// Agregar nodos sin padres
+$red->addNode('Terremoto', [], [
+    'true' => 0.001,
+    'false' => 0.999
+]);
+
+$red->addNode('Ladron', [], [
+    'true' => 0.01,
+    'false' => 0.99
+]);
+
+// Nodo con padres
+$red->addNode('Alarma', ['Terremoto', 'Ladron'], [
+    'T,L' => ['true' => 0.95, 'false' => 0.05],
+    'T,!L' => ['true' => 0.90, 'false' => 0.10],
+    '!T,L' => ['true' => 0.85, 'false' => 0.15],
+    '!T,!L' => ['true' => 0.01, 'false' => 0.99]
+]);
+
+$red->addNode('Juan', ['Alarma'], [
+    'A' => ['true' => 0.90, 'false' => 0.10],
+    '!A' => ['true' => 0.05, 'false' => 0.95]
+]);
+
+// Consulta
+$evidencia = ['Juan' => 'true'];
+$resultado = $red->query('Ladron', $evidencia);
+
+echo "P(Ladron=true|Juan=true) = ";
+echo number_format($resultado['true'], 4);
+?>
+\end{lstlisting}
+
+\subsection{Uso de HMM}
+
+\begin{lstlisting}[caption={Algoritmo Viterbi completo}]
+<?php
+require_once 'modules/hmm/HMM.php';
+
+$hmm = new HMM(
+    ['Feliz', 'Triste'],
+    ['Caminar', 'Comprar', 'Limpiar'],
+    ['Feliz' => 0.6, 'Triste' => 0.4],
+    [
+        'Feliz' => ['Feliz' => 0.7, 'Triste' => 0.3],
+        'Triste' => ['Feliz' => 0.4, 'Triste' => 0.6]
+    ],
+    [
+        'Feliz' => [
+            'Caminar' => 0.6,
+            'Comprar' => 0.3,
+            'Limpiar' => 0.1
+        ],
+        'Triste' => [
+            'Caminar' => 0.1,
+            'Comprar' => 0.4,
+            'Limpiar' => 0.5
+        ]
+    ]
+);
+
+$obs = ['Caminar', 'Comprar', 'Limpiar'];
+$resultado = $hmm->viterbi($obs);
+
+echo "Estados: " . implode(' -> ', $resultado['path']);
+echo "\nProb: " . $resultado['probability'];
+?>
+\end{lstlisting}
+
+% ===================================
+% CONCLUSIONES
+% ===================================
+\chapter{Conclusiones}
+
+\section{Logros Alcanzados}
+
+\begin{enumerate}[leftmargin=*]
+    \item Implementacion completa de 11 algoritmos probabilisticos
+    \item Interfaz web funcional e intuitiva
+    \item Codigo modular y bien documentado
+    \item 4 ejemplos demostrativos completamente funcionales
+    \item Manejo robusto de precision numerica
+\end{enumerate}
+
+\section{Aprendizajes Clave}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Teoricos}: Profundizacion en inferencia probabilistica
+    \item \textbf{Practicos}: Desarrollo web con PHP y JavaScript
+    \item \textbf{Ingenieria}: Importancia de arquitectura modular
+    \item \textbf{Numericos}: Tecnicas de log-space para estabilidad
+\end{itemize}
+
+\section{Trabajo Futuro}
+
+\subsection{Mejoras Propuestas}
+
+\begin{enumerate}[leftmargin=*]
+    \item Algoritmo Baum-Welch para aprendizaje HMM
+    \item Redes Bayesianas Dinamicas (DBN)
+    \item Optimizacion con GPU para redes grandes
+    \item API REST para integracion
+    \item Exportacion/importacion en formatos estandar
+    \item Visualizacion 3D interactiva
+\end{enumerate}
+
+\section{Reflexion Final}
+
+Este proyecto ha demostrado la viabilidad de implementar algoritmos probabilisticos complejos en PHP, proporcionando una herramienta educativa y practica para el analisis de modelos graficos probabilistas.
+
+% ===================================
+% APENDICES
+% ===================================
+\appendix
+
+\chapter{Instalacion de PHP}
+
+\section{Windows}
+
+\begin{enumerate}[leftmargin=*]
+    \item Descargue PHP de \url{https://windows.php.net/download/}
+    \item Extraiga en \codigo{C:\textbackslash php}
+    \item Agregue al PATH:
+    \begin{itemize}
+        \item Panel de Control $\rightarrow$ Sistema $\rightarrow$ Variables de entorno
+        \item Edite \codigo{Path}, agregue \codigo{C:\textbackslash php}
+    \end{itemize}
+    \item Verifique: \codigo{php -v}
+\end{enumerate}
+
+\section{Linux (Ubuntu/Debian)}
+
+\begin{lstlisting}[language=bash]
+sudo apt update
+sudo apt install php php-cli php-mbstring
+php -v
+\end{lstlisting}
+
+\section{macOS}
+
+PHP viene preinstalado. Para actualizar:
+
+\begin{lstlisting}[language=bash]
+brew install php
+php -v
+\end{lstlisting}
+
+\chapter{Referencias Bibliograficas}
+
+\begin{enumerate}[leftmargin=*]
+    \item Russell, S., \& Norvig, P. (2021). \textit{Artificial Intelligence: A Modern Approach} (4th ed.). Pearson.
+    
+    \item Koller, D., \& Friedman, N. (2009). \textit{Probabilistic Graphical Models: Principles and Techniques}. MIT Press.
+    
+    \item Rabiner, L. R. (1989). A tutorial on hidden Markov models and selected applications in speech recognition. \textit{Proceedings of the IEEE}, 77(2), 257-286.
+    
+    \item Pearl, J. (1988). \textit{Probabilistic Reasoning in Intelligent Systems: Networks of Plausible Inference}. Morgan Kaufmann.
+    
+    \item Murphy, K. P. (2012). \textit{Machine Learning: A Probabilistic Perspective}. MIT Press.
+\end{enumerate}
+
+\end{document}

@@ -4,15 +4,15 @@
 \contentsline {table}{\numberline {1.2}{\ignorespaces Algoritmos disponibles en el módulo HMM}}{14}{table.caption.11}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {3.1}{\ignorespaces Comparación de tecnologías backend}}{26}{table.caption.19}%
-\contentsline {table}{\numberline {3.2}{\ignorespaces Capas de validación en el sistema}}{33}{table.caption.22}%
+\contentsline {table}{\numberline {3.1}{\ignorespaces Comparación de tecnologías backend}}{27}{table.caption.19}%
+\contentsline {table}{\numberline {3.2}{\ignorespaces Capas de validación en el sistema}}{34}{table.caption.22}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {4.1}{\ignorespaces Tabla de probabilidad condicional de Alarma}}{36}{table.caption.23}%
-\contentsline {table}{\numberline {4.2}{\ignorespaces Probabilidades de que los vecinos llamen}}{36}{table.caption.24}%
-\contentsline {table}{\numberline {4.3}{\ignorespaces Probabilidades de transición entre estados climáticos}}{39}{table.caption.27}%
-\contentsline {table}{\numberline {4.4}{\ignorespaces Ejemplo de simulación comenzando en Soleado (S=Soleado, N=Nublado, L=Lluvioso)}}{39}{table.caption.28}%
-\contentsline {table}{\numberline {4.5}{\ignorespaces Matriz de transiciones entre estados de ánimo}}{41}{table.caption.30}%
-\contentsline {table}{\numberline {4.6}{\ignorespaces Matriz de emisiones (probabilidades de observaciones dado estado)}}{42}{table.caption.31}%
+\contentsline {table}{\numberline {4.1}{\ignorespaces Tabla de probabilidad condicional de Alarma}}{37}{table.caption.23}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces Probabilidades de que los vecinos llamen}}{37}{table.caption.24}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces Probabilidades de transición entre estados climáticos}}{40}{table.caption.27}%
+\contentsline {table}{\numberline {4.4}{\ignorespaces Ejemplo de simulación comenzando en Soleado (S=Soleado, N=Nublado, L=Lluvioso)}}{40}{table.caption.28}%
+\contentsline {table}{\numberline {4.5}{\ignorespaces Matriz de transiciones entre estados de ánimo}}{42}{table.caption.30}%
+\contentsline {table}{\numberline {4.6}{\ignorespaces Matriz de emisiones (probabilidades de observaciones dado estado)}}{43}{table.caption.31}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

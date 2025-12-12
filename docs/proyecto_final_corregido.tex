@@ -23,6 +23,7 @@
 \usepackage{microtype}
 \usepackage{cleveref}
 \usepackage{url}  % Para URLs en listings
+\usepackage{fontawesome5} % Opcional para iconos, si no compila, quitar
 
 % ===================================
 % CONFIGURACION DE PAGINA
@@ -44,10 +45,18 @@
 % ===================================
 \definecolor{azuloscuro}{RGB}{0, 51, 102}
 \definecolor{azulclaro}{RGB}{51, 102, 153}
-\definecolor{verdecode}{RGB}{0, 128, 0}
 \definecolor{grisclaro}{RGB}{245, 245, 245}
 \definecolor{naranja}{RGB}{230, 126, 34}
 \definecolor{rojoclaro}{RGB}{220, 50, 47}
+\definecolor{verdecode}{RGB}{0, 128, 0}
+
+% Colores estilo Terminal Ubuntu/Linux
+\definecolor{termbg}{RGB}{48, 10, 36}       % Fondo morado oscuro Ubuntu (o negro RGB{28,30,34})
+\definecolor{termbar}{RGB}{70, 70, 70}      % Barra de titulo gris oscura
+\definecolor{termtext}{RGB}{255, 255, 255}  % Texto blanco
+\definecolor{termgreen}{RGB}{135, 212, 65}  % Verde prompt Ubuntu
+\definecolor{termblue}{RGB}{52, 101, 164}   % Azul directorio
+\definecolor{termcmd}{RGB}{255, 255, 255}   % Comando blanco
 
 % ===================================
 % CONFIGURACION DE HYPERREF
@@ -151,6 +160,25 @@
 % ===================================
 % CONFIGURACION DE CODIGO
 % ===================================
+
+% Estilo base para listings dentro de la terminal
+\lstdefinestyle{bashstyle}{
+    language=bash,
+    basicstyle=\small\ttfamily\color{termtext},
+    numbers=none,
+    showstringspaces=false,
+    breaklines=true,
+    breakatwhitespace=false, % Permite romper URLs largas
+    frame=none, % El marco lo pone tcolorbox
+    backgroundcolor=\color{termbg},
+    keywordstyle=\color{termtext}, % Comandos normales en blanco
+    stringstyle=\color{termtext},
+    commentstyle=\color{gray},
+    moredelim=[s][\color{termgreen}]{alumno@}{:\~}, % Colorear usuario
+    moredelim=[s][\color{termblue}]{\~}{\$},         % Colorear ruta
+    literate={\$}{{\textcolor{termtext}{\$}}}1       % Simbolo $ en blanco
+}
+
 \lstdefinestyle{phpstyle}{
     language=PHP,
     basicstyle=\small\ttfamily,
@@ -176,28 +204,6 @@
     escapeinside={(*@}{@*)}
 }
 
-\lstdefinestyle{bashstyle}{
-    language=bash,
-    basicstyle=\small\ttfamily,
-    numbers=none,
-    showstringspaces=false,
-    frame=single,
-    framesep=5pt,
-    rulecolor=\color{azuloscuro},
-    backgroundcolor=\color{grisclaro},
-    tabsize=4,
-    captionpos=b,
-    breaklines=true,
-    breakatwhitespace=true,
-    keywordstyle=\color{azulclaro}\bfseries, % Usamos azulclaro o azuloscuro
-    stringstyle=\color{rojoclaro},
-    commentstyle=\color{verdecode}\itshape,
-    xleftmargin=15pt,
-    xrightmargin=5pt,
-    % AGREGAR ESTA LÍNEA PARA RESALTAR COMANDOS DE GIT:
-    morekeywords={git, clone, cd, php, composer} 
-}
-
 \lstdefinestyle{plaintextstyle}{
     language={},
     basicstyle=\small\ttfamily,
@@ -215,6 +221,35 @@
 }
 
 \lstset{style=phpstyle}
+
+% ===================================
+% ENTORNO DE TERMINAL LINUX (VISUAL)
+% ===================================
+\newtcblisting{linuxterminal}[2][]{
+    enhanced,
+    colback=termbg,      % Fondo oscuro
+    colframe=termbar,    % Barra de titulo gris
+    coltitle=white,      % Texto titulo blanco
+    fonttitle=\bfseries\small\sffamily,
+    title={#2},          % Titulo pasado como argumento 2
+    sharp corners=south, % Esquinas inferiores cuadradas
+    rounded corners=north, % Esquinas superiores redondas
+    arc=3pt,
+    boxrule=1pt,
+    titlerule=0pt,       % Sin linea separadora explicita
+    top=5pt, bottom=5pt, left=5pt, right=5pt,
+    listing only,
+    listing options={style=bashstyle},
+    % Dibujar los botones de la ventana (Rojo, Amarillo, Verde)
+    overlay={
+        \fill[red!60!black] ([xshift=10pt]frame.north west) circle (2.5pt); % Rojo
+        \fill[yellow!60!black] ([xshift=20pt]frame.north west) circle (2.5pt); % Amarillo
+        \fill[green!60!black] ([xshift=30pt]frame.north west) circle (2.5pt); % Verde
+    },
+    % Sombra para efecto de ventana flotante
+    drop shadow,
+    #1
+}
 
 % Estilo para codigo inline
 \newcommand{\codigo}[1]{\texttt{\color{azuloscuro}#1}}
@@ -278,8 +313,8 @@
         \begin{minipage}{0.4\textwidth}
             \begin{flushleft}
                 \textbf{Integrantes:}\\
-                Nombre Integrante 1\\
-                Nombre Integrante 2
+                Abraham Flores Avila\\
+                2100679B
             \end{flushleft}
         \end{minipage}
         \hfill
@@ -382,14 +417,17 @@ Conexión Internet & Requerida (CDN) & Banda ancha \\ \bottomrule
 
 Abra una terminal y ejecute:
 
-\begin{lstlisting}[style=bashstyle, caption={Verificación de instalaciones}]
+\begin{linuxterminal}{alumno@DESKTOP-J4QHEU8:\textasciitilde}
 # Verificar PHP
-php -v
-# Salida esperada: PHP 7.4.x o superior
+alumno@DESKTOP-J4QHEU8:~$ php -v
+PHP 8.0.30 (cli) (built: Aug 23 2023 12:00:00) ( NTS )
+Copyright (c) The PHP Group
+Zend Engine v4.0.30, Copyright (c) Zend Technologies
 
 # Verificar Git (opcional)
-git --version
-\end{lstlisting}
+alumno@DESKTOP-J4QHEU8:~$ git --version
+git version 2.25.1
+\end{linuxterminal}
 
 \begin{advertenciabox}
 Si PHP no está instalado, consulte el \cref{ch:instalacion-php} para instrucciones de instalación según su sistema operativo (Windows, Linux, macOS).
@@ -401,13 +439,19 @@ Si PHP no está instalado, consulte el \cref{ch:instalacion-php} para instruccio
 
 \subsubsection{Opción 1: Clonar desde Git}
 
-\begin{lstlisting}[style=bashstyle, caption={Clonar repositorio}]
+\begin{linuxterminal}{alumno@DESKTOP-J4QHEU8:\textasciitilde}
 # Clonar el proyecto
-git clone https://github.com/usuario/ProyectoFinal_ModelosProbabilistas2526.git
+alumno@DESKTOP-J4QHEU8:~$ git clone https://github.com/usuario/ProyectoFinal_ModelosProbabilistas2526.git
+Cloning into 'ProyectoFinal_ModelosProbabilistas2526'...
+remote: Enumerating objects: 120, done.
+remote: Counting objects: 100% (120/120), done.
+remote: Compressing objects: 100% (95/95), done.
+Receiving objects: 100% (120/120), 1.2 MiB | 2.5 MiB/s, done.
 
 # Entrar al directorio
-cd ProyectoFinal_ModelosProbabilistas2526
-\end{lstlisting}
+alumno@DESKTOP-J4QHEU8:~$ cd ProyectoFinal_ModelosProbabilistas2526
+alumno@DESKTOP-J4QHEU8:~/ProyectoFinal_ModelosProbabilistas2526$ 
+\end{linuxterminal}
 
 \subsubsection{Opción 2: Descarga Directa}
 
@@ -465,19 +509,14 @@ ProyectoFinal_ModelosProbabilistas2526/
 
 La forma más sencilla y portable es usar el servidor web integrado de PHP:
 
-\begin{lstlisting}[style=bashstyle, caption={Iniciar servidor PHP}]
+\begin{linuxterminal}{alumno@DESKTOP-J4QHEU8:\textasciitilde/Proyecto}
 # Navegar al directorio del proyecto
-cd ProyectoFinal_ModelosProbabilistas2526
+alumno@DESKTOP-J4QHEU8:~$ cd ProyectoFinal_ModelosProbabilistas2526
 
 # Iniciar servidor en el puerto 8000
-php -S localhost:8000
-\end{lstlisting}
-
-\textbf{Salida esperada:}
-\begin{lstlisting}[style=plaintextstyle]
-[Mon Dec 08 19:30:00 2025] PHP 8.0.30 Development Server 
-(http://localhost:8000) started
-\end{lstlisting}
+alumno@DESKTOP-J4QHEU8:~/ProyectoFinal_ModelosProbabilistas2526$ php -S localhost:8000
+[Mon Dec 08 19:30:00 2025] PHP 8.0.30 Development Server (http://localhost:8000) started
+\end{linuxterminal}
 
 \begin{importantebox}
 \textbf{Importante}: NO cierre esta ventana de terminal mientras utilice el sistema. El servidor se detendrá si cierra la terminal.
@@ -489,12 +528,11 @@ Luego abra su navegador en: \url{http://localhost:8000}
 
 Si el puerto 8000 está ocupado:
 
-\begin{lstlisting}[style=bashstyle]
+\begin{linuxterminal}{alumno@DESKTOP-J4QHEU8:\textasciitilde/Proyecto}
 # Usar puerto 9000
-php -S localhost:9000
-
-# Acceder a http://localhost:9000
-\end{lstlisting}
+alumno@DESKTOP-J4QHEU8:~/Proyecto$ php -S localhost:9000
+[Mon Dec 08 19:32:00 2025] PHP 8.0.30 Development Server (http://localhost:9000) started
+\end{linuxterminal}
 
 \subsubsection{Detener el Servidor}
 
@@ -515,19 +553,19 @@ Para detener el servidor:
         \item Los iconos de Font Awesome son visibles
         \item Los estilos de Bootstrap se aplican correctamente
     \end{itemize}
-    
+     
     \item \textbf{Navegación funciona}
     \begin{itemize}
         \item Hacer clic en ``Redes Bayesianas'' carga \codigo{/modules/bayesian/}
         \item No hay errores 404
     \end{itemize}
-    
+     
     \item \textbf{Consola sin errores}
     \begin{itemize}
         \item Presionar F12 $\rightarrow$ Tab ``Console''
         \item No debe haber errores en rojo
     \end{itemize}
-    
+     
     \item \textbf{Cargar ejemplo}
     \begin{itemize}
         \item En Redes Bayesianas, cargar ``Sistema de Alarma''
@@ -685,13 +723,13 @@ El sistema incluye ejemplos demostrativos listos para usar.
         \item Verifique: \codigo{php -v}
         \item Si falla, consulte \cref{ch:instalacion-php}
     \end{itemize}
-    
+     
     \item \textbf{Puerto ocupado}:
     \begin{itemize}
         \item Pruebe otro puerto: \codigo{php -S localhost:9000}
         \item Identifique proceso: \codigo{netstat -ano | findstr :8000} (Windows) o \codigo{lsof -ti:8000} (Linux/Mac)
     \end{itemize}
-    
+     
     \item \textbf{Permisos insuficientes}:
     \begin{itemize}
         \item Linux/Mac: Asegure permisos de lectura en archivos
@@ -722,13 +760,13 @@ El sistema incluye ejemplos demostrativos listos para usar.
         \item Verifique que todas las CPT sumen 1.0
         \item Asegúrese que probabilidades estén en [0, 1]
     \end{itemize}
-    
+     
     \item \textbf{Red con ciclos}:
     \begin{itemize}
         \item Las Redes Bayesianas deben ser DAG (sin ciclos)
         \item Rediseñe estructura eliminando ciclos
     \end{itemize}
-    
+     
     \item \textbf{Errores JavaScript}:
     \begin{itemize}
         \item Presione F12 $\rightarrow$ Console
@@ -844,8 +882,7 @@ ENUMERAR-TODO(vars, e):
     si Y tiene valor asignado en e:
         retornar P(y | padres(Y)) * ENUMERAR-TODO(RESTO(vars), e)
     sino:
-        retornar suma_y [P(y | padres(Y)) * 
-                        ENUMERAR-TODO(RESTO(vars), extend(e, Y, y))]
+        retornar suma_y [P(y | padres(Y)) * ENUMERAR-TODO(RESTO(vars), extend(e, Y, y))]
 \end{lstlisting}
 
 \subsubsection{Complejidad}
@@ -1000,13 +1037,13 @@ Un HMM $\lambda = (A, B, \pi)$ consiste en:
     \begin{itemize}
         \item Algoritmo: \textbf{Forward}
     \end{itemize}
-    
+     
     \item \textbf{Decodificación}: Encontrar secuencia de estados más probable
     \begin{itemize}
         \item $Q^* = \arg\max_Q P(Q|O,\lambda)$
         \item Algoritmo: \textbf{Viterbi}
     \end{itemize}
-    
+     
     \item \textbf{Aprendizaje}: Ajustar parámetros $\lambda$ para maximizar $P(O|\lambda)$
     \begin{itemize}
         \item Algoritmo: \textbf{Baum-Welch} (EM)
@@ -1352,8 +1389,7 @@ class HMM {
         
         // Inicializacion
         for ($i = 0; $i < $N; $i++) {
-            $alpha[0][$i] = $this->pi[$i] * 
-                            $this->B[$i][$secuencia_obs[0]];
+            $alpha[0][$i] = $this->pi[$i] * $this->B[$i][$secuencia_obs[0]];
         }
         
         // Recursion
@@ -1487,12 +1523,12 @@ Para eliminación de variables en Redes Bayesianas:
     \begin{itemize}
         \item Minimiza tamaño de factores intermedios
     \end{itemize}
-    
+     
     \item \textbf{Min-fill}: Minimizar aristas nuevas creadas al eliminar variable
     \begin{itemize}
         \item Previene aumento de complejidad
     \end{itemize}
-    
+     
     \item \textbf{Weighted-min-fill}: Combinación ponderada
     \begin{itemize}
         \item Considera tanto degree como fill
@@ -1611,10 +1647,10 @@ Sistema de alarma doméstica que puede activarse por dos causas independientes: 
 \textbf{Estructura de la red:}
 \begin{verbatim}
     Terremoto -----> Alarma <----- Ladron
-                       |
+                        |
               +--------+--------+
               |                 |
-            Juan              Maria
+             Juan             Maria
 \end{verbatim}
 
 \textbf{Variables}:
@@ -2152,21 +2188,21 @@ Tiempo 2 (Obs: Limpiar): Feliz=0.2177 Triste=0.7823
         \item Cadenas de Markov: Simulación, Distribución Estacionaria
         \item HMM: Forward, Viterbi, Forward-Backward, Backward
     \end{itemize}
-    
+     
     \item \textbf{Sistema web completamente funcional}:
     \begin{itemize}
         \item Interfaz intuitiva y responsive
         \item Visualización interactiva con vis.js
         \item Sin dependencias de frameworks externos
     \end{itemize}
-    
+     
     \item \textbf{Código modular y mantenible}:
     \begin{itemize}
         \item Arquitectura MVC simplificada
         \item Clases bien encapsuladas
         \item Documentación inline completa
     \end{itemize}
-    
+     
     \item \textbf{4 ejemplos demostrativos completamente funcionales}:
     \begin{itemize}
         \item Red Alarma (clásico)
@@ -2174,7 +2210,7 @@ Tiempo 2 (Obs: Limpiar): Feliz=0.2177 Triste=0.7823
         \item HMM de estados de ánimo
         \item Validados contra literatura académica
     \end{itemize}
-    
+     
     \item \textbf{Manejo robusto de precisión numérica}:
     \begin{itemize}
         \item Aritmética logarítmica para evitar underflow
@@ -2232,19 +2268,19 @@ Tiempo 2 (Obs: Limpiar): Feliz=0.2177 Triste=0.7823
         \item HMM: secuencias hasta ~100 observaciones
         \item No hay paralelización
     \end{itemize}
-    
+     
     \item \textbf{Solo inferencia exacta}:
     \begin{itemize}
         \item No hay muestreo (MCMC, Gibbs)
         \item No hay inferencia aproximada variacional
     \end{itemize}
-    
+     
     \item \textbf{Falta algoritmo de aprendizaje}:
     \begin{itemize}
         \item Baum-Welch no implementado
         \item Parámetros deben ser conocidos a priori
     \end{itemize}
-    
+     
     \item \textbf{Solo variables discretas}:
     \begin{itemize}
         \item No soporta gaussianas
@@ -2272,7 +2308,7 @@ Tiempo 2 (Obs: Limpiar): Feliz=0.2177 Triste=0.7823
         \item Esencial para aplicaciones reales
         \item Complejidad: Media (1-2 semanas)
     \end{itemize}
-    
+     
     \item \textbf{Editor gráfico de redes}:
     \begin{itemize}
         \item Permitir crear/editar redes visualmente
@@ -2280,14 +2316,14 @@ Tiempo 2 (Obs: Limpiar): Feliz=0.2177 Triste=0.7823
         \item Edición inline de CPTs
         \item Complejidad: Alta (3-4 semanas)
     \end{itemize}
-    
+     
     \item \textbf{Exportar/Importar XMLBIF}:
     \begin{itemize}
         \item Formato estándar académico
         \item Interoperabilidad con GeNIe, Hugin
         \item Complejidad: Baja (1 semana)
     \end{itemize}
-    
+     
     \item \textbf{Testing automatizado}:
     \begin{itemize}
         \item PHPUnit para backend
@@ -2305,7 +2341,7 @@ Tiempo 2 (Obs: Limpiar): Feliz=0.2177 Triste=0.7823
         \item Extensión temporal de redes bayesianas
         \item Aplicaciones: series temporales, tracking
     \end{itemize}
-    
+     
     \item \textbf{Inferencia aproximada}:
     \begin{itemize}
         \item Gibbs Sampling
@@ -2313,14 +2349,14 @@ Tiempo 2 (Obs: Limpiar): Feliz=0.2177 Triste=0.7823
         \item Loopy Belief Propagation
         \item Para redes grandes donde inferencia exacta es intratable
     \end{itemize}
-    
+     
     \item \textbf{Variables continuas}:
     \begin{itemize}
         \item Distribuciones Gaussianas
         \item Redes híbridas (discretas + continuas)
         \item Filtro de Kalman como caso especial
     \end{itemize}
-    
+     
     \item \textbf{API REST}:
     \begin{itemize}
         \item Endpoints JSON para integración externa
@@ -2339,21 +2375,21 @@ Tiempo 2 (Obs: Limpiar): Feliz=0.2177 Triste=0.7823
         \item O migrar backend a Python + PyTorch
         \item Para redes muy grandes (>100 nodos)
     \end{itemize}
-    
+     
     \item \textbf{Aprendizaje de estructura}:
     \begin{itemize}
         \item Descubrir estructura de red desde datos
         \item Algoritmos: Hill Climbing, PC, K2
         \item Muy valioso para data science
     \end{itemize}
-    
+     
     \item \textbf{Explicabilidad (XAI)}:
     \begin{itemize}
         \item Justificar inferencias en lenguaje natural
         \item Visualización de flujo de evidencia
         \item Análisis de sensibilidad
     \end{itemize}
-    
+     
     \item \textbf{Integración con Deep Learning}:
     \begin{itemize}
         \item Redes neuronales probabilísticas
@@ -2442,11 +2478,13 @@ El conocimiento adquirido trasciende las tecnologías específicas: los principi
 
 \subsection{Verificación}
 
-\begin{lstlisting}[style=bashstyle]
+\begin{linuxterminal}{alumno@DESKTOP-J4QHEU8:\textasciitilde}
 # Abrir PowerShell o CMD
-php -v
-# Debe mostrar: PHP 8.x.x (cli) ...
-\end{lstlisting}
+alumno@DESKTOP-J4QHEU8:~$ php -v
+PHP 8.0.30 (cli) (built: Aug 23 2023 12:00:00) ( NTS )
+Copyright (c) The PHP Group
+Zend Engine v4.0.30, Copyright (c) Zend Technologies
+\end{linuxterminal}
 
 \subsection{Habilitar Extensiones (Opcional)}
 
@@ -2462,32 +2500,32 @@ extension=pdo_mysql  ; Si usara base de datos
 
 \subsection{Instalación desde Repositorios}
 
-\begin{lstlisting}[style=bashstyle, caption={Instalación completa en Ubuntu}]
+\begin{linuxterminal}{alumno@DESKTOP-J4QHEU8:\textasciitilde}
 # Actualizar repositorios
-sudo apt update
+alumno@DESKTOP-J4QHEU8:~$ sudo apt update
 
 # Instalar PHP y extensiones comunes
-sudo apt install php php-cli php-mbstring php-json php-xml
+alumno@DESKTOP-J4QHEU8:~$ sudo apt install php php-cli php-mbstring php-json php-xml
 
 # Verificar instalacion
-php -v
-\end{lstlisting}
+alumno@DESKTOP-J4QHEU8:~$ php -v
+\end{linuxterminal}
 
 \subsection{Instalación de Versión Específica}
 
 Para instalar PHP 8.0+ en Ubuntu 20.04:
 
-\begin{lstlisting}[style=bashstyle]
+\begin{linuxterminal}{alumno@DESKTOP-J4QHEU8:\textasciitilde}
 # Agregar repositorio Ondrej
-sudo add-apt-repository ppa:ondrej/php
-sudo apt update
+alumno@DESKTOP-J4QHEU8:~$ sudo add-apt-repository ppa:ondrej/php
+alumno@DESKTOP-J4QHEU8:~$ sudo apt update
 
 # Instalar PHP 8.2
-sudo apt install php8.2 php8.2-cli php8.2-mbstring
+alumno@DESKTOP-J4QHEU8:~$ sudo apt install php8.2 php8.2-cli php8.2-mbstring
 
 # Verificar
-php -v
-\end{lstlisting}
+alumno@DESKTOP-J4QHEU8:~$ php -v
+\end{linuxterminal}
 
 \section{macOS}
 
@@ -2495,65 +2533,64 @@ php -v
 
 macOS incluye PHP, pero puede ser versión antigua:
 
-\begin{lstlisting}[style=bashstyle]
-php -v
+\begin{linuxterminal}{alumno@DESKTOP-J4QHEU8:\textasciitilde}
+alumno@DESKTOP-J4QHEU8:~$ php -v
 # Si version < 7.4, actualizar con Homebrew
-\end{lstlisting}
+\end{linuxterminal}
 
 \subsection{Instalación con Homebrew}
 
-\begin{lstlisting}[style=bashstyle, caption={Instalación en macOS}]
+\begin{linuxterminal}{alumno@DESKTOP-J4QHEU8:\textasciitilde}
 # Instalar Homebrew (si no lo tiene)
-/bin/bash -c "$(curl -fsSL \
-https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+alumno@DESKTOP-J4QHEU8:~$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # Instalar PHP
-brew install php
+alumno@DESKTOP-J4QHEU8:~$ brew install php
 
 # Agregar al PATH (si necesario)
-echo 'export PATH="/usr/local/opt/php/bin:$PATH"' >> ~/.zshrc
-source ~/.zshrc
+alumno@DESKTOP-J4QHEU8:~$ echo 'export PATH="/usr/local/opt/php/bin:$PATH"' >> ~/.zshrc
+alumno@DESKTOP-J4QHEU8:~$ source ~/.zshrc
 
 # Verificar
-php -v
-\end{lstlisting}
+alumno@DESKTOP-J4QHEU8:~$ php -v
+\end{linuxterminal}
 
 \chapter{Glosario de Términos}
 \label{ch:glosario}
 
 \begin{description}[leftmargin=3cm, style=nextline]
     \item[A Priori] Probabilidad inicial antes de observar evidencia.
-    
+     
     \item[A Posteriori] Probabilidad actualizada después de observar evidencia.
-    
+     
     \item[Backward Algorithm] Algoritmo que calcula probabilidades hacia atrás en el tiempo en HMM.
-    
+     
     \item[Baum-Welch] Algoritmo EM para aprender parámetros de HMM.
-    
+     
     \item[CPT] Conditional Probability Table - Tabla de Probabilidad Condicional.
-    
+     
     \item[DAG] Directed Acyclic Graph - Grafo Acíclico Dirigido.
-    
+     
     \item[EM] Expectation-Maximization - Algoritmo iterativo para máxima verosimilitud.
-    
+     
     \item[Forward Algorithm] Algoritmo que calcula $P(O|\lambda)$ en HMM.
-    
+     
     \item[Hidden State] Estado oculto en HMM que no se observa directamente.
-    
+     
     \item[Inference] Inferencia - Cálculo de probabilidades en modelos probabilísticos.
-    
+     
     \item[Marginalización] Sumar sobre variables no relevantes para obtener distribución marginal.
-    
+     
     \item[Markov Property] Propiedad que establece que el futuro depende solo del presente.
-    
+     
     \item[Memoización] Técnica de cache que almacena resultados de cálculos previos.
-    
+     
     \item[Observación] Variable visible en HMM que se puede medir directamente.
-    
+     
     \item[Underflow] Error numérico donde valor se vuelve tan pequeño que se redondea a cero.
-    
+     
     \item[Variable Oculta] Variable que no se consulta ni es evidencia, se marginaliza.
-    
+     
     \item[Viterbi] Algoritmo que encuentra secuencia de estados más probable en HMM.
 \end{description}
 
@@ -2562,23 +2599,23 @@ php -v
 
 \begin{enumerate}[leftmargin=*]
     \item Russell, S., \& Norvig, P. (2021). \textit{Artificial Intelligence: A Modern Approach} (4th ed.). Pearson Education.
-    
+     
     \item Koller, D., \& Friedman, N. (2009). \textit{Probabilistic Graphical Models: Principles and Techniques}. MIT Press.
-    
+     
     \item Rabiner, L. R. (1989). A tutorial on hidden Markov models and selected applications in speech recognition. \textit{Proceedings of the IEEE}, 77(2), 257--286.
-    
+     
     \item Pearl, J. (1988). \textit{Probabilistic Reasoning in Intelligent Systems: Networks of Plausible Inference}. Morgan Kaufmann Publishers.
-    
+     
     \item Murphy, K. P. (2012). \textit{Machine Learning: A Probabilistic Perspective}. MIT Press.
-    
+     
     \item Bishop, C. M. (2006). \textit{Pattern Recognition and Machine Learning}. Springer.
-    
+     
     \item Barber, D. (2012). \textit{Bayesian Reasoning and Machine Learning}. Cambridge University Press.
-    
+     
     \item Jurafsky, D., \& Martin, J. H. (2023). \textit{Speech and Language Processing} (3rd ed.). Prentice Hall.
-    
+     
     \item Zhang, N. L., \& Poole, D. (1996). Exploiting causal independence in Bayesian network inference. \textit{Journal of Artificial Intelligence Research}, 5, 301--328.
-    
+     
     \item Dempster, A. P., Laird, N. M., \& Rubin, D. B. (1977). Maximum likelihood from incomplete data via the EM algorithm. \textit{Journal of the Royal Statistical Society: Series B}, 39(1), 1--22.
 \end{enumerate}
 

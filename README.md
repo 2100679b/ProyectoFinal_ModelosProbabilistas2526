@@ -1,71 +1,85 @@
-# 🎓 Proyecto Final - Modelos Probabilistas
+🎓 Proyecto Final - Modelos Probabilistas
 
-## Universidad Michoacana de San Nicolás de Hidalgo
-### Facultad de Ingeniería Eléctrica - Ingeniería en Computación
+Universidad Michoacana de San Nicolás de Hidalgo
 
----
+Facultad de Ingeniería Eléctrica - Ingeniería en Computación
 
-## 📋 Descripción del Proyecto
+📋 Descripción del Proyecto
 
-Aplicación web desarrollada en **PHP puro** (sin frameworks) que implementa algoritmos fundamentales para tres tipos de modelos probabilistas:
+Aplicación web desarrollada en PHP puro (sin frameworks) que implementa algoritmos fundamentales para tres tipos de modelos probabilistas:
 
-- **Redes Bayesianas (RB)**
-- **Cadenas de Markov (CM)**
-- **Modelos Ocultos de Markov (HMM)**
+Redes Bayesianas (RB)
+
+Cadenas de Markov (CM)
+
+Modelos Ocultos de Markov (HMM)
 
 Cada módulo incluye algoritmos de inferencia, visualización interactiva y ejemplos prácticos para demostrar su funcionamiento.
 
----
+🎯 Objetivos
 
-## 🎯 Objetivos
+Implementar algoritmos de inferencia probabilística en PHP puro
 
-- Implementar algoritmos de inferencia probabilística en PHP puro
-- Desarrollar una interfaz de usuario intuitiva sin frameworks
-- Aplicar conceptos teóricos en problemas prácticos
-- Visualizar modelos gráficos probabilistas con JavaScript vanilla
+Desarrollar una interfaz de usuario intuitiva sin frameworks
 
----
+Aplicar conceptos teóricos en problemas prácticos
 
-## ✨ Características Principales
+Visualizar modelos gráficos probabilistas con JavaScript vanilla
 
-### 🔗 Módulo de Redes Bayesianas
-- ✅ Algoritmo de Enumeración para inferencia exacta
-- ✅ Algoritmo de Eliminación de Variables
-- ✅ Visualización gráfica de la red (JavaScript puro)
-- ✅ Ejemplos: Alarma-Terremoto, Red Médica, Diagnóstico de Fallas
+✨ Características Principales
 
-### ⛓️ Módulo de Cadenas de Markov
-- ✅ Implementación de cadenas de primer orden
-- ✅ Cálculo de matriz de transición de estados
-- ✅ Cálculo de probabilidades estacionarias
-- ✅ Visualización del grafo de estados
-- ✅ Ejemplos: Predicción del Clima, Comportamiento del Cliente
+🔗 Módulo de Redes Bayesianas
 
-### 🔍 Módulo de Modelos Ocultos de Markov
-- ✅ Algoritmo Forward (probabilidades de observación)
-- ✅ Algoritmo Viterbi (decodificación de secuencias)
-- ✅ Algoritmo Forward-Backward (suavizado)
-- ✅ Visualización de estados ocultos y observables
-- ✅ Ejemplos: Robot y Clima, Reconocimiento de Voz
+✅ Algoritmo de Enumeración para inferencia exacta
 
----
+✅ Algoritmo de Eliminación de Variables
 
-## 🛠️ Tecnologías Utilizadas
+✅ Visualización gráfica de la red (JavaScript puro)
 
-- **Backend**: PHP 7.4+ (sin frameworks, código puro)
-- **Frontend**: HTML5, CSS3 (sin preprocesadores)
-- **JavaScript**: Vanilla JS (sin jQuery ni librerías pesadas)
-- **Visualización**: Canvas API / SVG nativo
-- **Servidor**: PHP integrado / Apache / Nginx
-- **Base de datos**: NO requiere (todo en memoria/archivos)
+✅ Ejemplos: Alarma-Terremoto, Red Médica, Diagnóstico de Fallas
 
-> **Nota**: Este proyecto NO utiliza frameworks, ORMs, ni dependencias externas. Todo el código es PHP y JavaScript nativos.
+⛓️ Módulo de Cadenas de Markov
 
----
+✅ Implementación de cadenas de primer orden
 
-## 📁 Estructura del Proyecto
+✅ Cálculo de matriz de transición de estados
 
-```
+✅ Cálculo de probabilidades estacionarias
+
+✅ Visualización del grafo de estados
+
+✅ Ejemplos: Predicción del Clima, Comportamiento del Cliente
+
+🔍 Módulo de Modelos Ocultos de Markov
+
+✅ Algoritmo Forward (probabilidades de observación)
+
+✅ Algoritmo Viterbi (decodificación de secuencias)
+
+✅ Algoritmo Forward-Backward (suavizado)
+
+✅ Visualización de estados ocultos y observables
+
+✅ Ejemplos: Robot y Clima, Reconocimiento de Voz
+
+🛠️ Tecnologías Utilizadas
+
+Backend: PHP 7.4+ (sin frameworks, código puro)
+
+Frontend: HTML5, CSS3 (sin preprocesadores)
+
+JavaScript: Vanilla JS (sin jQuery ni librerías pesadas)
+
+Visualización: Canvas API / SVG nativo
+
+Servidor: PHP integrado / Apache / Nginx
+
+Base de datos: NO requiere (todo en memoria/archivos)
+
+Nota: Este proyecto NO utiliza frameworks, ORMs, ni dependencias externas. Todo el código es PHP y JavaScript nativos.
+
+📁 Estructura del Proyecto
+
 ProyectoFinal_ModelosProbabilistas2526/
 │
 ├── index.php                    # Página principal
@@ -130,245 +144,356 @@ ProyectoFinal_ModelosProbabilistas2526/
     ├── examples_rb.json
     ├── examples_cm.json
     └── examples_hmm.json
-```
 
----
 
-## 🚀 Instalación y Configuración
+🚀 Instalación y Configuración
 
-### Requisitos Previos
+Requisitos Previos
 
-- **PHP**: Versión 7.4 o superior (sin extensiones especiales)
-- **Servidor Web**: Apache, Nginx o **servidor integrado de PHP** (recomendado)
-- **Navegador**: Chrome, Firefox, Edge (versiones recientes)
-- **Git**: Para clonar el repositorio (opcional)
+PHP: Versión 7.4 o superior (sin extensiones especiales)
 
-> ⚠️ **NO se requiere**: Composer, npm, MySQL, frameworks, ni dependencias externas.
+Servidor Web: Apache, Nginx o servidor integrado de PHP (recomendado)
 
----
+Navegador: Chrome, Firefox, Edge (versiones recientes)
 
-### ⚡ Instalación Rápida (Recomendada)
+Git: Para clonar el repositorio (opcional)
 
-#### Windows
+⚠️ NO se requiere: Composer, npm, MySQL, frameworks, ni dependencias externas.
 
-1. **Descargar el proyecto**
-   ```bash
-   # Con Git
-   git clone https://github.com/2100679b/ProyectoFinal_ModelosProbabilistas2526
-   cd ProyectoFinal_ModelosProbabilistas2526
-   
-   # O descargar ZIP y extraer
-   ```
+⚡ Instalación Rápida (Recomendada)
 
-2. **Iniciar servidor PHP integrado**
-   ```bash
-   # Abrir CMD o PowerShell en la carpeta del proyecto
-   php -S localhost:8000
-   ```
+Windows
 
-3. **Acceder al proyecto**
-   - Abrir navegador
-   - Ir a: `http://localhost:8000`
+Descargar el proyecto
 
-#### Linux/Ubuntu
+# Con Git
+git clone [https://github.com/2100679b/ProyectoFinal_ModelosProbabilistas2526](https://github.com/2100679b/ProyectoFinal_ModelosProbabilistas2526)
+cd ProyectoFinal_ModelosProbabilistas2526
 
-1. **Verificar PHP instalado**
-   ```bash
-   php --version
-   # Si no está instalado: sudo apt install php
-   ```
+# O descargar ZIP y extraer
 
-2. **Clonar el proyecto**
-   ```bash
-   cd ~
-   git clone https://github.com/2100679b/ProyectoFinal_ModelosProbabilistas2526
-   cd ProyectoFinal_ModelosProbabilistas2526
-   ```
 
-3. **Iniciar servidor**
-   ```bash
-   php -S localhost:8000
-   ```
+Iniciar servidor PHP integrado
 
-4. **Acceder**
-   - Ir a: `http://localhost:8000`
+# Abrir CMD o PowerShell en la carpeta del proyecto
+php -S localhost:8000
 
----
 
-### 📦 Instalación con XAMPP (Alternativa)
+Acceder al proyecto
 
-#### Windows
+Abrir navegador
 
-1. **Descargar e instalar XAMPP**
-   - Ir a: https://www.apachefriends.org/
-   - Descargar versión para Windows
-   - Instalar en `C:\xampp`
+Ir a: http://localhost:8000
 
-2. **Copiar el proyecto**
-   ```bash
-   # Copiar carpeta completa a:
-   C:\xampp\htdocs\ProyectoFinal_ModelosProbabilistas2526
-   ```
+Linux/Ubuntu
 
-3. **Iniciar Apache**
-   - Abrir XAMPP Control Panel
-   - Click en "Start" junto a Apache
+Verificar PHP instalado
 
-4. **Acceder**
-   - Ir a: `http://localhost/ProyectoFinal_ModelosProbabilistas2526`
+php --version
+# Si no está instalado: sudo apt install php
 
-#### Linux
 
-1. **Instalar Apache y PHP**
-   ```bash
-   sudo apt update
-   sudo apt install apache2 php libapache2-mod-php
-   ```
+Clonar el proyecto
 
-2. **Copiar el proyecto**
-   ```bash
-   sudo cp -r ProyectoFinal_ModelosProbabilistas2526 /var/www/html/
-   ```
+cd ~
+git clone [https://github.com/2100679b/ProyectoFinal_ModelosProbabilistas2526](https://github.com/2100679b/ProyectoFinal_ModelosProbabilistas2526)
+cd ProyectoFinal_ModelosProbabilistas2526
 
-3. **Configurar permisos**
-   ```bash
-   sudo chmod -R 755 /var/www/html/ProyectoFinal_ModelosProbabilistas2526
-   sudo chown -R www-data:www-data /var/www/html/ProyectoFinal_ModelosProbabilistas2526
-   ```
 
-4. **Reiniciar Apache**
-   ```bash
-   sudo systemctl restart apache2
-   ```
+Iniciar servidor
 
-5. **Acceder**
-   - Ir a: `http://localhost/ProyectoFinal_ModelosProbabilistas2526`
+php -S localhost:8000
 
----
 
-## 🎮 Uso del Sistema
+Acceder
 
-### Navegación Principal
+Ir a: http://localhost:8000
 
-1. **Página Principal** (`index.php`)
-   - Presenta los tres módulos disponibles
-   - Links a cada sección
+📦 Instalación con XAMPP (Alternativa)
 
-2. **Seleccionar Módulo**:
-   - Click en "Redes Bayesianas"
-   - Click en "Cadenas de Markov"
-   - Click en "Modelos Ocultos de Markov"
+Windows
 
----
+Descargar e instalar XAMPP
 
-### Ejemplo: Redes Bayesianas
+Ir a: https://www.apachefriends.org/
 
-1. **Acceder al módulo**
-   ```
-   http://localhost:8000/modules/bayesian/
-   ```
+Descargar versión para Windows
 
-2. **Cargar ejemplo predefinido**
-   - Seleccionar "Alarma-Terremoto" del menú desplegable
-   - Click en "Cargar Ejemplo"
+Instalar en C:\xampp
 
-3. **Configurar nodos**
-   - Definir variables de la red
-   - Establecer dependencias
-   - Ingresar tablas de probabilidad condicional
+Copiar el proyecto
 
-4. **Ejecutar inferencia**
-   - Seleccionar algoritmo (Enumeración o Eliminación)
-   - Especificar evidencia
-   - Click en "Calcular"
+# Copiar carpeta completa a:
+C:\xampp\htdocs\ProyectoFinal_ModelosProbabilistas2526
 
-5. **Ver resultados**
-   - Probabilidades posteriores
-   - Visualización gráfica de la red
-   - Pasos del algoritmo
 
----
+Iniciar Apache
 
-### Ejemplo: Cadenas de Markov
+Abrir XAMPP Control Panel
 
-1. **Acceder al módulo**
-   ```
-   http://localhost:8000/modules/markov/
-   ```
+Click en "Start" junto a Apache
 
-2. **Definir estados**
-   - Ingresar estados del sistema (ej: Soleado, Lluvioso)
-   - Configurar matriz de transición
+Acceder
 
-3. **Calcular**
-   - Probabilidades de transición
-   - Distribución estacionaria
-   - Predicciones futuras
+Ir a: http://localhost/ProyectoFinal_ModelosProbabilistas2526
 
-4. **Visualizar**
-   - Grafo de estados y transiciones
-   - Matriz en formato tabla
+Linux
 
----
+Instalar Apache y PHP
 
-### Ejemplo: HMM
+sudo apt update
+sudo apt install apache2 php libapache2-mod-php
 
-1. **Acceder al módulo**
-   ```
-   http://localhost:8000/modules/hmm/
-   ```
 
-2. **Configurar modelo**
-   - Estados ocultos (ej: Clima real)
-   - Observaciones (ej: Sensores del robot)
-   - Probabilidades de emisión
+Copiar el proyecto
 
-3. **Ejecutar algoritmo**
-   - **Forward**: Probabilidad de secuencia
-   - **Viterbi**: Secuencia de estados más probable
-   - **Forward-Backward**: Suavizado
+sudo cp -r ProyectoFinal_ModelosProbabilistas2526 /var/www/html/
 
-4. **Analizar resultados**
-   - Secuencia decodificada
-   - Probabilidades por estado
-   - Visualización temporal
 
----
+Configurar permisos
 
-## 🧪 Ejemplos Predefinidos
+sudo chmod -R 755 /var/www/html/ProyectoFinal_ModelosProbabilistas2526
+sudo chown -R www-data:www-data /var/www/html/ProyectoFinal_ModelosProbabilistas2526
 
-### Redes Bayesianas
 
-| Ejemplo | Descripción | Nodos | Dificultad |
-|---------|-------------|-------|------------|
-| Alarma-Terremoto | Red clásica con 5 nodos | 5 | Básica |
-| Red Médica | Diagnóstico de enfermedades | 8 | Media |
-| Diagnóstico de Fallas | Detección de problemas | 10 | Media |
-| Clima Complejo | Predicción meteorológica | 12 | Avanzada |
+Reiniciar Apache
 
-### Cadenas de Markov
+sudo systemctl restart apache2
 
-| Ejemplo | Descripción | Estados | Tipo |
-|---------|-------------|---------|------|
-| Predicción del Clima | Soleado, Nublado, Lluvioso | 3 | Básico |
-| Comportamiento del Cliente | Nuevo, Activo, Inactivo | 3 | Medio |
-| Análisis de Texto | Estados de palabras | 5 | Avanzado |
 
-### HMM
+Acceder
 
-| Ejemplo | Descripción | Estados Ocultos | Observaciones |
-|---------|-------------|-----------------|---------------|
-| Robot y Clima | 2 (Soleado, Lluvioso) | 3 (Sensores) | Básico |
-| Reconocimiento de Voz | 4 (Fonemas) | 6 (Señales) | Medio |
-| Análisis de ADN | 3 (Regiones) | 4 (Bases) | Avanzado |
+Ir a: http://localhost/ProyectoFinal_ModelosProbabilistas2526
 
----
+🎮 Uso del Sistema
 
-## 🔧 Configuración Avanzada
+Navegación Principal
 
-### Editar `config.php`
+Página Principal (index.php)
 
-```php
+Presenta los tres módulos disponibles
+
+Links a cada sección
+
+Seleccionar Módulo:
+
+Click en "Redes Bayesianas"
+
+Click en "Cadenas de Markov"
+
+Click en "Modelos Ocultos de Markov"
+
+Ejemplo: Redes Bayesianas
+
+Acceder al módulo
+
+http://localhost:8000/modules/bayesian/
+
+
+Cargar ejemplo predefinido
+
+Seleccionar "Alarma-Terremoto" del menú desplegable
+
+Click en "Cargar Ejemplo"
+
+Configurar nodos
+
+Definir variables de la red
+
+Establecer dependencias
+
+Ingresar tablas de probabilidad condicional
+
+Ejecutar inferencia
+
+Seleccionar algoritmo (Enumeración o Eliminación)
+
+Especificar evidencia
+
+Click en "Calcular"
+
+Ver resultados
+
+Probabilidades posteriores
+
+Visualización gráfica de la red
+
+Pasos del algoritmo
+
+Ejemplo: Cadenas de Markov
+
+Acceder al módulo
+
+http://localhost:8000/modules/markov/
+
+
+Definir estados
+
+Ingresar estados del sistema (ej: Soleado, Lluvioso)
+
+Configurar matriz de transición
+
+Calcular
+
+Probabilidades de transición
+
+Distribución estacionaria
+
+Predicciones futuras
+
+Visualizar
+
+Grafo de estados y transiciones
+
+Matriz en formato tabla
+
+Ejemplo: HMM
+
+Acceder al módulo
+
+http://localhost:8000/modules/hmm/
+
+
+Configurar modelo
+
+Estados ocultos (ej: Clima real)
+
+Observaciones (ej: Sensores del robot)
+
+Probabilidades de emisión
+
+Ejecutar algoritmo
+
+Forward: Probabilidad de secuencia
+
+Viterbi: Secuencia de estados más probable
+
+Forward-Backward: Suavizado
+
+Analizar resultados
+
+Secuencia decodificada
+
+Probabilidades por estado
+
+Visualización temporal
+
+🧪 Ejemplos Predefinidos
+
+Redes Bayesianas
+
+Ejemplo
+
+Descripción
+
+Nodos
+
+Dificultad
+
+Alarma-Terremoto
+
+Red clásica con 5 nodos
+
+5
+
+Básica
+
+Red Médica
+
+Diagnóstico de enfermedades
+
+8
+
+Media
+
+Diagnóstico de Fallas
+
+Detección de problemas
+
+10
+
+Media
+
+Clima Complejo
+
+Predicción meteorológica
+
+12
+
+Avanzada
+
+Cadenas de Markov
+
+Ejemplo
+
+Descripción
+
+Estados
+
+Tipo
+
+Predicción del Clima
+
+Soleado, Nublado, Lluvioso
+
+3
+
+Básico
+
+Comportamiento del Cliente
+
+Nuevo, Activo, Inactivo
+
+3
+
+Medio
+
+Análisis de Texto
+
+Estados de palabras
+
+5
+
+Avanzado
+
+HMM
+
+Ejemplo
+
+Descripción
+
+Estados Ocultos
+
+Observaciones
+
+Robot y Clima
+
+2 (Soleado, Lluvioso)
+
+3 (Sensores)
+
+Básico
+
+Reconocimiento de Voz
+
+4 (Fonemas)
+
+6 (Señales)
+
+Medio
+
+Análisis de ADN
+
+3 (Regiones)
+
+4 (Bases)
+
+Avanzado
+
+🔧 Configuración Avanzada
+
+Editar config.php
+
 <?php
 // Configuración global del proyecto
 
@@ -407,87 +532,86 @@ spl_autoload_register(function ($class) {
     }
 });
 ?>
-```
 
----
 
-## 🐛 Solución de Problemas
+🐛 Solución de Problemas
 
-### Problema: "Cannot access localhost:8000"
-**Causa**: Puerto ocupado o servidor no iniciado  
-**Solución**:
-```bash
+Problema: "Cannot access localhost:8000"
+
+Causa: Puerto ocupado o servidor no iniciado
+
+Solución:
+
 # Cambiar puerto
 php -S localhost:8080
 
 # O verificar si algo usa el puerto
 netstat -ano | findstr :8000  # Windows
 lsof -i :8000                  # Linux
-```
 
----
 
-### Problema: "Call to undefined function..."
-**Causa**: `config.php` no incluido  
-**Solución**: Verificar que cada archivo PHP tenga:
-```php
+Problema: "Call to undefined function..."
+
+Causa: config.php no incluido
+
+Solución: Verificar que cada archivo PHP tenga:
+
 <?php
 require_once __DIR__ . '/../../config.php';
 ?>
-```
 
----
 
-### Problema: CSS/JS no se cargan
-**Causa**: Rutas incorrectas  
-**Solución**:
-```php
+Problema: CSS/JS no se cargan
+
+Causa: Rutas incorrectas
+
+Solución:
+
 // En header.php usar rutas absolutas desde BASE_URL
 <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
 <script src="<?= BASE_URL ?>/assets/js/main.js"></script>
-```
 
----
 
-### Problema: "Undefined variable" en PHP
-**Causa**: Variables no inicializadas  
-**Solución**: Activar display_errors en desarrollo:
-```php
+Problema: "Undefined variable" en PHP
+
+Causa: Variables no inicializadas
+
+Solución: Activar display_errors en desarrollo:
+
 // Agregar al inicio de config.php
 if (DEBUG_MODE) {
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
 }
-```
 
----
 
-### Problema: Errores de permisos (Linux)
-**Solución**:
-```bash
+Problema: Errores de permisos (Linux)
+
+Solución:
+
 # Dar permisos de lectura/escritura
 chmod -R 755 ProyectoFinal_ModelosProbabilistas2526
 
 # Si usa Apache
 sudo chown -R www-data:www-data ProyectoFinal_ModelosProbabilistas2526
-```
 
----
 
-### Problema: "Cannot modify header information"
-**Causa**: Salida antes de `header()`  
-**Solución**: 
-1. No dejar espacios antes de `<?php`
-2. Usar `ob_start()` al inicio si es necesario
-3. Verificar que no haya `echo` antes de redirecciones
+Problema: "Cannot modify header information"
 
----
+Causa: Salida antes de header()
 
-## 📚 Estructura del Código
+Solución:
 
-### Ejemplo: Clase BayesianNetwork
+No dejar espacios antes de <?php
 
-```php
+Usar ob_start() al inicio si es necesario
+
+Verificar que no haya echo antes de redirecciones
+
+📚 Estructura del Código
+
+Ejemplo: Clase BayesianNetwork
+
 <?php
 // modules/bayesian/BayesianNetwork.php
 
@@ -521,11 +645,10 @@ class BayesianNetwork {
     }
 }
 ?>
-```
 
-### Ejemplo: Uso en página
 
-```php
+Ejemplo: Uso en página
+
 <?php
 // modules/bayesian/index.php
 require_once '../../config.php';
@@ -565,75 +688,88 @@ include '../../includes/header.php';
 <script src="<?= BASE_URL ?>/assets/js/bayesian.js"></script>
 
 <?php include '../../includes/footer.php'; ?>
-```
 
----
 
-## 👥 Equipo de Desarrollo
+👥 Equipo de Desarrollo
 
-- **Susana Ramírez López**: `2201331d@umich.mx`
-- **Abraham Flores Ávila**: `2100679b@umich.mx`
+Abraham Flores Ávila: 2100679b@umich.mx
 
-**Profesor**: Mauricio Reyes  
-**Correo**: mauricio.reyes@umich.mx
+Profesor: Mauricio Reyes
 
----
+Correo: mauricio.reyes@umich.mx
 
-## 📅 Cronograma
+📅 Cronograma
 
-| Fecha | Entrega |
-|-------|---------|
-| Nov 27, 2025 | Inicio del proyecto |
-| Dic 10, 2025 | Avance 1 (Redes Bayesianas) |
-| Dic 17, 2025 | Documentación completa (12:00 PM) |
-| Dic 19, 2025 | Presentación final (10:00-13:00 hrs) |
+Fecha
 
----
+Entrega
 
-## 📝 Licencia
+Nov 27, 2025
 
-Este proyecto es parte del curso de **Modelos Probabilistas** de la Universidad Michoacana de San Nicolás de Hidalgo.
+Inicio del proyecto
+
+Dic 10, 2025
+
+Avance 1 (Redes Bayesianas)
+
+Dic 17, 2025
+
+Documentación completa (12:00 PM)
+
+Dic 19, 2025
+
+Presentación final (10:00-13:00 hrs)
+
+📝 Licencia
+
+Este proyecto es parte del curso de Modelos Probabilistas de la Universidad Michoacana de San Nicolás de Hidalgo.
 
 © 2025 UMSNH - Facultad de Ingeniería Eléctrica
 
----
+🔗 Referencias y Recursos
 
-## 🔗 Referencias y Recursos
+Documentación PHP
 
-### Documentación PHP
-- [PHP Manual](https://www.php.net/manual/es/)
-- [PHP Arrays](https://www.php.net/manual/es/language.types.array.php)
-- [PHP OOP](https://www.php.net/manual/es/language.oop5.php)
+PHP Manual
 
-### Algoritmos
-- Russell & Norvig - *Artificial Intelligence: A Modern Approach*
-- Daphne Koller - *Probabilistic Graphical Models*
+PHP Arrays
 
-### JavaScript Vanilla
-- [MDN Web Docs](https://developer.mozilla.org/es/)
-- [Canvas API](https://developer.mozilla.org/es/docs/Web/API/Canvas_API)
+PHP OOP
 
-### Git
-- [Git Documentation](https://git-scm.com/doc)
-- [GitHub Guides](https://guides.github.com/)
+Algoritmos
 
----
+Russell & Norvig - Artificial Intelligence: A Modern Approach
 
-## 📞 Contacto y Soporte
+Daphne Koller - Probabilistic Graphical Models
 
-**Para dudas sobre el proyecto:**
-- **Correo**: mauricio.reyes@umich.mx
-- **Ubicación**: Laboratorio de Simulación y Cómputo Avanzado  
-  Edificio "B" Planta Alta  
-  Facultad de Ingeniería Eléctrica, UMSNH
+JavaScript Vanilla
 
-**Horario de atención**: Lunes a Viernes, 10:00 - 14:00 hrs
+MDN Web Docs
 
----
+Canvas API
 
-## 🚀 Comandos Útiles
+Git
 
-```bash
+Git Documentation
+
+GitHub Guides
+
+📞 Contacto y Soporte
+
+Para dudas sobre el proyecto:
+
+Correo: mauricio.reyes@umich.mx
+
+Ubicación: Laboratorio de Simulación y Cómputo Avanzado
+
+Edificio "B" Planta Alta
+
+Facultad de Ingeniería Eléctrica, UMSNH
+
+Horario de atención: Lunes a Viernes, 10:00 - 14:00 hrs
+
+🚀 Comandos Útiles
+
 # Iniciar servidor PHP integrado
 php -S localhost:8000
 
@@ -648,24 +784,28 @@ php -l archivo.php
 
 # Ejecutar script de prueba
 php tests/test_bayesian.php
-```
 
----
 
-## 📋 Checklist de Entrega
+📋 Checklist de Entrega
 
-- [ ] Código fuente completo
-- [ ] README.md actualizado
-- [ ] Manual de usuario (PDF)
-- [ ] Documentación técnica (PDF)
-- [ ] Ejemplos funcionando
-- [ ] Sin errores PHP
-- [ ] Probado en al menos 2 navegadores
-- [ ] Código comentado
-- [ ] Estructura de carpetas organizada
+[ ] Código fuente completo
 
----
+[ ] README.md actualizado
 
-**Última actualización**: Diciembre 2025
+[ ] Manual de usuario (PDF)
 
-**Versión**: 1.0.0
+[ ] Documentación técnica (PDF)
+
+[ ] Ejemplos funcionando
+
+[ ] Sin errores PHP
+
+[ ] Probado en al menos 2 navegadores
+
+[ ] Código comentado
+
+[ ] Estructura de carpetas organizada
+
+Última actualización: Diciembre 2025
+
+Versión: 1.0.0

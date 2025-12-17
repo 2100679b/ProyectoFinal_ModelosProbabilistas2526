@@ -1,0 +1,210 @@
+\documentclass[12pt, a4paper]{book} % Usamos 'book' para un documento extenso con capítulos
+
+% ==========================================================
+% PAQUETES ESENCIALES
+% ==========================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}    % Soporte para español
+\usepackage{amsmath}           % Matemáticas avanzadas (alineación, matrices)
+\usepackage{amssymb}           % Símbolos matemáticos (conjuntos, distribuciones)
+\usepackage{graphicx}          % Para incluir figuras y diagramas
+\usepackage{hyperref}          % Para enlaces interactivos en el PDF
+\usepackage{listings}          % Para incluir código fuente (PHP)
+\usepackage{geometry}          % Para definir márgenes
+\usepackage{float}             % Para control de posicionamiento de figuras [H]
+\usepackage{verbatim}          % Para entorno verbatim (mostrar texto como está)
+
+% Configuración de Márgenes
+\geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=25mm,
+ right=20mm,
+ top=25mm,
+ bottom=20mm,
+}
+
+% ==========================================================
+% CONFIGURACIÓN DEL CÓDIGO (LISTINGS)
+% ==========================================================
+\lstset{
+    language=PHP,                 % Lenguaje a resaltar
+    basicstyle=\small\ttfamily,   % Estilo de la fuente
+    numbers=left,                 % Números de línea a la izquierda
+    numberstyle=\tiny\color{gray},% Estilo de los números de línea
+    stepnumber=1,                 % Mostrar cada línea
+    showspaces=false,             % No mostrar espacios
+    showstringspaces=false,       % No mostrar espacios en strings
+    showtabs=false,               % No mostrar tabs
+    frame=single,                 % Marco alrededor del código
+    framesep=5pt,                 % Espacio entre el marco y el texto
+    rulecolor=\color{black!70},   % Color del marco
+    tabsize=4,                    % Tamaño de la tabulación
+    captionpos=b,                 % Posición del título (abajo)
+    breaklines=true,              % Romper líneas largas
+    keywordstyle=\color{blue}\bfseries, % Estilo de las palabras clave
+    stringstyle=\color{red},      % Estilo de los strings
+    commentstyle=\color{green!60!black}\itshape % Estilo de los comentarios
+}
+
+% ==========================================================
+% METADATOS DEL DOCUMENTO
+% ==========================================================
+\title{\textbf{Proyecto Final: Modelos Probabilísticos y Aplicaciones en PHP}}
+\author{Nombre del Alumno / Equipo}
+\date{Diciembre de 2025} % Fecha Actual
+
+\begin{document}
+
+\frontmatter % Para la portada y tabla de contenido (páginas en números romanos)
+\maketitle
+\tableofcontents
+
+\mainmatter % Para el cuerpo principal (páginas en números arábigos)
+
+% ==========================================================
+% CAPÍTULO 1: MANUAL DE USUARIO (Requisito 1)
+% ==========================================================
+\chapter{Manual de Usuario - Instalación y Entorno}
+\label{ch:manual}
+
+Este capítulo es la guía esencial para la configuración y ejecución del proyecto de Modelos Probabilísticos. Si ya tiene \textbf{PHP} instalado (versión 7.4 o superior), puede avanzar a la Sección \ref{sec:clonacion}.
+
+\section{Requisitos y Verificación de PHP}
+
+El proyecto está desarrollado en \textbf{PHP puro} y se ejecuta desde la terminal.
+
+\subsection{Verificación de PHP}
+Abra su terminal (\textit{Símbolo del Sistema}, \textit{PowerShell}, o \textit{Terminal}) y ejecute:
+\begin{verbatim}
+php -v
+\end{verbatim}
+
+\begin{itemize}
+    \item Si el comando retorna la versión (\textit{ej. PHP 8.2.10...}), la instalación es correcta.
+    \item Si recibe un error, debe instalar PHP.
+\end{itemize}
+
+\section{Descarga del Código Fuente (Clonar desde GitHub)}
+\label{sec:clonacion}
+
+Utilizaremos \textbf{Git} para obtener el código fuente desde el repositorio.
+
+\subsection{Verificación de Git}
+Verifique la instalación de Git ejecutando:
+\begin{verbatim}
+git --version
+\end{verbatim}
+
+\subsection{Clonar el Repositorio}
+Navegue a la ubicación deseada y use el comando \texttt{git clone} con la \texttt{URL} de su proyecto:
+\begin{verbatim}
+git clone [URL_DEL_REPOSITORIO] ProyectoFinal_ModelosProbabilistas2526
+cd ProyectoFinal_ModelosProbabilistas2526
+\end{verbatim}
+
+La estructura de carpetas incluye los módulos principales en \texttt{modules/}:
+\begin{itemize}
+    \item \texttt{modules/bayesian} (Modelos Bayesianos)
+    \item \texttt{modules/markov} (Cadenas de Markov)
+    \item \texttt{modules/hmm} (Modelos Ocultos de Markov)
+\end{itemize}
+
+% ==========================================================
+% CAPÍTULO 2: EXPLICACIÓN DE ALGORITMOS (Requisito 2)
+% ==========================================================
+\chapter{Explicación de los Algoritmos Implementados}
+\label{ch:algoritmos}
+
+Este capítulo detalla la formulación matemática y la implementación de los modelos probabilísticos utilizados en el proyecto.
+
+\section{Modelos Bayesianos}
+
+\subsection{El Teorema de Bayes}
+El principio fundamental de nuestro módulo \texttt{bayesian} es el Teorema de Bayes para la inferencia probabilística:
+\begin{equation}
+P(\theta | \mathbf{X}) = \frac{P(\mathbf{X} | \theta) P(\theta)}{P(\mathbf{X})}
+\label{eq:bayes}
+\end{equation}
+Donde $P(\theta | \mathbf{X})$ es la \textbf{posterior}, $P(\mathbf{X} | \theta)$ es la \textbf{verosimilitud}, $P(\theta)$ es la \textbf{prior} y $P(\mathbf{X})$ es la evidencia.
+
+\section{Cadenas de Markov y Matrices de Transición}
+
+El comportamiento del sistema es modelado por una Matriz de Probabilidad de Transición $A$, donde $a_{ij}$ representa la probabilidad de transitar del estado $i$ al estado $j$.
+\begin{equation}
+A = 
+\begin{pmatrix}
+p_{11} & p_{12} & \cdots & p_{1N} \\
+p_{21} & p_{22} & \cdots & p_{2N} \\
+\vdots & \vdots & \ddots & \vdots \\
+p_{N1} & p_{N2} & \cdots & p_{NN}
+\end{pmatrix}
+\end{equation}
+
+\section{Modelos Ocultos de Markov (HMM)}
+\label{sec:hmm_algoritmos}
+
+Para el módulo \texttt{hmm}, se implementaron los siguientes algoritmos:
+\begin{itemize}
+    \item \textbf{Forward-Backward (Evaluación)}: Para calcular la probabilidad de una secuencia de observaciones $P(\mathbf{O} | \lambda)$.
+    \item \textbf{Viterbi (Descodificación)}: Para encontrar la secuencia de estados ocultos más probable $\mathbf{Q}^*$ que produjo la secuencia de observaciones $\mathbf{O}$.
+\end{itemize}
+
+% Se puede añadir un diagrama si tienes el archivo en 'assets/'
+%\begin{figure}[H]
+%    \centering
+%    \includegraphics[width=0.8\textwidth]{assets/diagrama_hmm.png}
+%    \caption{Representación gráfica de la estructura de un HMM.}
+%    \label{fig:hmm_diagram}
+%\end{figure}
+
+% ==========================================================
+% CAPÍTULO 3: DECISIONES DE DISEÑO (Requisito 3)
+% ==========================================================
+\chapter{Decisiones de Diseño y Arquitectura PHP}
+\label{ch:diseno}
+
+Este capítulo justifica las elecciones de diseño y la estructura del código implementada en \text{PHP}.
+
+\section{Modularidad Basada en Modelos}
+El proyecto utiliza una estructura de directorios modular (\texttt{bayesian}, \texttt{markov}, \texttt{hmm}) que se mapea directamente a las clases y a los problemas que resuelven.
+
+\section{Representación de Estructuras de Datos}
+\subsection{Matrices y Vectores}
+Las matrices de probabilidad de transición y las distribuciones iniciales se representan en \text{PHP} usando \textbf{arrays asociativos} y \textbf{multidimensionales}. Esta elección optimiza la legibilidad y la indexación por nombre de estado, aunque podría tener implicaciones de rendimiento en comparación con extensiones optimizadas.
+
+\section{Manejo de Errores y Validaciones}
+Se ha implementado la validación estricta de entradas (ej. la suma de probabilidades en las matrices de transición debe ser igual a 1).
+
+% ==========================================================
+% CAPÍTULO 4: EJEMPLOS DE USO (Requisito 4)
+% ==========================================================
+\chapter{Ejemplos de Uso y Código Fuente}
+\label{ch:ejemplos}
+
+Los siguientes ejemplos demuestran cómo interactuar con los diferentes módulos del proyecto. Asumimos que ya se encuentra en el directorio raíz \texttt{ProyectoFinal\_ModelosProbabilistas2526}.
+
+\section{Ejemplo 4.1: Clasificación con Naive Bayes}
+\label{sec:ejemplo_bayes}
+Este ejemplo ilustra la inicialización y el entrenamiento de un clasificador Naive Bayes simple.
+
+\lstinputlisting[caption={Uso del Clasificador Bayesiano (\texttt{ejemplo\_bayes.php})}, label={lst:bayes}]{modules/bayesian/ejemplo_bayes.php}
+
+\noindent Para ejecutar este ejemplo desde la terminal, use:
+\begin{verbatim}
+php modules/bayesian/ejemplo_bayes.php
+\end{verbatim}
+
+\section{Ejemplo 4.2: Predicción de Secuencias con HMM}
+\label{sec:ejemplo_hmm}
+Este script usa el algoritmo de Viterbi para inferir la secuencia de estados ocultos más probable dada una secuencia de observaciones.
+
+\lstinputlisting[caption={Algoritmo de Viterbi (\texttt{ejemplo\_viterbi.php})}, label={lst:viterbi}]{modules/hmm/ejemplo_viterbi.php}
+
+\noindent Para ejecutar este ejemplo, use:
+\begin{verbatim}
+php modules/hmm/ejemplo_viterbi.php
+\end{verbatim}
+
+\end{document}

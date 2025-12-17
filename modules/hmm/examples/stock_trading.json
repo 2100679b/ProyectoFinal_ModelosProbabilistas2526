@@ -1,0 +1,111 @@
+{
+  "name": "Trading Algorítmico con HMM",
+  "description": "Modelo que identifica regímenes de mercado basándose en indicadores técnicos",
+  "domain": "Finanzas Cuantitativas",
+  "hiddenStates": [
+    {
+      "id": "Alcista",
+      "label": "Mercado Alcista",
+      "description": "Tendencia alcista (bull market)"
+    },
+    {
+      "id": "Bajista",
+      "label": "Mercado Bajista",
+      "description": "Tendencia bajista (bear market)"
+    },
+    {
+      "id": "Lateral",
+      "label": "Mercado Lateral",
+      "description": "Sin tendencia clara (sideways)"
+    }
+  ],
+  "observations": [
+    {
+      "id": "SubeFuerte",
+      "label": "Sube Fuerte",
+      "description": "Precio aumenta >3%"
+    },
+    {
+      "id": "SubeLeve",
+      "label": "Sube Leve",
+      "description": "Precio aumenta 0-3%"
+    },
+    {
+      "id": "Estable",
+      "label": "Estable",
+      "description": "Precio sin cambio significativo"
+    },
+    {
+      "id": "BajaLeve",
+      "label": "Baja Leve",
+      "description": "Precio disminuye 0-3%"
+    },
+    {
+      "id": "BajaFuerte",
+      "label": "Baja Fuerte",
+      "description": "Precio disminuye >3%"
+    }
+  ],
+  "transitionMatrix": {
+    "Alcista": {
+      "Alcista": 0.7,
+      "Bajista": 0.1,
+      "Lateral": 0.2
+    },
+    "Bajista": {
+      "Alcista": 0.1,
+      "Bajista": 0.7,
+      "Lateral": 0.2
+    },
+    "Lateral": {
+      "Alcista": 0.3,
+      "Bajista": 0.3,
+      "Lateral": 0.4
+    }
+  },
+  "emissionMatrix": {
+    "Alcista": {
+      "SubeFuerte": 0.4,
+      "SubeLeve": 0.3,
+      "Estable": 0.2,
+      "BajaLeve": 0.08,
+      "BajaFuerte": 0.02
+    },
+    "Bajista": {
+      "SubeFuerte": 0.02,
+      "SubeLeve": 0.08,
+      "Estable": 0.2,
+      "BajaLeve": 0.3,
+      "BajaFuerte": 0.4
+    },
+    "Lateral": {
+      "SubeFuerte": 0.05,
+      "SubeLeve": 0.25,
+      "Estable": 0.4,
+      "BajaLeve": 0.25,
+      "BajaFuerte": 0.05
+    }
+  },
+  "initialProbabilities": {
+    "Alcista": 0.4,
+    "Bajista": 0.3,
+    "Lateral": 0.3
+  },
+  "exampleSequences": [
+    {
+      "name": "Tendencia alcista",
+      "observations": ["SubeLeve", "SubeFuerte", "SubeLeve", "SubeFuerte", "Estable"],
+      "expectedStates": ["Alcista", "Alcista", "Alcista", "Alcista", "Alcista"]
+    },
+    {
+      "name": "Cambio de tendencia",
+      "observations": ["SubeFuerte", "SubeLeve", "Estable", "BajaLeve", "BajaFuerte"],
+      "expectedStates": ["Alcista", "Alcista", "Lateral", "Bajista", "Bajista"]
+    },
+    {
+      "name": "Mercado lateral",
+      "observations": ["Estable", "SubeLeve", "BajaLeve", "Estable", "SubeLeve"],
+      "expectedStates": ["Lateral", "Lateral", "Lateral", "Lateral", "Lateral"]
+    }
+  ]
+}

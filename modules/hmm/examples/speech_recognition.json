@@ -1,0 +1,93 @@
+{
+  "name": "Reconocimiento de Voz Simplificado",
+  "description": "Modelo HMM para reconocimiento de fonemas en procesamiento de voz",
+  "domain": "Procesamiento de Lenguaje Natural",
+  "hiddenStates": [
+    {
+      "id": "Vocal",
+      "label": "Vocal",
+      "description": "Fonema vocálico"
+    },
+    {
+      "id": "Consonante",
+      "label": "Consonante",
+      "description": "Fonema consonántico"
+    },
+    {
+      "id": "Silencio",
+      "label": "Silencio",
+      "description": "Pausa o silencio"
+    }
+  ],
+  "observations": [
+    {
+      "id": "A",
+      "label": "Señal A",
+      "description": "Patrón acústico tipo A (baja frecuencia)"
+    },
+    {
+      "id": "B",
+      "label": "Señal B",
+      "description": "Patrón acústico tipo B (media frecuencia)"
+    },
+    {
+      "id": "C",
+      "label": "Señal C",
+      "description": "Patrón acústico tipo C (alta frecuencia)"
+    },
+    {
+      "id": "D",
+      "label": "Señal D",
+      "description": "Patrón acústico tipo D (ruido)"
+    }
+  ],
+  "transitionMatrix": {
+    "Vocal": {
+      "Vocal": 0.4,
+      "Consonante": 0.5,
+      "Silencio": 0.1
+    },
+    "Consonante": {
+      "Vocal": 0.5,
+      "Consonante": 0.3,
+      "Silencio": 0.2
+    },
+    "Silencio": {
+      "Vocal": 0.3,
+      "Consonante": 0.3,
+      "Silencio": 0.4
+    }
+  },
+  "emissionMatrix": {
+    "Vocal": {
+      "A": 0.6,
+      "B": 0.2,
+      "C": 0.1,
+      "D": 0.1
+    },
+    "Consonante": {
+      "A": 0.1,
+      "B": 0.5,
+      "C": 0.3,
+      "D": 0.1
+    },
+    "Silencio": {
+      "A": 0.1,
+      "B": 0.1,
+      "C": 0.1,
+      "D": 0.7
+    }
+  },
+  "initialProbabilities": {
+    "Vocal": 0.4,
+    "Consonante": 0.4,
+    "Silencio": 0.2
+  },
+  "exampleSequences": [
+    {
+      "name": "Palabra simple",
+      "observations": ["D", "A", "B", "A", "B", "D"],
+      "expectedStates": ["Silencio", "Vocal", "Consonante", "Vocal", "Consonante", "Silencio"]
+    }
+  ]
+}

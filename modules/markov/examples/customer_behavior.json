@@ -1,0 +1,53 @@
+{
+  "name": "Comportamiento del Cliente",
+  "description": "Modelo de navegación y compra de clientes en e-commerce",
+  "domain": "Marketing",
+  "states": [
+    {
+      "id": "Navegando",
+      "label": "Navegando",
+      "description": "Cliente explorando el sitio"
+    },
+    {
+      "id": "Carrito",
+      "label": "Carrito",
+      "description": "Cliente agregó productos al carrito"
+    },
+    {
+      "id": "Compra",
+      "label": "Compra",
+      "description": "Cliente completó la compra"
+    },
+    {
+      "id": "Abandono",
+      "label": "Abandono",
+      "description": "Cliente abandonó el sitio"
+    }
+  ],
+  "transitionMatrix": {
+    "Navegando": {
+      "Navegando": 0.5,
+      "Carrito": 0.3,
+      "Compra": 0.05,
+      "Abandono": 0.15
+    },
+    "Carrito": {
+      "Navegando": 0.2,
+      "Carrito": 0.3,
+      "Compra": 0.4,
+      "Abandono": 0.1
+    },
+    "Compra": {
+      "Navegando": 0.3,
+      "Carrito": 0,
+      "Compra": 0,
+      "Abandono": 0.7
+    },
+    "Abandono": {
+      "Navegando": 0,
+      "Carrito": 0,
+      "Compra": 0,
+      "Abandono": 1.0
+    }
+  }
+}

@@ -1,0 +1,12 @@
+# Instalar Homebrew (si no lo tiene)
+alumno@DESKTOP-J4QHEU8:~$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Instalar PHP
+alumno@DESKTOP-J4QHEU8:~$ brew install php
+
+# Agregar al PATH (si necesario)
+alumno@DESKTOP-J4QHEU8:~$ echo 'export PATH="/usr/local/opt/php/bin:$PATH"' >> ~/.zshrc
+alumno@DESKTOP-J4QHEU8:~$ source ~/.zshrc
+
+# Verificar
+alumno@DESKTOP-J4QHEU8:~$ php -v

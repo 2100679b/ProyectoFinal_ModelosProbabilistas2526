@@ -1,0 +1,72 @@
+{
+  "name": "Predicción Climática con HMM",
+  "description": "Modelo que predice el clima basándose en actividades observables de personas",
+  "domain": "Meteorología",
+  "hiddenStates": [
+    {
+      "id": "Soleado",
+      "label": "Soleado",
+      "description": "Día soleado (estado oculto)"
+    },
+    {
+      "id": "Lluvioso",
+      "label": "Lluvioso",
+      "description": "Día lluvioso (estado oculto)"
+    }
+  ],
+  "observations": [
+    {
+      "id": "Caminar",
+      "label": "Caminar",
+      "description": "Persona caminando en el parque"
+    },
+    {
+      "id": "Comprar",
+      "label": "Comprar",
+      "description": "Persona en centro comercial"
+    },
+    {
+      "id": "Limpiar",
+      "label": "Limpiar",
+      "description": "Persona limpiando en casa"
+    }
+  ],
+  "transitionMatrix": {
+    "Soleado": {
+      "Soleado": 0.7,
+      "Lluvioso": 0.3
+    },
+    "Lluvioso": {
+      "Soleado": 0.4,
+      "Lluvioso": 0.6
+    }
+  },
+  "emissionMatrix": {
+    "Soleado": {
+      "Caminar": 0.6,
+      "Comprar": 0.3,
+      "Limpiar": 0.1
+    },
+    "Lluvioso": {
+      "Caminar": 0.1,
+      "Comprar": 0.4,
+      "Limpiar": 0.5
+    }
+  },
+  "initialProbabilities": {
+    "Soleado": 0.6,
+    "Lluvioso": 0.4
+  },
+  "exampleSequences": [
+    {
+      "name": "Secuencia 1",
+      "observations": ["Caminar", "Comprar", "Limpiar"],
+      "expectedStates": ["Soleado", "Soleado", "Lluvioso"]
+    },
+    {
+      "name": "Secuencia 2",
+      "observations": ["Limpiar", "Limpiar", "Comprar"],
+      "expectedStates": ["Lluvioso", "Lluvioso", "Lluvioso"]
+    }
+  ]
+}

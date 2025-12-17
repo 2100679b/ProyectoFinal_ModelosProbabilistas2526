@@ -1,0 +1,652 @@
+/**
+ * Estilos para Módulo de Redes Bayesianas
+ * Universidad Michoacana de San Nicolás de Hidalgo
+ * Modelos Probabilísticos
+ */
+
+/* ========================================
+   VARIABLES CSS
+   ======================================== */
+:root {
+    --bayesian-primary: #2563eb;
+    --bayesian-secondary: #1e40af;
+    --bayesian-light: #eff6ff;
+    --bayesian-dark: #1e3a8a;
+    --bayesian-accent: #dbeafe;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --border-color: #e5e7eb;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================
+   CONTENEDOR PRINCIPAL
+   ======================================== */
+.bayesian-container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* ========================================
+   HEADER MEJORADO - TEXTO BLANCO
+   ======================================== */
+.bayesian-header {
+    background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+    color: #ffffff !important;
+    padding: 50px 40px;
+    border-radius: 16px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+    grid-column: 1 / -1;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efecto de brillo sutil */
+.bayesian-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+    animation: headerGlow 10s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes headerGlow {
+    0%, 100% { transform: translate(-25%, -25%); }
+    50% { transform: translate(0%, 0%); }
+}
+
+.bayesian-header h1 {
+    font-size: 2.75em;
+    margin-bottom: 12px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+    z-index: 1;
+    letter-spacing: -0.02em;
+    color: #ffffff !important;
+}
+
+.bayesian-header h1 i {
+    font-size: 1.2em;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    color: #ffffff !important;
+}
+
+.bayesian-header p {
+    font-size: 1.15em;
+    opacity: 0.98;
+    margin: 0;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+    font-weight: 400;
+    color: #ffffff !important;
+}
+
+/* ========================================
+   SIDEBAR
+   ======================================== */
+.bayesian-sidebar {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+}
+
+.sidebar-section {
+    margin-bottom: 30px;
+}
+
+.sidebar-section:last-child {
+    margin-bottom: 0;
+}
+
+.sidebar-section h3 {
+    color: var(--bayesian-primary);
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--bayesian-light);
+}
+
+/* Botones de ejemplo */
+.example-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn-example {
+    background: #f9fafb;
+    border: 2px solid var(--border-color);
+    padding: 12px 15px;
+    border-radius: 8px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-primary);
+}
+
+.btn-example:hover {
+    background: var(--bayesian-light);
+    border-color: var(--bayesian-primary);
+    transform: translateX(5px);
+}
+
+.btn-example:active {
+    transform: translateX(3px);
+}
+
+/* Selector de algoritmo */
+.algorithm-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.algorithm-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: #f9fafb;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.algorithm-option:hover {
+    background: var(--bayesian-light);
+}
+
+.algorithm-option input[type="radio"] {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--bayesian-primary);
+}
+
+.algorithm-option label {
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--text-primary);
+    flex: 1;
+}
+
+/* ========================================
+   ÁREA PRINCIPAL
+   ======================================== */
+.bayesian-main {
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+/* ========================================
+   TABS
+   ======================================== */
+.bayesian-tabs {
+    display: flex;
+    border-bottom: 2px solid var(--border-color);
+    background: #f9fafb;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 15px 20px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-bottom: 3px solid transparent;
+}
+
+.tab-button:hover {
+    background: #f3f4f6;
+    color: var(--bayesian-primary);
+}
+
+.tab-button.active {
+    background: white;
+    color: var(--bayesian-primary);
+    border-bottom-color: var(--bayesian-primary);
+}
+
+.tab-button i {
+    font-size: 1.1em;
+}
+
+/* ========================================
+   CONTENIDO DE TABS
+   ======================================== */
+.tab-content {
+    padding: 25px;
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.tab-panel h3 {
+    color: var(--bayesian-secondary);
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    font-weight: 700;
+}
+
+/* ========================================
+   CONTROLES DE RED
+   ======================================== */
+.network-controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* ========================================
+   VISUALIZACIÓN DE RED
+   ======================================== */
+.network-visualization {
+    width: 100%;
+    height: 500px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: #fafafa;
+    position: relative;
+}
+
+/* Panel de información de nodo */
+.node-info-panel {
+    margin-top: 20px;
+    padding: 20px;
+    background: var(--bayesian-light);
+    border-radius: 8px;
+    border-left: 4px solid var(--bayesian-primary);
+}
+
+.node-info-panel h4 {
+    color: var(--bayesian-secondary);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#node-details {
+    color: var(--text-primary);
+    line-height: 1.8;
+}
+
+/* ========================================
+   TABLAS DE PROBABILIDAD CONDICIONAL
+   ======================================== */
+.cpt-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    margin: 20px 0;
+}
+
+.cpt-table caption {
+    background: var(--bayesian-primary);
+    color: white;
+    padding: 15px;
+    font-weight: bold;
+    font-size: 1.1em;
+    caption-side: top;
+    text-align: left;
+}
+
+.cpt-table thead {
+    background: var(--bayesian-light);
+    color: var(--bayesian-secondary);
+}
+
+.cpt-table th {
+    padding: 12px 15px;
+    font-weight: 600;
+    text-align: center;
+    border-bottom: 2px solid var(--bayesian-primary);
+}
+
+.cpt-table td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.cpt-table tbody tr:hover {
+    background: #f9fafb;
+}
+
+.cpt-table tbody tr:nth-child(even) {
+    background: #fafafa;
+}
+
+.probability-value {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    color: var(--bayesian-primary);
+    font-size: 1.1em;
+}
+
+/* ========================================
+   QUERY BUILDER
+   ======================================== */
+.query-builder {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.query-section {
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.query-section h4 {
+    color: var(--bayesian-secondary);
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.variable-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.variable-selector .btn {
+    margin: 0;
+}
+
+.evidence-inputs {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.evidence-item {
+    background: white;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.evidence-item label {
+    display: block;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.evidence-item select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.evidence-item select:focus {
+    outline: none;
+    border-color: var(--bayesian-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.btn-run {
+    padding: 15px 30px;
+    font-size: 1.1em;
+    font-weight: 700;
+    margin-top: 10px;
+}
+
+/* ========================================
+   RESULTADOS
+   ======================================== */
+.result-card {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
+.result-card h4 {
+    color: var(--bayesian-secondary);
+    margin-bottom: 20px;
+    font-size: 1.3em;
+    font-weight: 700;
+}
+
+.probability-item {
+    margin-bottom: 20px;
+}
+
+.prob-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.prob-label {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 1.1em;
+}
+
+.prob-value {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: var(--bayesian-primary);
+}
+
+.progress-bar {
+    height: 10px;
+    background: #e5e7eb;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--bayesian-primary), var(--bayesian-secondary));
+    transition: width 0.5s ease;
+    border-radius: 5px;
+}
+
+/* ========================================
+   ALERTAS
+   ======================================== */
+.alert {
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+}
+
+.alert i {
+    font-size: 1.2em;
+}
+
+.alert-info {
+    background: var(--bayesian-light);
+    border-left: 4px solid var(--bayesian-primary);
+    color: var(--bayesian-secondary);
+}
+
+.alert-success {
+    background: #d1fae5;
+    border-left: 4px solid #10b981;
+    color: #065f46;
+}
+
+.alert-warning {
+    background: #fef3c7;
+    border-left: 4px solid #f59e0b;
+    color: #92400e;
+}
+
+.alert-error {
+    background: #fee2e2;
+    border-left: 4px solid #ef4444;
+    color: #991b1b;
+}
+
+/* ========================================
+   LOADING SPINNER
+   ======================================== */
+.spinner {
+    border: 4px solid var(--border-color);
+    border-top: 4px solid var(--bayesian-primary);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 30px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ========================================
+   UTILIDADES
+   ======================================== */
+.text-muted {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 1024px) {
+    .bayesian-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .bayesian-sidebar {
+        position: relative;
+        top: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .bayesian-header {
+        padding: 35px 25px;
+    }
+    
+    .bayesian-header h1 {
+        font-size: 2em;
+    }
+    
+    .bayesian-tabs {
+        overflow-x: auto;
+    }
+    
+    .tab-button {
+        flex: none;
+        min-width: 120px;
+        font-size: 0.9em;
+    }
+    
+    .tab-content {
+        padding: 15px;
+    }
+    
+    .network-visualization {
+        height: 400px;
+    }
+    
+    .network-controls {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .bayesian-container {
+        padding: 10px;
+    }
+    
+    .bayesian-header {
+        padding: 25px 20px;
+    }
+    
+    .bayesian-header h1 {
+        font-size: 1.6em;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .network-visualization {
+        height: 300px;
+    }
+}

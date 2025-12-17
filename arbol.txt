@@ -1,0 +1,64 @@
+C:\xampp\htdocs\modelos-probabilistas\
+│
+├── 📁 config.php                          # Configuración global
+│
+├── 📁 includes/
+│   ├── header.php                         # <head> común
+│   ├── navbar.php                         # Navegación principal
+│   └── footer.php                         # Scripts JS comunes
+│
+├── 📁 assets/
+│   ├── 📁 css/
+│   │   ├── styles.css                     # Estilos globales
+│   │   ├── bayesian.css                   # Estilos Redes Bayesianas
+│   │   ├── markov.css                     # Estilos Cadenas de Markov
+│   │   └── hmm.css                        # Estilos HMM
+│   │
+│   ├── 📁 js/
+│   │   ├── main.js                        # JavaScript global
+│   │   ├── bayesian.js                    # JS Redes Bayesianas
+│   │   ├── markov.js                      # JS Cadenas de Markov
+│   │   └── hmm.js                         # JS HMM
+│   │
+│   └── 📁 images/
+│       └── logo.png                       # Logo (opcional)
+│
+├── 📁 modules/
+│   │
+│   ├── 📁 bayesian/                       # MÓDULO 1: Redes Bayesianas
+│   │   ├── index.php                      # Interfaz principal
+│   │   ├── visualization.php              # API visualización
+│   │   ├── model.php                      # Modelo y operaciones
+│   │   ├── 📁 algorithms/
+│   │   │   ├── inference.php              # Inferencia bayesiana
+│   │   │   ├── probability.php            # Cálculos de probabilidad
+│   │   │   └── learning.php               # Aprendizaje de parámetros
+│   │   └── 📁 examples/
+│   │       ├── alarm.json                 # Sistema de alarma
+│   │       ├── medical.json               # Diagnóstico médico
+│   │       ├── spam.json                  # Filtro de spam
+│   │       └── student.json               # Rendimiento estudiantil
+│   │
+│   ├── 📁 markov/                         # MÓDULO 2: Cadenas de Markov
+│   │   ├── index.php                      # Interfaz principal
+│   │   └── 📁 examples/
+│   │       ├── weather.json               # Predicción del clima
+│   │       ├── text_generation.json       # Generación de texto
+│   │       ├── stock_market.json          # Mercado de valores
+│   │       └── customer_behavior.json     # Comportamiento del cliente
+│   │
+│   └── 📁 hmm/                            # MÓDULO 3: Modelos Ocultos de Markov
+│       ├── index.php                      # Interfaz principal
+│       ├── visualization.php              # API visualización
+│       ├── model.php                      # Modelo y operaciones
+│       ├── 📁 algorithms/
+│       │   ├── forward.php                # Algoritmo Forward (α)
+│       │   ├── viterbi.php                # Algoritmo Viterbi
+│       │   └── baum_welch.php             # Algoritmo Baum-Welch (EM)
+│       └── 📁 examples/
+│           ├── weather_prediction.json    # Predicción climática
+│           ├── speech_recognition.json    # Reconocimiento de voz
+│           ├── bioinformatics.json        # Análisis genético
+│           └── stock_trading.json         # Trading algorítmico
+│
+└── 📁 index.php                           # Página principal (home)

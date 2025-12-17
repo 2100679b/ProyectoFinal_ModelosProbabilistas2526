@@ -76,6 +76,58 @@ class HMMModel {
     }
     
     /**
+<<<<<<< HEAD
+=======
+     * Algoritmo Forward (α)
+     * Calcula la probabilidad de una secuencia de observaciones
+     */
+    public function forward($observationSequence) {
+        $T = count($observationSequence);
+        $N = count($this->hiddenStates);
+        
+        // Inicializar matriz alpha
+        $alpha = [];
+        
+        // Inicialización (t=0)
+        foreach ($this->hiddenStates as $state) {
+            $stateId = $state['id'];
+            $obs = $observationSequence[0];
+            $alpha[0][$stateId] = $this->initialProbabilities[$stateId] * 
+                                  $this->emissionMatrix[$stateId][$obs];
+        }
+        
+        // Recursión (t=1 hasta T-1)
+        for ($t = 1; $t < $T; $t++) {
+            foreach ($this->hiddenStates as $state) {
+                $stateId = $state['id'];
+                $obs = $observationSequence[$t];
+                
+                $sum = 0;
+                foreach ($this->hiddenStates as $prevState) {
+                    $prevStateId = $prevState['id'];
+                    $sum += $alpha[$t-1][$prevStateId] * 
+                            $this->transitionMatrix[$prevStateId][$stateId];
+                }
+                
+                $alpha[$t][$stateId] = $sum * $this->emissionMatrix[$stateId][$obs];
+            }
+        }
+        
+        // Terminación: probabilidad total
+        $probability = 0;
+        foreach ($this->hiddenStates as $state) {
+            $probability += $alpha[$T-1][$state['id']];
+        }
+        
+        return [
+            'alpha' => $alpha,
+            'probability' => $probability,
+            'logProbability' => log($probability)
+        ];
+    }
+    
+    /**
+>>>>>>> bd8104b9392cada77b6306706fd249f89b486036
      * Algoritmo Viterbi
      * Encuentra la secuencia de estados más probable
      */
@@ -91,7 +143,12 @@ class HMMModel {
         foreach ($this->hiddenStates as $state) {
             $stateId = $state['id'];
             $obs = $observationSequence[0];
+<<<<<<< HEAD
             $delta[0][$stateId] = $this->initialProbabilities[$stateId] * $this->emissionMatrix[$stateId][$obs];
+=======
+            $delta[0][$stateId] = $this->initialProbabilities[$stateId] * 
+                                  $this->emissionMatrix[$stateId][$obs];
+>>>>>>> bd8104b9392cada77b6306706fd249f89b486036
             $psi[0][$stateId] = null;
         }
         
@@ -106,7 +163,12 @@ class HMMModel {
                 
                 foreach ($this->hiddenStates as $prevState) {
                     $prevStateId = $prevState['id'];
+<<<<<<< HEAD
                     $prob = $delta[$t-1][$prevStateId] * $this->transitionMatrix[$prevStateId][$stateId];
+=======
+                    $prob = $delta[$t-1][$prevStateId] * 
+                            $this->transitionMatrix[$prevStateId][$stateId];
+>>>>>>> bd8104b9392cada77b6306706fd249f89b486036
                     
                     if ($prob > $maxProb) {
                         $maxProb = $prob;
@@ -180,7 +242,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     
+<<<<<<< HEAD
     // Algoritmo Viterbi (Único permitido)
+=======
+    // Algoritmo Forward
+    if (isset($data['action']) && $data['action'] === 'forward') {
+        if (!isset($data['observations'])) {
+            http_response_code(400);
+            echo json_encode(['error' => 'No se especificó la secuencia de observaciones']);
+            exit;
+        }
+        
+        $result = $model->forward($data['observations']);
+        echo json_encode(['success' => true, 'result' => $result]);
+        exit;
+    }
+    
+    // Algoritmo Viterbi
+>>>>>>> bd8104b9392cada77b6306706fd249f89b486036
     if (isset($data['action']) && $data['action'] === 'viterbi') {
         if (!isset($data['observations'])) {
             http_response_code(400);
@@ -198,4 +277,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'success' => true,
         'info' => $model->getInfo()
     ]);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> bd8104b9392cada77b6306706fd249f89b486036

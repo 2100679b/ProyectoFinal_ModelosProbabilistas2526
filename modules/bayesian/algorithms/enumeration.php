@@ -1,211 +1,444 @@
-<?php
 /**
- * Algoritmo de Enumeración Exacta para Redes Bayesianas
+ * Estilos para Módulo de HMM
  * Universidad Michoacana de San Nicolás de Hidalgo
- * * Corrige problemas de rutas y lectura de datos.
  */
 
-// 1. Manejo robusto de rutas (Intenta subir niveles hasta encontrar config)
-$configPath = __DIR__ . '/../../config.php';
-if (!file_exists($configPath)) {
-    // Intento alternativo si la estructura es diferente
-    $configPath = __DIR__ . '/../../../config.php';
+/* ========================================
+   VARIABLES CSS
+   ======================================== */
+:root {
+    --hmm-primary: #9333ea;
+    --hmm-secondary: #7e22ce;
+    --hmm-light: #f3e8ff;
+    --hmm-dark: #581c87;
+    --hmm-accent: #e9d5ff;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --border-color: #e5e7eb;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
 
-if (file_exists($configPath)) {
-    require_once $configPath;
-} else {
-    // Si no encuentra config, definimos lo básico para no romper
-    if (!defined('BASE_PATH')) define('BASE_PATH', dirname(__DIR__, 2));
+/* ========================================
+   CONTENEDOR PRINCIPAL
+   ======================================== */
+.hmm-container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-// 2. Incluir la clase de la Red (Asumiendo que está en la misma carpeta o un nivel arriba)
-$networkClassPath = __DIR__ . '/network.php';
-if (!file_exists($networkClassPath)) {
-    $networkClassPath = __DIR__ . '/BayesianNetwork.php'; // Nombre alternativo común
-}
-require_once $networkClassPath;
-
-// Configurar respuesta JSON
-header('Content-Type: application/json; charset=utf-8');
-
-try {
-    // 3. Lectura Robusta de Entrada (POST vs JSON Raw)
-    $input = [];
-    
-    // Si se envía como JSON en el cuerpo (fetch standard)
-    $rawInput = file_get_contents('php://input');
-    if (!empty($rawInput)) {
-        $jsonInput = json_decode($rawInput, true);
-        if (json_last_error() === JSON_ERROR_NONE) {
-            $input = $jsonInput;
-        }
-    }
-    
-    // Si se envía como Form Data ($.ajax clásico), sobreescribe si existe
-    if (!empty($_POST)) {
-        $input = array_merge($input, $_POST);
-    }
-
-    // Extraer variables
-    $networkData = isset($input['network']) ? (is_string($input['network']) ? json_decode($input['network'], true) : $input['network']) : [];
-    $queryVariable = $input['query'] ?? '';
-    $evidence = isset($input['evidence']) ? (is_string($input['evidence']) ? json_decode($input['evidence'], true) : $input['evidence']) : [];
-
-    // --- VALIDACIONES ---
-    if (empty($networkData)) {
-        throw new Exception('No se recibieron datos de la red (Network Data empty).');
-    }
-    
-    if (empty($queryVariable)) {
-        throw new Exception('No se especificó la variable de consulta (Query Variable).');
-    }
-
-    // --- INICIALIZACIÓN ---
-    $network = new BayesianNetwork($networkData);
-    
-    // Validar integridad de la red
-    $validation = $network->validate();
-    if (!$validation['valid']) {
-        throw new Exception('La red es inválida: ' . implode(', ', $validation['errors']));
-    }
-
-    // Validar existencia de la variable Query
-    if (!$network->getNode($queryVariable)) {
-        throw new Exception("La variable '$queryVariable' no existe en la red.");
-    }
-
-    // --- ALGORITMO DE ENUMERACIÓN ---
-    $startTime = microtime(true);
-    $steps = []; // Para mostrar el paso a paso en el frontend
-    $probabilities = [];
-    
-    // 1. Obtener dominio de la variable de consulta (True, False, etc.)
-    $domain = $network->getNodeValues($queryVariable);
-    if (empty($domain)) {
-        // Fallback si no hay dominio explícito
-        $domain = ['True', 'False']; 
-    }
-
-    // 2. Iterar sobre cada valor posible de la variable de consulta
-    // P(Q | E) = alpha * P(Q, E) = alpha * sum_h(P(Q, E, h))
-    foreach ($domain as $val) {
-        // Extendemos la evidencia: Evidencia observada + Hipótesis actual de Q
-        $extendedEvidence = array_merge($evidence, [$queryVariable => $val]);
-        
-        // Identificar variables ocultas (Hidden) = Todas - (Query + Evidence)
-        $hiddenVars = [];
-        foreach ($network->getNodes() as $node) {
-            $nodeId = is_array($node) ? $node['id'] : $node;
-            if (!isset($extendedEvidence[$nodeId])) {
-                $hiddenVars[] = $nodeId;
-            }
-        }
-
-        // Llamada recursiva para sumarizar variables ocultas
-        $prob = enumerateAll($network, $hiddenVars, $extendedEvidence);
-        $probabilities[$val] = $prob;
-        
-        $steps[] = "Calculado P($queryVariable = $val, E) = " . number_format($prob, 6);
-    }
-
-    // 3. Normalización (alpha)
-    $sum = array_sum($probabilities);
-    $normalized = [];
-    
-    if ($sum > 0) {
-        foreach ($probabilities as $val => $p) {
-            $normalized[$val] = $p / $sum;
-        }
-    } else {
-        throw new Exception("Probabilidad total 0. Revisa si la evidencia es contradictoria.");
-    }
-
-    $executionTime = microtime(true) - $startTime;
-
-    // --- RESPUESTA ---
-    echo json_encode([
-        'success' => true,
-        'algorithm' => 'Enumeración Exacta',
-        'query' => $queryVariable,
-        'results' => $normalized, // Resultados finales normalizados
-        'raw_probabilities' => $probabilities, // Antes de normalizar
-        'steps' => $steps,
-        'time' => round($executionTime, 5) . 's'
-    ]);
-
-} catch (Exception $e) {
-    http_response_code(400);
-    echo json_encode([
-        'success' => false,
-        'error' => $e->getMessage()
-    ]);
+/* ========================================
+   HEADER MEJORADO
+   ======================================== */
+.hmm-header {
+    background: linear-gradient(135deg, #9333ea 0%, #c026d3 100%);
+    color: #ffffff !important;
+    padding: 50px 40px;
+    border-radius: 16px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 25px rgba(147, 51, 234, 0.3);
+    grid-column: 1 / -1;
+    position: relative;
+    overflow: hidden;
 }
 
-// ==========================================
-// FUNCIONES AUXILIARES
-// ==========================================
-
-/**
- * Función Recursiva Enumerate-All
- * Suma sobre todas las combinaciones de variables ocultas
- */
-function enumerateAll($network, $hiddenVars, $evidence) {
-    // CASO BASE: Si no hay variables ocultas, calculamos la probabilidad atómica
-    if (empty($hiddenVars)) {
-        // En este punto, $evidence contiene una asignación completa para TODAS las variables
-        return calculateAtomicProbability($network, $evidence);
-    }
-
-    // PASO RECURSIVO
-    // Tomamos la primera variable oculta (Y)
-    $Y = array_shift($hiddenVars); // Extrae y remueve el primer elemento
-    
-    $domain = $network->getNodeValues($Y);
-    if (empty($domain)) $domain = ['True', 'False']; // Fallback
-    
-    $sum = 0.0;
-    
-    // Sumamos sobre todos los valores posibles de Y
-    foreach ($domain as $yVal) {
-        // Extendemos la evidencia con Y = yVal
-        $newEvidence = array_merge($evidence, [$Y => $yVal]);
-        
-        // Llamada recursiva con el resto de variables ocultas
-        $sum += enumerateAll($network, $hiddenVars, $newEvidence);
-    }
-    
-    return $sum;
+.hmm-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+    animation: headerGlow 10s ease-in-out infinite;
+    pointer-events: none;
 }
 
-/**
- * Calcula la probabilidad de una asignación completa (Atomic Event)
- * P(x1, x2, ... xn) = Product( P(xi | Parents(xi)) )
- */
-function calculateAtomicProbability($network, $fullAssignment) {
-    $prob = 1.0;
-    
-    // Iteramos sobre CADA nodo de la red
-    foreach ($network->getNodes() as $node) {
-        $nodeId = is_array($node) ? $node['id'] : $node;
-        
-        // Valor actual de este nodo en la asignación
-        $val = $fullAssignment[$nodeId];
-        
-        // Valores de sus padres en la asignación
-        $parents = $network->getParents($nodeId);
-        $parentValues = [];
-        foreach ($parents as $p) {
-            $parentValues[$p] = $fullAssignment[$p];
-        }
-        
-        // Obtener probabilidad condicional de la CPT
-        // Nota: Asegúrate que tu clase BayesianNetwork tenga getConditionalProbability
-        $p_cond = $network->getConditionalProbability($nodeId, $val, $parentValues);
-        
-        $prob *= $p_cond;
+@keyframes headerGlow {
+    0%, 100% { transform: translate(-25%, -25%); }
+    50% { transform: translate(0%, 0%); }
+}
+
+.hmm-header h1 {
+    font-size: 2.75em;
+    margin-bottom: 12px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+    z-index: 1;
+    letter-spacing: -0.02em;
+    color: #ffffff !important;
+}
+
+.hmm-header h1 i {
+    font-size: 1.2em;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    color: #ffffff !important;
+}
+
+.hmm-header p {
+    font-size: 1.15em;
+    opacity: 0.98;
+    margin: 0;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+    font-weight: 400;
+    color: #ffffff !important;
+}
+
+/* ========================================
+   SIDEBAR
+   ======================================== */
+.hmm-sidebar {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+}
+
+.sidebar-section {
+    margin-bottom: 30px;
+}
+
+.sidebar-section:last-child {
+    margin-bottom: 0;
+}
+
+.sidebar-section h3 {
+    color: var(--hmm-primary);
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--hmm-light);
+}
+
+/* Botones de ejemplo */
+.example-buttons,
+.algorithm-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn-example {
+    background: #f9fafb;
+    border: 2px solid var(--border-color);
+    padding: 12px 15px;
+    border-radius: 8px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-primary);
+}
+
+.btn-example:hover {
+    background: var(--hmm-light);
+    border-color: var(--hmm-primary);
+    transform: translateX(5px);
+}
+
+.btn-example:active {
+    transform: translateX(3px);
+}
+
+/* ========================================
+   ÁREA PRINCIPAL
+   ======================================== */
+.hmm-main {
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+/* ========================================
+   TABS (General y Resultados)
+   ======================================== */
+.hmm-tabs {
+    display: flex;
+    gap: 10px; /* Separación entre botones */
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px; /* Espacio debajo de los tabs */
+    background: #f9fafb;
+    padding: 0; /* Reset padding del container de tabs si es necesario */
+}
+
+.tab-button {
+    flex: 1;
+    padding: 15px 20px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-bottom: 3px solid transparent;
+}
+
+.tab-button:hover {
+    background: #f3f4f6;
+    color: var(--hmm-primary);
+}
+
+.tab-button.active {
+    background: white;
+    color: var(--hmm-primary);
+    border-bottom-color: var(--hmm-primary);
+    font-weight: bold;
+}
+
+.tab-button i {
+    font-size: 1.1em;
+}
+
+/* ========================================
+   CONTENIDO DE TABS
+   ======================================== */
+.tab-content {
+    padding: 25px;
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.tab-panel h3 {
+    color: var(--hmm-secondary);
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    font-weight: 700;
+}
+
+/* Estilos específicos para el tab de resultados */
+#tab-results {
+    padding: 20px;
+    min-height: 400px;
+}
+
+/* ========================================
+   VISUALIZACIÓN
+   ======================================== */
+.diagram-controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.hmm-visualization {
+    width: 100%;
+    height: 500px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: #fafafa;
+    position: relative;
+}
+
+.hmm-info-panel {
+    margin-top: 20px;
+    padding: 20px;
+    background: var(--hmm-light);
+    border-radius: 8px;
+    border-left: 4px solid var(--hmm-primary);
+}
+
+.hmm-info-panel h4 {
+    color: var(--hmm-secondary);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#hmm-details {
+    color: var(--text-primary);
+    line-height: 1.8;
+}
+
+/* ========================================
+   OBSERVACIONES
+   ======================================== */
+.observation-builder {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.observation-section {
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.observation-section h4 {
+    color: var(--hmm-secondary);
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.observation-selector,
+.observation-sequence {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-height: 60px;
+    padding: 15px;
+    background: white;
+    border-radius: 6px;
+    border: 2px dashed var(--border-color);
+}
+
+/* ========================================
+   ALERTAS
+   ======================================== */
+.alert {
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+}
+
+.alert i {
+    font-size: 1.2em;
+}
+
+.alert-info {
+    background: var(--hmm-light);
+    border-left: 4px solid var(--hmm-primary);
+    color: var(--hmm-secondary);
+}
+
+.alert-success {
+    background: #d1fae5;
+    border-left: 4px solid #10b981;
+    color: #065f46;
+}
+
+.alert-warning {
+    background: #fef3c7;
+    border-left: 4px solid #f59e0b;
+    color: #92400e;
+}
+
+.alert-error {
+    background: #fee2e2;
+    border-left: 4px solid #ef4444;
+    color: #991b1b;
+}
+
+/* ========================================
+   UTILIDADES
+   ======================================== */
+.text-muted {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 1024px) {
+    .hmm-container {
+        grid-template-columns: 1fr;
     }
     
-    return $prob;
+    .hmm-sidebar {
+        position: relative;
+        top: 0;
+    }
 }
-?>
+
+@media (max-width: 768px) {
+    .hmm-header {
+        padding: 35px 25px;
+    }
+    
+    .hmm-header h1 {
+        font-size: 2em;
+    }
+    
+    .hmm-tabs {
+        overflow-x: auto;
+    }
+    
+    .tab-button {
+        flex: none;
+        min-width: 120px;
+        font-size: 0.9em;
+    }
+    
+    .tab-content {
+        padding: 15px;
+    }
+    
+    .hmm-visualization {
+        height: 400px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hmm-container {
+        padding: 10px;
+    }
+    
+    .hmm-header {
+        padding: 25px 20px;
+    }
+    
+    .hmm-header h1 {
+        font-size: 1.6em;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .hmm-visualization {
+        height: 300px;
+    }
+}

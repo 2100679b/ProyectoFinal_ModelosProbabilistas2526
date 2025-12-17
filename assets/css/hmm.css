@@ -171,12 +171,16 @@
 }
 
 /* ========================================
-   TABS
+   TABS (General y Resultados)
    ======================================== */
 .hmm-tabs {
     display: flex;
+    gap: 10px; /* Separación entre botones */
+    margin-bottom: 20px;
     border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px; /* Espacio debajo de los tabs */
     background: #f9fafb;
+    padding: 0; /* Reset padding del container de tabs si es necesario */
 }
 
 .tab-button {
@@ -204,6 +208,7 @@
     background: white;
     color: var(--hmm-primary);
     border-bottom-color: var(--hmm-primary);
+    font-weight: bold;
 }
 
 .tab-button i {
@@ -236,6 +241,12 @@
     margin-bottom: 20px;
     font-size: 1.5em;
     font-weight: 700;
+}
+
+/* Estilos específicos para el tab de resultados */
+#tab-results {
+    padding: 20px;
+    min-height: 400px;
 }
 
 /* ========================================
@@ -430,50 +441,4 @@
     .hmm-visualization {
         height: 300px;
     }
-}
-
-/* ========================================
-   ESTILOS PARA EL TAB DE RESULTADOS
-   (Agregados para funcionalidad Viterbi)
-   ======================================== */
-#tab-results {
-    padding: 20px;
-    min-height: 400px;
-}
-
-.tab-panel {
-    display: none;
-}
-
-.tab-panel.active {
-    display: block;
-}
-
-.hmm-tabs {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #e5e7eb;
-    padding-bottom: 10px;
-}
-
-.hmm-tabs .tab-button {
-    padding: 10px 20px;
-    border: none;
-    background: transparent;
-    color: #6b7280;
-    cursor: pointer;
-    border-bottom: 3px solid transparent;
-    transition: all 0.3s ease;
-}
-
-.hmm-tabs .tab-button:hover {
-    color: #9333ea;
-    background: #f3e8ff;
-}
-
-.hmm-tabs .tab-button.active {
-    color: #9333ea;
-    border-bottom-color: #9333ea;
-    font-weight: bold;
 }

@@ -1,7 +1,7 @@
 /**
  * JavaScript para Módulo de HMM (Hidden Markov Models)
  * Universidad Michoacana de San Nicolás de Hidalgo
- * VERSIÓN ROBUSTA - VITERBI & RESULTADOS
+ * VERSIÓN MEJORADA - VITERBI CON VALIDACIÓN Y DEBUG
  */
 
 // ========== PREVENIR DOBLE CARGA ==========
@@ -15,6 +15,7 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
     let hmmDiagram = null;
     let observationSequence = [];
     let currentView = 'combined';
+    let lastViterbiResults = null; // Guardar últimos resultados
 
     // ========== INICIALIZACIÓN ==========
     document.addEventListener('DOMContentLoaded', () => {
@@ -37,13 +38,12 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
         initTabs();
         initHMMDiagram();
         initExampleButtons();
-        // Aseguramos que la UI de resultados exista desde el inicio
+        initKeyboardShortcuts();
         setTimeout(ensureResultsTab, 500);
     }
 
     // ========== GESTIÓN INTELIGENTE DE TABS ==========
     function initTabs() {
-        // Delegación de eventos para manejar botones creados dinámicamente
         document.addEventListener('click', (e) => {
             const btn = e.target.closest('.tab-button');
             if (btn && document.querySelector('.hmm-tabs').contains(btn)) {
@@ -57,48 +57,38 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
     function activateTab(tabId) {
         console.log('🔍 Activando tab:', tabId);
         
-        // 1. Desactivar todos
         document.querySelectorAll('.hmm-tabs .tab-button').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.tab-panel').forEach(p => {
             p.classList.remove('active');
             p.style.display = 'none';
         });
         
-        // 2. Buscar elementos (incluso si se crearon dinámicamente)
         const btn = document.querySelector(`.hmm-tabs .tab-button[data-tab="${tabId}"]`);
         const panel = document.getElementById(`tab-${tabId}`);
         
-        // 3. Activar
         if (btn) btn.classList.add('active');
         if (panel) {
             panel.classList.add('active');
-            panel.style.display = 'block'; // Forzar display block
+            panel.style.display = 'block';
             
-            // Acciones específicas
             if (tabId === 'matrices' && currentHMM) displayMatrices();
             if (tabId === 'diagram' && hmmDiagram) {
                 setTimeout(() => hmmDiagram.fit({ animation: true }), 100);
             }
         } else {
             console.warn(`⚠️ No se encontró el panel para el tab: ${tabId}`);
-            // Si falta el panel de resultados, intentar crearlo de nuevo y activar
             if (tabId === 'results') {
                 ensureResultsTab();
-                // Reintentar activación tras un breve delay
                 setTimeout(() => activateTab('results'), 50);
             }
         }
     }
 
-    // ✅ FUNCIÓN MEJORADA: Asegurar que existe el contenedor de resultados Y el botón
     function ensureResultsTab() {
-        // 1. Verificar si existe el tab de resultados
         let resultsTab = document.getElementById('tab-results');
         
         if (!resultsTab) {
             console.log('⚠️ Tab de resultados no existe, creándolo...');
-            
-            // Buscar el contenedor de tabs
             const tabsContainer = document.querySelector('.tab-content');
             
             if (tabsContainer) {
@@ -116,17 +106,13 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
                     </div>`;
                 tabsContainer.appendChild(resultsTab);
                 console.log('✅ Tab de resultados creado');
-            } else {
-                console.error('❌ No se encontró .tab-content');
             }
         }
         
-        // 2. Verificar si existe el botón del tab
         let resultsButton = document.querySelector('.hmm-tabs .tab-button[data-tab="results"]');
         
         if (!resultsButton) {
             console.log('⚠️ Botón de resultados no existe, creándolo...');
-            
             const tabsNav = document.querySelector('.hmm-tabs');
             
             if (tabsNav) {
@@ -134,13 +120,58 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
                 resultsButton.className = 'tab-button';
                 resultsButton.setAttribute('data-tab', 'results');
                 resultsButton.innerHTML = '<i class="fas fa-chart-bar"></i> Resultados';
-                // El event listener ya está delegado en initTabs
                 tabsNav.appendChild(resultsButton);
                 console.log('✅ Botón de resultados creado');
-            } else {
-                console.error('❌ No se encontró .hmm-tabs');
             }
         }
+    }
+
+    // ========== ATAJOS DE TECLADO ==========
+    function initKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            
+            // Ctrl/Cmd + R: Ejecutar Viterbi
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'r' && !e.shiftKey) {
+                e.preventDefault();
+                if (currentHMM && observationSequence.length > 0) {
+                    window.runViterbi(false);
+                } else {
+                    showAlert('⚠️ Carga un HMM y define una secuencia primero', 'warning');
+                }
+            }
+            
+            // Ctrl/Cmd + Shift + R: Ejecutar con Debug
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'r') {
+                e.preventDefault();
+                if (currentHMM && observationSequence.length > 0) {
+                    window.runViterbi(true);
+                } else {
+                    showAlert('⚠️ Carga un HMM y define una secuencia primero', 'warning');
+                }
+            }
+            
+            // Ctrl/Cmd + E: Exportar resultados
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'e') {
+                e.preventDefault();
+                if (lastViterbiResults) {
+                    window.exportViterbiResults(
+                        lastViterbiResults.sequence,
+                        lastViterbiResults.probability,
+                        lastViterbiResults.V,
+                        lastViterbiResults.states,
+                        lastViterbiResults.logProb
+                    );
+                } else {
+                    showAlert('⚠️ Ejecuta Viterbi primero', 'warning');
+                }
+            }
+        });
+        
+        console.log('⌨️ Atajos de teclado habilitados:');
+        console.log('   Ctrl+R: Ejecutar Viterbi');
+        console.log('   Ctrl+Shift+R: Ejecutar con Debug');
+        console.log('   Ctrl+E: Exportar resultados');
     }
 
     // ========== DIAGRAMA VIS.JS ==========
@@ -190,7 +221,6 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
         const nodes = new vis.DataSet();
         const edges = new vis.DataSet();
         
-        // Estados Ocultos
         hmm.hiddenStates.forEach(state => {
             nodes.add({
                 id: `hidden_${state.id}`,
@@ -202,7 +232,6 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
             });
         });
         
-        // Observaciones
         hmm.observations.forEach(obs => {
             nodes.add({
                 id: `obs_${obs.id}`,
@@ -214,7 +243,6 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
             });
         });
         
-        // Transiciones
         if (hmm.transitionMatrix) {
             Object.entries(hmm.transitionMatrix).forEach(([from, targets]) => {
                 Object.entries(targets).forEach(([to, prob]) => {
@@ -226,7 +254,6 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
             });
         }
         
-        // Emisiones
         if (hmm.emissionMatrix) {
             Object.entries(hmm.emissionMatrix).forEach(([state, emissions]) => {
                 Object.entries(emissions).forEach(([obs, prob]) => {
@@ -243,43 +270,77 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
         updateHMMInfo(hmm);
     }
 
-    // ========== ALGORITMOS (VITERBI) ==========
-    
-    // Funciones globales para botones
-    window.runForward = () => showAlert('⚠️ Solo Viterbi está disponible', 'warning');
-    window.runBaumWelch = () => showAlert('⚠️ Solo Viterbi está disponible', 'warning');
-
-    window.runViterbi = function() {
-        console.log('🚀 Iniciando algoritmo de Viterbi...');
-
-        // ✅ DEPURACIÓN: Verificar estado del DOM
-        console.log('🔍 Verificando estructura del DOM:');
-        console.log('- Tab results existe:', !!document.getElementById('tab-results'));
-        console.log('- Botón results existe:', !!document.querySelector('.tab-button[data-tab="results"]'));
-        console.log('- Container tab-content existe:', !!document.querySelector('.tab-content'));
-        console.log('- HMM cargado:', !!currentHMM);
-        console.log('- Secuencia:', observationSequence);
+    // ========== VALIDACIÓN PARA VITERBI ==========
+    function validateForViterbi() {
+        const errors = [];
         
-        // 1. Diagnóstico de estado
-        if (!currentHMM) return showAlert('Carga un HMM primero', 'error');
-        if (observationSequence.length === 0) return showAlert('Define una secuencia de observación primero (Tab Observación)', 'error');
+        if (!currentHMM) {
+            errors.push('No hay modelo HMM cargado');
+            return errors;
+        }
+        
+        if (observationSequence.length === 0) {
+            errors.push('No hay secuencia de observaciones definida');
+            return errors;
+        }
+        
+        // Validar que todas las observaciones existen en el modelo
+        const validObs = new Set(currentHMM.observations.map(o => o.id));
+        observationSequence.forEach((obs, i) => {
+            if (!validObs.has(obs.id)) {
+                errors.push(`Observación "${obs.id}" en posición ${i} no existe en el modelo`);
+            }
+        });
+        
+        // Validar probabilidades iniciales
+        const hasInitialProbs = currentHMM.hiddenStates.some(s => 
+            (currentHMM.initialProbabilities[s.id] || 0) > 0
+        );
+        if (!hasInitialProbs) {
+            errors.push('No hay probabilidades iniciales definidas (todas son 0)');
+        }
+        
+        // Validar que hay al menos un camino posible
+        const firstObs = observationSequence[0].id;
+        const canStart = currentHMM.hiddenStates.some(s => {
+            const pi = currentHMM.initialProbabilities[s.id] || 0;
+            const b = currentHMM.emissionMatrix[s.id]?.[firstObs] || 0;
+            return pi > 0 && b > 0;
+        });
+        
+        if (!canStart) {
+            errors.push(`Imposible iniciar: ningún estado puede emitir "${firstObs}" con probabilidad > 0`);
+        }
+        
+        return errors;
+    }
 
-        // 2. Validación de datos
+    // ========== ALGORITMO DE VITERBI MEJORADO ==========
+    window.runViterbi = function(debugMode = false) {
+        console.log('🚀 Iniciando algoritmo de Viterbi...');
+        
+        // Validación robusta
+        const errors = validateForViterbi();
+        if (errors.length > 0) {
+            const errorMsg = '❌ Errores de validación:\n• ' + errors.join('\n• ');
+            console.error(errorMsg);
+            showAlert(errorMsg, 'error');
+            return;
+        }
+        
         const states = currentHMM.hiddenStates;
         const N = states.length;
         const T = observationSequence.length;
-        
-        if (N === 0) return showAlert('El modelo no tiene estados ocultos', 'error');
 
         try {
-            // Estructuras (Logs para precisión)
             let V = Array(T).fill(0).map(() => Array(N).fill(-Infinity));
             let path = Array(T).fill(0).map(() => Array(N).fill(0));
             
             // --- INICIALIZACIÓN ---
             const firstObs = observationSequence[0].id;
-            let validStart = false;
-
+            
+            if (debugMode) console.group('🔧 Inicialización (t=0)');
+            
             for (let s = 0; s < N; s++) {
                 const id = states[s].id;
                 const pi = currentHMM.initialProbabilities[id] || 0;
@@ -287,18 +348,21 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
                 
                 if (pi > 0 && b > 0) {
                     V[0][s] = Math.log(pi) + Math.log(b);
-                    validStart = true;
+                    if (debugMode) {
+                        console.log(`${states[s].label}: π=${pi.toFixed(4)}, b=${b.toFixed(4)}, V=${Math.exp(V[0][s]).toFixed(6)}`);
+                    }
                 }
                 path[0][s] = -1;
             }
-
-            if (!validStart) return showAlert('Imposible iniciar: probabilidad 0 para la primera observación', 'error');
+            
+            if (debugMode) console.groupEnd();
 
             // --- RECURSIÓN ---
             for (let t = 1; t < T; t++) {
                 const obs = observationSequence[t].id;
-                let validStep = false;
-
+                
+                if (debugMode) console.group(`🔧 Paso t=${t} (obs: ${observationSequence[t].label})`);
+                
                 for (let s = 0; s < N; s++) {
                     const currId = states[s].id;
                     let maxLogP = -Infinity;
@@ -321,10 +385,14 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
                     if (maxLogP !== -Infinity && emit > 0) {
                         V[t][s] = maxLogP + Math.log(emit);
                         path[t][s] = bestPrev;
-                        validStep = true;
+                        
+                        if (debugMode) {
+                            console.log(`${states[s].label}: mejor_anterior=${states[bestPrev].label}, V=${Math.exp(V[t][s]).toFixed(6)}`);
+                        }
                     }
                 }
-                if (!validStep) return showAlert(`Secuencia rota en el paso ${t+1} (probabilidad 0)`, 'error');
+                
+                if (debugMode) console.groupEnd();
             }
 
             // --- TERMINACIÓN ---
@@ -338,7 +406,9 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
                 }
             }
 
-            if (lastStateIdx === -1) return showAlert('La secuencia es imposible con este modelo', 'error');
+            if (lastStateIdx === -1) {
+                return showAlert('La secuencia es imposible con este modelo', 'error');
+            }
 
             // --- BACKTRACKING ---
             const bestPathIndices = new Array(T);
@@ -352,32 +422,86 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
             const probability = Math.exp(maxFinalLogP);
             const V_display = V.map(row => row.map(v => v === -Infinity ? 0 : Math.exp(v)));
 
-            // Mostrar resultados
+            if (debugMode) {
+                console.group('📊 Resultados Finales');
+                console.log('Secuencia óptima:', resultSequence.map(s => s.label).join(' → '));
+                console.log('Log-Probabilidad:', maxFinalLogP);
+                console.log('Probabilidad:', probability);
+                console.table(V_display);
+                console.groupEnd();
+            }
+
+            // Guardar resultados para exportación
+            lastViterbiResults = {
+                sequence: resultSequence,
+                probability: probability,
+                V: V_display,
+                states: states,
+                logProb: maxFinalLogP
+            };
+
             displayViterbiResults(resultSequence, probability, V_display, states, maxFinalLogP);
 
         } catch (e) {
-            console.error(e);
+            console.error('❌ Error en Viterbi:', e);
             showAlert('Error matemático: ' + e.message, 'error');
         }
     };
 
-    // ✅ FUNCIÓN MEJORADA Y ROBUSTA PARA MOSTRAR RESULTADOS
+    // ========== EXPORTACIÓN DE RESULTADOS ==========
+    window.exportViterbiResults = function(sequence, probability, V, states, logProb) {
+        const results = {
+            metadata: {
+                timestamp: new Date().toISOString(),
+                modelName: currentHMM.name,
+                algorithm: 'Viterbi'
+            },
+            input: {
+                observations: observationSequence.map(o => o.label),
+                observationIds: observationSequence.map(o => o.id)
+            },
+            output: {
+                hiddenStatePath: sequence.map(s => s.label),
+                hiddenStateIds: sequence.map(s => s.id),
+                logProbability: logProb,
+                probability: probability
+            },
+            viterbiMatrix: V.map((row, t) => {
+                const obj = { 
+                    time: t, 
+                    observation: observationSequence[t].label 
+                };
+                states.forEach((s, i) => {
+                    obj[s.label] = row[i];
+                });
+                return obj;
+            })
+        };
+        
+        const blob = new Blob([JSON.stringify(results, null, 2)], {
+            type: 'application/json'
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `viterbi_${currentHMM.name}_${Date.now()}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        showAlert('✅ Resultados exportados correctamente', 'success');
+    };
+
+    // ========== MOSTRAR RESULTADOS VITERBI ==========
     function displayViterbiResults(sequence, probability, V, states, logProb) {
         console.log('📊 Mostrando resultados de Viterbi...');
         
-        // 1. Asegurar que la UI existe
         ensureResultsTab();
-        
-        // 2. Activar Tab
         activateTab('results');
         
-        // 3. Buscar contenedor de forma flexible
         let container = document.getElementById('tab-results');
         
-        // Si no existe, intentar crearlo de emergencia
         if (!container) {
             console.error('❌ No se encontró #tab-results, creándolo de emergencia...');
-            
             const tabContent = document.querySelector('.tab-content') || document.querySelector('.hmm-main');
             
             if (tabContent) {
@@ -392,11 +516,9 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
             }
         }
         
-        // Asegurarse de que el tab esté visible
         container.style.display = 'block';
         container.classList.add('active');
 
-        // Construir HTML
         let html = `
             <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2px; border-radius: 14px; margin-bottom: 25px;">
                 <div style="background: white; padding: 30px; border-radius: 12px;">
@@ -509,7 +631,19 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
                     </div>
                     
                     <!-- Botones de Acción -->
-                    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 25px;">
+                    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 25px; flex-wrap: wrap;">
+                        <button onclick="window.exportViterbiResults(
+                            ${JSON.stringify(sequence).replace(/"/g, '&quot;')},
+                            ${probability},
+                            ${JSON.stringify(V).replace(/"/g, '&quot;')},
+                            ${JSON.stringify(states).replace(/"/g, '&quot;')},
+                            ${logProb}
+                        )" class="btn btn-success">
+                            <i class="fas fa-download"></i> Exportar Resultados JSON
+                        </button>
+                        <button onclick="window.runViterbi(true)" class="btn btn-info">
+                            <i class="fas fa-bug"></i> Ejecutar con Debug
+                        </button>
                         <button onclick="window.clearSequence()" class="btn btn-outline-secondary">
                             <i class="fas fa-eraser"></i> Limpiar Secuencia
                         </button>
@@ -520,7 +654,6 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
         
         container.innerHTML = html;
         
-        // ✅ Añadir animación CSS
         if (!document.getElementById('viterbi-animations')) {
             const style = document.createElement('style');
             style.id = 'viterbi-animations';
@@ -539,7 +672,6 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
 
     // ========== UTILIDADES & HELPERS ==========
     
-    // Carga de Ejemplos
     function initExampleButtons() {
         document.querySelectorAll('.btn-example').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -567,7 +699,6 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
             .catch(e => showAlert('Error cargando ejemplo: ' + e.message, 'error'));
     }
 
-    // Manejo de Secuencia
     function updateObservationSelector(hmm) {
         const container = document.getElementById('observation-selector');
         if (!container) return;
@@ -582,7 +713,6 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
         });
     }
 
-    // Funciones globales (window)
     window.addToSequence = function(id, label) {
         observationSequence.push({ id, label });
         updateSequenceDisplay();
@@ -612,7 +742,6 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
         ).join(' ');
     }
 
-    // CRUD HMM
     window.createNewHMM = function() {
         if(currentHMM && !confirm('¿Crear nuevo?')) return;
         currentHMM = { name: 'Nuevo', hiddenStates: [], observations: [], transitionMatrix: {}, emissionMatrix: {}, initialProbabilities: {} };
@@ -631,11 +760,9 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
     };
     window.exportHMM = window.saveHMM;
 
-    // Helpers UI
     window.toggleView = () => showAlert('Vista cambiada (simulado)', 'info');
     window.fitDiagram = () => hmmDiagram && hmmDiagram.fit({ animation: true });
 
-    // ✅ FUNCIONES DE EDICIÓN REALES (NO PLACEHOLDERS)
     window.addHiddenState = function() {
         if (!currentHMM) return showAlert('Carga un HMM primero', 'error');
         const name = prompt("Nombre del Estado Oculto:");
@@ -644,7 +771,6 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
         if (currentHMM.hiddenStates.find(s => s.id === id)) return showAlert('ID duplicado', 'error');
         
         currentHMM.hiddenStates.push({id, label: name});
-        // Inicializar matrices para nuevo estado
         if(!currentHMM.transitionMatrix) currentHMM.transitionMatrix = {};
         currentHMM.transitionMatrix[id] = {};
         
@@ -693,16 +819,241 @@ if (typeof window.hmmModuleLoaded !== 'undefined') {
     }
 
     function showNodeDetails(nodeId) { /* Detalle básico de nodos */ }
-    function displayMatrices() { /* Lógica de matrices (simplificada para brevedad) */ 
-        const container = document.getElementById('matrices-container');
-        if(container && currentHMM) container.innerHTML = '<div class="alert alert-info">Matrices disponibles en JSON</div>';
-    }
-
+    
+function displayMatrices() {
+    const container = document.getElementById('matrices-container');
+    if (!container || !currentHMM) return;
+    
+    let html = `
+        <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            
+            <!-- MATRIZ DE PROBABILIDADES INICIALES -->
+            <div style="margin-bottom: 30px;">
+                <h4 style="color: #7e22ce; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-play-circle"></i> Probabilidades Iniciales (π)
+                </h4>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                        <thead>
+                            <tr style="background: #f3e8ff;">
+                                <th style="padding: 12px; border: 2px solid #e5e7eb; color: #7e22ce; font-weight: bold;">Estado</th>
+                                <th style="padding: 12px; border: 2px solid #e5e7eb; color: #7e22ce; font-weight: bold;">Probabilidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+    `;
+    
+    currentHMM.hiddenStates.forEach(state => {
+        const prob = currentHMM.initialProbabilities[state.id] || 0;
+        html += `
+            <tr>
+                <td style="padding: 12px; border: 2px solid #e5e7eb; font-weight: bold; background: #faf5ff; color: #581c87;">
+                    ${state.label || state.id}
+                </td>
+                <td style="padding: 12px; border: 2px solid #e5e7eb; ${prob > 0 ? 'background: #f3e8ff; color: #581c87; font-weight: 600;' : 'background: #f9fafb; color: #d1d5db;'}">
+                    ${prob.toFixed(4)}
+                </td>
+            </tr>
+        `;
+    });
+    
+    html += `
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- MATRIZ DE TRANSICIÓN -->
+            <div style="margin-bottom: 30px;">
+                <h4 style="color: #7e22ce; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-exchange-alt"></i> Matriz de Transición A (Estado → Estado)
+                </h4>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                        <thead>
+                            <tr style="background: #f3e8ff;">
+                                <th style="padding: 12px; border: 2px solid #e5e7eb; color: #7e22ce; font-weight: bold;">Desde \\ Hacia</th>
+    `;
+    
+    currentHMM.hiddenStates.forEach(state => {
+        html += `<th style="padding: 12px; border: 2px solid #e5e7eb; color: #7e22ce; font-weight: bold;">${state.label || state.id}</th>`;
+    });
+    
+    html += `
+                            </tr>
+                        </thead>
+                        <tbody>
+    `;
+    
+    currentHMM.hiddenStates.forEach(fromState => {
+        html += `<tr>`;
+        html += `<td style="padding: 12px; border: 2px solid #e5e7eb; font-weight: bold; background: #faf5ff; color: #581c87;">${fromState.label || fromState.id}</td>`;
+        
+        currentHMM.hiddenStates.forEach(toState => {
+            const prob = currentHMM.transitionMatrix[fromState.id]?.[toState.id] || 0;
+            html += `<td style="padding: 12px; border: 2px solid #e5e7eb; ${prob > 0 ? 'background: #f3e8ff; color: #581c87; font-weight: 600;' : 'background: #f9fafb; color: #d1d5db;'}">${prob.toFixed(4)}</td>`;
+        });
+        
+        html += `</tr>`;
+    });
+    
+    html += `
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- MATRIZ DE EMISIÓN -->
+            <div style="margin-bottom: 30px;">
+                <h4 style="color: #7e22ce; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-broadcast-tower"></i> Matriz de Emisión B (Estado → Observación)
+                </h4>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                        <thead>
+                            <tr style="background: #f3e8ff;">
+                                <th style="padding: 12px; border: 2px solid #e5e7eb; color: #7e22ce; font-weight: bold;">Estado \\ Observación</th>
+    `;
+    
+    currentHMM.observations.forEach(obs => {
+        html += `<th style="padding: 12px; border: 2px solid #e5e7eb; color: #7e22ce; font-weight: bold;">${obs.label || obs.id}</th>`;
+    });
+    
+    html += `
+                            </tr>
+                        </thead>
+                        <tbody>
+    `;
+    
+    currentHMM.hiddenStates.forEach(state => {
+        html += `<tr>`;
+        html += `<td style="padding: 12px; border: 2px solid #e5e7eb; font-weight: bold; background: #faf5ff; color: #581c87;">${state.label || state.id}</td>`;
+        
+        currentHMM.observations.forEach(obs => {
+            const prob = currentHMM.emissionMatrix[state.id]?.[obs.id] || 0;
+            html += `<td style="padding: 12px; border: 2px solid #e5e7eb; ${prob > 0 ? 'background: #f3e8ff; color: #581c87; font-weight: 600;' : 'background: #f9fafb; color: #d1d5db;'}">${prob.toFixed(4)}</td>`;
+        });
+        
+        html += `</tr>`;
+    });
+    
+    html += `
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Verificación de Probabilidades -->
+            <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border: 2px solid #3b82f6; border-radius: 10px; padding: 20px;">
+                <h5 style="color: #1e40af; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-check-circle"></i> Verificación de Sumas (deben ser ≈ 1.0)
+                </h5>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+    `;
+    
+    // Verificar probabilidades iniciales
+    const piSum = Object.values(currentHMM.initialProbabilities || {}).reduce((a, b) => a + b, 0);
+    const piValid = Math.abs(piSum - 1) < 0.01;
+    html += `
+        <div style="background: white; padding: 12px; border-radius: 8px; border-left: 4px solid ${piValid ? '#10b981' : '#ef4444'};">
+            <div style="font-size: 0.9em; color: #6b7280; margin-bottom: 5px;">Σ Probabilidades Iniciales</div>
+            <div style="font-size: 1.2em; font-weight: bold; color: ${piValid ? '#059669' : '#dc2626'};">
+                ${piSum.toFixed(4)} ${piValid ? '✓' : '✗'}
+            </div>
+        </div>
+    `;
+    
+    // Verificar transiciones
+    currentHMM.hiddenStates.forEach(state => {
+        const transSum = Object.values(currentHMM.transitionMatrix[state.id] || {}).reduce((a, b) => a + b, 0);
+        const transValid = Math.abs(transSum - 1) < 0.01 || transSum === 0;
+        html += `
+            <div style="background: white; padding: 12px; border-radius: 8px; border-left: 4px solid ${transValid ? '#10b981' : '#ef4444'};">
+                <div style="font-size: 0.9em; color: #6b7280; margin-bottom: 5px;">Trans. desde ${state.label}</div>
+                <div style="font-size: 1.2em; font-weight: bold; color: ${transValid ? '#059669' : '#dc2626'};">
+                    ${transSum.toFixed(4)} ${transValid ? '✓' : '✗'}
+                </div>
+            </div>
+        `;
+    });
+    
+    // Verificar emisiones
+    currentHMM.hiddenStates.forEach(state => {
+        const emisSum = Object.values(currentHMM.emissionMatrix[state.id] || {}).reduce((a, b) => a + b, 0);
+        const emisValid = Math.abs(emisSum - 1) < 0.01 || emisSum === 0;
+        html += `
+            <div style="background: white; padding: 12px; border-radius: 8px; border-left: 4px solid ${emisValid ? '#10b981' : '#ef4444'};">
+                <div style="font-size: 0.9em; color: #6b7280; margin-bottom: 5px;">Emis. desde ${state.label}</div>
+                <div style="font-size: 1.2em; font-weight: bold; color: ${emisValid ? '#059669' : '#dc2626'};">
+                    ${emisSum.toFixed(4)} ${emisValid ? '✓' : '✗'}
+                </div>
+            </div>
+        `;
+    });
+    
+    html += `
+                </div>
+            </div>
+        </div>
+    `;
+    
+    container.innerHTML = html;
+}
     function showAlert(msg, type='info') {
+        const icons = {
+            success: '✅',
+            error: '❌',
+            warning: '⚠️',
+            info: 'ℹ️'
+        };
+        
+        const colors = {
+            success: '#10b981',
+            error: '#ef4444',
+            warning: '#f59e0b',
+            info: '#3b82f6'
+        };
+        
         const div = document.createElement('div');
-        div.style.cssText = `position:fixed;top:80px;right:20px;padding:15px;background:${type==='error'?'#ef4444':'#10b981'};color:white;border-radius:8px;z-index:9999;box-shadow:0 4px 6px rgba(0,0,0,0.1);`;
-        div.textContent = msg;
+        div.style.cssText = `
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            padding: 15px 20px;
+            background: ${colors[type]};
+            color: white;
+            border-radius: 8px;
+            z-index: 9999;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+            max-width: 400px;
+        `;
+        div.innerHTML = `<span style="font-size: 1.2em;">${icons[type]}</span><span>${msg}</span>`;
         document.body.appendChild(div);
-        setTimeout(() => div.remove(), 3000);
+        
+        setTimeout(() => {
+            div.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => div.remove(), 300);
+        }, 3000);
+    }
+    
+    // Agregar CSS para animaciones de alertas
+    if (!document.getElementById('hmm-alert-animations')) {
+        const style = document.createElement('style');
+        style.id = 'hmm-alert-animations';
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(400px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(400px); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
     }
 }

@@ -54,7 +54,7 @@ require_once BASE_PATH . '/includes/navbar.php';
             <div class="sidebar-section">
                 <h3><i class="fas fa-calculator"></i> Algoritmos</h3>
                 <div class="algorithm-buttons">
-                    <!-- Solo Viterbi disponible por restricción -->
+                    <!-- Único botón disponible: Viterbi -->
                     <button class="btn btn-primary" onclick="runViterbi()" style="width: 100%; margin-bottom: 0.5rem;">
                         <i class="fas fa-route"></i> Viterbi (Decodificación)
                     </button>
@@ -91,7 +91,6 @@ require_once BASE_PATH . '/includes/navbar.php';
                 <button class="tab-button" data-tab="observation">
                     <i class="fas fa-eye"></i> Observación
                 </button>
-                <!-- ✅ Botón de Resultados agregado correctamente -->
                 <button class="tab-button" data-tab="results">
                     <i class="fas fa-chart-bar"></i> Resultados
                 </button>
@@ -180,12 +179,11 @@ require_once BASE_PATH . '/includes/navbar.php';
                     </div>
                 </div>
                 
-                <!-- Tab 4: Resultados ✅ Estructura corregida -->
+                <!-- Tab 4: Resultados (Viterbi) -->
                 <div class="tab-panel" id="tab-results">
                     <h3>Resultados del Análisis (Viterbi)</h3>
                     <p class="text-muted">Ruta más probable de estados ocultos</p>
                     
-                    <!-- ✅ El ID debe ser exacto para que el JS lo encuentre -->
                     <div id="results-container">
                         <div class="alert alert-info">
                             <i class="fas fa-info-circle"></i> Ejecuta el algoritmo Viterbi para ver los resultados aquí.

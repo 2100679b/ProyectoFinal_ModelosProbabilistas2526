@@ -66,6 +66,32 @@ function generateId() {
     return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 }
 
+/**
+ * Verifica si la librería Vis.js está cargada
+ * @param {string} containerId - ID del contenedor para mostrar el error si falla
+ * @returns {boolean}
+ */
+function checkVisLibrary(containerId) {
+    if (typeof vis === 'undefined') {
+        logError('CRÍTICO: vis.js no está cargado');
+        if (containerId) {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.innerHTML = `
+                    <div style="padding: 40px; text-align: center; color: #dc2626; background: #fee2e2; border-radius: 8px; margin: 20px;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3em; margin-bottom: 15px;"></i>
+                        <h4>Error de Configuración</h4>
+                        <p>La biblioteca de visualización (Vis.js) no está disponible.</p>
+                        <small>Verifica que includes/footer.php la esté cargando correctamente.</small>
+                    </div>
+                `;
+            }
+        }
+        return false;
+    }
+    return true;
+}
+
 // ==============================================================================
 // MANEJO DE ALERTAS Y NOTIFICACIONES
 // ==============================================================================
@@ -81,15 +107,24 @@ function showAlert(message, type = 'info', duration = 5000) {
         'error': '❌'
     };
     
+    // Remover alertas previas para evitar acumulación excesiva
+    const existingAlert = document.querySelector('.app-alert');
+    if (existingAlert) existingAlert.remove();
+
     const alert = document.createElement('div');
-    alert.className = `alert alert-${type} fade-in`;
+    alert.className = `alert alert-${type} fade-in app-alert`;
     alert.innerHTML = `${icons[type] || icons.info} ${message}`;
     alert.style.cssText = `
         position: fixed;
         top: 80px;
         right: 20px;
-        z-index: 9999;
+        z-index: 10000;
         max-width: 400px;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        color: white;
+        background-color: ${type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : type === 'warning' ? '#f59e0b' : '#3b82f6'};
         animation: slideInRight 0.3s ease;
     `;
     
@@ -99,7 +134,9 @@ function showAlert(message, type = 'info', duration = 5000) {
     if (duration > 0) {
         setTimeout(() => {
             alert.style.animation = 'slideOutRight 0.3s ease';
-            setTimeout(() => alert.remove(), 300);
+            setTimeout(() => {
+                if (alert.parentNode) alert.parentNode.removeChild(alert);
+            }, 300);
         }, duration);
     }
     
@@ -142,37 +179,51 @@ function showInfo(message, duration = 3000) {
  * Muestra un spinner de carga
  */
 function showLoading(container = document.body, message = 'Cargando...') {
+    // Si ya existe un loader en este contenedor, no crear otro
+    if (container.querySelector('.loading-overlay')) return;
+
     const overlay = document.createElement('div');
     overlay.className = 'loading-overlay';
     overlay.innerHTML = `
-        <div class="spinner"></div>
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
         <p style="color: #333; margin-top: 1rem; font-weight: 600;">${message}</p>
     `;
+    
+    // Estilos inline para asegurar funcionamiento sin CSS externo
     overlay.style.cssText = `
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(255, 255, 255, 0.9);
+        background-color: rgba(255, 255, 255, 0.8);
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         z-index: 1000;
+        backdrop-filter: blur(2px);
+        border-radius: inherit;
     `;
     
-    container.style.position = 'relative';
-    container.appendChild(overlay);
+    // Asegurar que el contenedor tenga posición relativa si es static
+    const style = window.getComputedStyle(container);
+    if (style.position === 'static') {
+        container.style.position = 'relative';
+    }
     
+    container.appendChild(overlay);
     return overlay;
 }
 
 /**
  * Oculta el spinner de carga
  */
-function hideLoading(overlay) {
-    if (overlay && overlay.parentNode) {
+function hideLoading(container = document.body) {
+    const overlay = container.querySelector('.loading-overlay');
+    if (overlay) {
         overlay.remove();
     }
 }
@@ -191,25 +242,25 @@ function validateForm(formElement) {
     
     inputs.forEach(input => {
         // Limpiar errores previos
-        input.classList.remove('error');
+        input.classList.remove('is-invalid');
         
         // Validar campo vacío
         if (!input.value.trim()) {
             isValid = false;
-            input.classList.add('error');
-            errors.push(`El campo "${input.name}" es requerido`);
+            input.classList.add('is-invalid');
+            errors.push(`El campo "${input.name || 'Desconocido'}" es requerido`);
         }
         
         // Validar tipo number
-        if (input.type === 'number') {
+        if (input.type === 'number' && input.value.trim() !== '') {
             const value = parseFloat(input.value);
             const min = input.min ? parseFloat(input.min) : -Infinity;
             const max = input.max ? parseFloat(input.max) : Infinity;
             
             if (isNaN(value) || value < min || value > max) {
                 isValid = false;
-                input.classList.add('error');
-                errors.push(`El campo "${input.name}" debe estar entre ${min} y ${max}`);
+                input.classList.add('is-invalid');
+                errors.push(`El valor de "${input.name}" debe estar entre ${min} y ${max}`);
             }
         }
     });
@@ -221,8 +272,8 @@ function validateForm(formElement) {
  * Limpia errores de validación de un formulario
  */
 function clearFormErrors(formElement) {
-    formElement.querySelectorAll('.error').forEach(el => {
-        el.classList.remove('error');
+    formElement.querySelectorAll('.is-invalid').forEach(el => {
+        el.classList.remove('is-invalid');
     });
 }
 
@@ -239,8 +290,7 @@ async function ajaxRequest(url, options = {}) {
         headers: {
             'Content-Type': 'application/json',
             'X-Requested-With': 'XMLHttpRequest'
-        },
-        timeout: AppConfig.apiTimeout
+        }
     };
     
     const finalOptions = { ...defaultOptions, ...options };
@@ -266,7 +316,6 @@ async function ajaxRequest(url, options = {}) {
 async function get(url, params = {}) {
     const queryString = new URLSearchParams(params).toString();
     const fullUrl = queryString ? `${url}?${queryString}` : url;
-    
     return ajaxRequest(fullUrl, { method: 'GET' });
 }
 
@@ -281,190 +330,49 @@ async function post(url, data = {}) {
 }
 
 // ==============================================================================
-// MANEJO DE TABS
+// MANEJO DE TABS (GENÉRICO)
 // ==============================================================================
 
 /**
- * Inicializa sistema de tabs
+ * Inicializa sistema de tabs simple
+ * NOTA: Los módulos HMM y Bayesiano usan su propia lógica extendida.
+ * Esta función es solo para tabs simples sin lógica adicional.
  */
 function initTabs(containerSelector) {
     const container = document.querySelector(containerSelector);
     if (!container) return;
     
+    // Verificar si ya tiene manejo de eventos para evitar duplicados
+    if (container.dataset.tabsInitialized) return;
+    container.dataset.tabsInitialized = "true";
+    
     const tabButtons = container.querySelectorAll('.tab-button');
     const tabPanels = container.querySelectorAll('.tab-panel');
     
-    tabButtons.forEach((button, index) => {
-        button.addEventListener('click', () => {
+    tabButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = button.dataset.tab;
+            
             // Remover active de todos
             tabButtons.forEach(btn => btn.classList.remove('active'));
-            tabPanels.forEach(panel => panel.classList.remove('active'));
+            tabPanels.forEach(panel => {
+                panel.classList.remove('active');
+                panel.style.display = 'none';
+            });
             
             // Activar el seleccionado
             button.classList.add('active');
-            tabPanels[index].classList.add('active');
+            const targetPanel = container.querySelector(`#tab-${targetId}`);
+            if (targetPanel) {
+                targetPanel.classList.add('active');
+                targetPanel.style.display = 'block';
+            }
             
-            debug('Tab cambiado:', index);
+            debug('Tab cambiado (Genérico):', targetId);
         });
     });
 }
-
-// ==============================================================================
-// MANEJO DE TABLAS
-// ==============================================================================
-
-/**
- * Crea una tabla HTML a partir de datos
- */
-function createTable(data, headers, options = {}) {
-    const table = document.createElement('table');
-    table.className = options.className || 'data-table';
-    
-    // Crear thead
-    if (headers && headers.length > 0) {
-        const thead = document.createElement('thead');
-        const headerRow = document.createElement('tr');
-        
-        headers.forEach(header => {
-            const th = document.createElement('th');
-            th.textContent = header;
-            headerRow.appendChild(th);
-        });
-        
-        thead.appendChild(headerRow);
-        table.appendChild(thead);
-    }
-    
-    // Crear tbody
-    const tbody = document.createElement('tbody');
-    
-    data.forEach(row => {
-        const tr = document.createElement('tr');
-        
-        row.forEach(cell => {
-            const td = document.createElement('td');
-            td.textContent = cell;
-            tr.appendChild(td);
-        });
-        
-        tbody.appendChild(tr);
-    });
-    
-    table.appendChild(tbody);
-    
-    return table;
-}
-
-// ==============================================================================
-// UTILIDADES DE LOCAL STORAGE
-// ==============================================================================
-
-/**
- * Guarda datos en localStorage
- */
-function saveToStorage(key, data) {
-    try {
-        localStorage.setItem(key, JSON.stringify(data));
-        return true;
-    } catch (error) {
-        logError('Error guardando en localStorage:', error);
-        return false;
-    }
-}
-
-/**
- * Recupera datos de localStorage
- */
-function loadFromStorage(key, defaultValue = null) {
-    try {
-        const data = localStorage.getItem(key);
-        return data ? JSON.parse(data) : defaultValue;
-    } catch (error) {
-        logError('Error cargando de localStorage:', error);
-        return defaultValue;
-    }
-}
-
-/**
- * Elimina datos de localStorage
- */
-function removeFromStorage(key) {
-    try {
-        localStorage.removeItem(key);
-        return true;
-    } catch (error) {
-        logError('Error eliminando de localStorage:', error);
-        return false;
-    }
-}
-
-// ==============================================================================
-// UTILIDADES DE ARRAYS Y OBJETOS
-// ==============================================================================
-
-/**
- * Clona profundamente un objeto
- */
-function deepClone(obj) {
-    return JSON.parse(JSON.stringify(obj));
-}
-
-/**
- * Verifica si dos objetos son iguales
- */
-function isEqual(obj1, obj2) {
-    return JSON.stringify(obj1) === JSON.stringify(obj2);
-}
-
-/**
- * Suma todos los elementos de un array
- */
-function sum(array) {
-    return array.reduce((acc, val) => acc + val, 0);
-}
-
-/**
- * Promedio de un array
- */
-function average(array) {
-    return array.length > 0 ? sum(array) / array.length : 0;
-}
-
-// ==============================================================================
-// ANIMACIONES CSS
-// ==============================================================================
-
-// Agregar estilos de animación
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideInRight {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slideOutRight {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-    }
-    
-    .error {
-        border-color: #e74c3c !important;
-        box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1) !important;
-    }
-`;
-document.head.appendChild(style);
 
 // ==============================================================================
 // INICIALIZACIÓN
@@ -473,11 +381,18 @@ document.head.appendChild(style);
 document.addEventListener('DOMContentLoaded', function() {
     debug(`${AppConfig.name} v${AppConfig.version} inicializado`);
     
-    // Inicializar tabs si existen
+    // NOTA: Se ha deshabilitado la auto-inicialización global de tabs
+    // para evitar conflictos con los módulos específicos (HMM/Bayesiano)
+    // que requieren lógica personalizada al cambiar de pestaña.
+    /*
     const tabContainers = document.querySelectorAll('[class*="-tabs"]');
     tabContainers.forEach(container => {
-        initTabs('.' + container.className.split(' ')[0]);
+        // Solo inicializar si no es un módulo complejo conocido
+        if (!container.classList.contains('hmm-tabs') && !container.classList.contains('bayesian-tabs')) {
+            initTabs('.' + container.className.split(' ')[0]);
+        }
     });
+    */
     
     debug('Aplicación lista');
 });
@@ -495,10 +410,7 @@ window.App = {
         formatPercentage,
         isValidProbability,
         generateId,
-        deepClone,
-        isEqual,
-        sum,
-        average
+        checkVisLibrary
     },
     ui: {
         showAlert,
@@ -508,8 +420,7 @@ window.App = {
         showInfo,
         showLoading,
         hideLoading,
-        initTabs,
-        createTable
+        initTabs
     },
     validation: {
         validateForm,
@@ -519,11 +430,6 @@ window.App = {
         request: ajaxRequest,
         get,
         post
-    },
-    storage: {
-        save: saveToStorage,
-        load: loadFromStorage,
-        remove: removeFromStorage
     }
 };
 

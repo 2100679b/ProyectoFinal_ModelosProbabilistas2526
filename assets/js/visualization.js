@@ -3,11 +3,12 @@
  * VISUALIZACIÓN - FUNCIONES AUXILIARES
  * Universidad Michoacana de San Nicolás de Hidalgo
  * Archivo: visualization.js
+ * Descripción: Clases reutilizables para gráficos con estilos unificados.
  * ==============================================================================
  */
 
 // ==============================================================================
-// VISUALIZACIÓN DE REDES BAYESIANAS
+// 1. VISUALIZACIÓN DE REDES BAYESIANAS (Tema Azul)
 // ==============================================================================
 class BayesianNetworkVisualizer {
     constructor(containerId) {
@@ -15,97 +16,74 @@ class BayesianNetworkVisualizer {
         this.network = null;
         this.nodes = new vis.DataSet();
         this.edges = new vis.DataSet();
-    }
-
-    /**
-     * Renderiza una red bayesiana
-     * @param {BayesianNetwork} bayesianNet - Red bayesiana a visualizar
-     */
-    render(bayesianNet) {
-        // Limpiar datos previos
-        this.nodes.clear();
-        this.edges.clear();
-
-        // Agregar nodos
-        bayesianNet.nodes.forEach((node, id) => {
-            this.nodes.add({
-                id: id,
-                label: node.name,
-                color: {
-                    background: '#97C2FC',
-                    border: '#2B7CE9',
-                    highlight: {
-                        background: '#4CAF50',
-                        border: '#2B7CE9'
-                    }
+        
+        // Opciones por defecto (Tema Azul)
+        this.options = {
+            nodes: {
+                shape: 'box',
+                margin: 10,
+                color: { 
+                    background: '#dbeafe', 
+                    border: '#2563eb', 
+                    highlight: { background: '#bfdbfe', border: '#1d4ed8' } 
                 },
-                font: { color: '#ffffff', size: 14, face: 'Arial', bold: true }
-            });
-        });
-
-        // Agregar aristas
-        const edgesList = bayesianNet.getEdges();
-        edgesList.forEach(edge => {
-            this.edges.add({
-                from: edge.from,
-                to: edge.to,
-                arrows: 'to',
-                color: { color: '#848484', highlight: '#2B7CE9' },
-                width: 2
-            });
-        });
-
-        // Configurar opciones de visualización
-        const options = {
-            layout: {
-                hierarchical: {
-                    direction: 'UD',
-                    sortMethod: 'directed',
-                    nodeSpacing: 150,
-                    levelSeparation: 150
-                }
+                font: { size: 16, color: '#1e40af', face: 'arial' },
+                borderWidth: 2,
+                shadow: true
+            },
+            edges: {
+                arrows: { to: { enabled: true, scaleFactor: 1.2 } },
+                smooth: { type: 'cubicBezier' },
+                color: { color: '#94a3b8', highlight: '#2563eb' }
             },
             physics: {
-                enabled: false
+                enabled: true,
+                stabilization: false,
+                barnesHut: { gravitationalConstant: -2000, springLength: 200 }
             },
             interaction: {
                 hover: true,
                 tooltipDelay: 200
             }
         };
-
-        // Crear la red
-        const data = { nodes: this.nodes, edges: this.edges };
-        this.network = new vis.Network(this.container, data, options);
-
-        return this.network;
     }
 
-    /**
-     * Resalta un nodo
-     */
-    highlightNode(nodeId, color = '#FFD700') {
-        this.nodes.update({
-            id: nodeId,
-            color: { background: color }
-        });
-    }
+    render(bayesianNet) {
+        if (!this.container) return;
+        
+        this.nodes.clear();
+        this.edges.clear();
 
-    /**
-     * Resetea los colores de todos los nodos
-     */
-    resetColors() {
-        this.nodes.forEach(node => {
-            this.nodes.update({
+        // Agregar nodos
+        bayesianNet.nodes.forEach((node) => {
+            this.nodes.add({
                 id: node.id,
-                color: { background: '#97C2FC', border: '#2B7CE9' }
+                label: node.label || node.name || node.id,
+                title: node.description || ''
             });
         });
+
+        // Agregar aristas
+        const edgesList = bayesianNet.edges || bayesianNet.getEdges();
+        edgesList.forEach(edge => {
+            this.edges.add({
+                from: edge.from,
+                to: edge.to
+            });
+        });
+
+        const data = { nodes: this.nodes, edges: this.edges };
+        
+        // Destruir red previa si existe para liberar memoria
+        if (this.network) this.network.destroy();
+        
+        this.network = new vis.Network(this.container, data, this.options);
+        return this.network;
     }
 }
 
 // ==============================================================================
-// VISUALIZACIÓN DE CADENAS DE MARKOV
+// 2. VISUALIZACIÓN DE CADENAS DE MARKOV (Tema Esmeralda/Verde)
 // ==============================================================================
 class MarkovChainVisualizer {
     constructor(containerId) {
@@ -113,100 +91,78 @@ class MarkovChainVisualizer {
         this.network = null;
         this.nodes = new vis.DataSet();
         this.edges = new vis.DataSet();
+
+        // Opciones por defecto (Tema Esmeralda)
+        this.options = {
+            nodes: {
+                shape: 'circle',
+                margin: 10,
+                color: { 
+                    background: '#d1fae5', 
+                    border: '#059669', 
+                    highlight: { background: '#a7f3d0', border: '#047857' }
+                },
+                font: { size: 14, color: '#064e3b', face: 'arial bold' }, // ✅ Corregido
+                borderWidth: 2,
+                shadow: true
+            },
+            edges: {
+                arrows: { to: { enabled: true, scaleFactor: 1 } },
+                color: { color: '#6b7280', highlight: '#059669' },
+                smooth: { type: 'curvedCW', roundness: 0.2 },
+                font: { align: 'horizontal', size: 12, background: 'rgba(255,255,255,0.7)' }
+            },
+            physics: {
+                enabled: true,
+                stabilization: false,
+                barnesHut: { gravitationalConstant: -2000, springLength: 150 }
+            },
+            interaction: { hover: true }
+        };
     }
 
-    /**
-     * Renderiza una cadena de Markov
-     * @param {MarkovChain} markovChain - Cadena de Markov a visualizar
-     */
     render(markovChain) {
+        if (!this.container) return;
+
         this.nodes.clear();
         this.edges.clear();
 
-        // Agregar nodos (estados)
-        markovChain.states.forEach((state, index) => {
+        // Agregar nodos
+        const states = markovChain.states || [];
+        states.forEach(state => {
             this.nodes.add({
-                id: index,
-                label: state,
-                color: {
-                    background: '#9b59b6',
-                    border: '#8e44ad'
-                },
-                font: { color: '#ffffff', size: 14 }
+                id: state.id,
+                label: state.label
             });
         });
 
-        // Agregar aristas (transiciones)
-        markovChain.transitionMatrix.forEach((row, fromIndex) => {
-            row.forEach((prob, toIndex) => {
-                if (prob > 0.01) { // Solo mostrar transiciones significativas
+        // Agregar transiciones
+        const matrix = markovChain.transitionMatrix || {};
+        Object.keys(matrix).forEach(fromId => {
+            const targets = matrix[fromId];
+            Object.keys(targets).forEach(toId => {
+                const prob = targets[toId];
+                if (prob > 0) {
                     this.edges.add({
-                        from: fromIndex,
-                        to: toIndex,
+                        from: fromId,
+                        to: toId,
                         label: prob.toFixed(2),
-                        arrows: 'to',
-                        color: { color: '#848484' },
-                        width: Math.max(1, prob * 5),
-                        font: { size: 12, align: 'middle' }
+                        color: { color: prob > 0.8 ? '#059669' : '#6b7280' }
                     });
                 }
             });
         });
 
-        const options = {
-            layout: {
-                randomSeed: 2
-            },
-            physics: {
-                stabilization: true,
-                barnesHut: {
-                    gravitationalConstant: -2000,
-                    springConstant: 0.001,
-                    springLength: 200
-                }
-            }
-        };
-
         const data = { nodes: this.nodes, edges: this.edges };
-        this.network = new vis.Network(this.container, data, options);
-
-        return this.network;
-    }
-
-    /**
-     * Anima una transición entre estados
-     */
-    animateTransition(fromState, toState, duration = 1000) {
-        // Resaltar estado actual
-        this.highlightNode(fromState, '#FFD700');
         
-        setTimeout(() => {
-            this.highlightNode(toState, '#4CAF50');
-            setTimeout(() => {
-                this.resetColors();
-            }, duration / 2);
-        }, duration / 2);
-    }
-
-    highlightNode(nodeId, color) {
-        this.nodes.update({
-            id: nodeId,
-            color: { background: color }
-        });
-    }
-
-    resetColors() {
-        this.nodes.forEach(node => {
-            this.nodes.update({
-                id: node.id,
-                color: { background: '#9b59b6', border: '#8e44ad' }
-            });
-        });
+        if (this.network) this.network.destroy();
+        this.network = new vis.Network(this.container, data, this.options);
+        return this.network;
     }
 }
 
 // ==============================================================================
-// VISUALIZACIÓN DE HMM
+// 3. VISUALIZACIÓN DE HMM (Tema Púrpura)
 // ==============================================================================
 class HMMVisualizer {
     constructor(containerId) {
@@ -214,184 +170,158 @@ class HMMVisualizer {
         this.network = null;
         this.nodes = new vis.DataSet();
         this.edges = new vis.DataSet();
+
+        this.options = {
+            nodes: {
+                shape: 'box',
+                margin: 10,
+                borderWidth: 2,
+                shadow: true,
+                font: { face: 'arial' }
+            },
+            edges: {
+                arrows: { to: { enabled: true, scaleFactor: 1 } },
+                smooth: { type: 'cubicBezier' },
+                font: { align: 'middle', size: 11 }
+            },
+            layout: {
+                hierarchical: {
+                    enabled: true,
+                    direction: 'LR',
+                    sortMethod: 'directed',
+                    levelSeparation: 200,
+                    nodeSpacing: 100
+                }
+            },
+            physics: { enabled: false }, // HMM se ve mejor estático/jerárquico
+            interaction: { hover: true, dragNodes: true }
+        };
     }
 
-    /**
-     * Renderiza un HMM
-     * @param {HiddenMarkovModel} hmm - HMM a visualizar
-     */
     render(hmm) {
+        if (!this.container) return;
+
         this.nodes.clear();
         this.edges.clear();
 
-        const stateY = 100;
-        const obsY = 300;
-        const spacing = 200;
-
-        // Agregar nodos de estados ocultos
-        hmm.states.forEach((state, index) => {
+        // Estados Ocultos (Nivel 0)
+        hmm.hiddenStates.forEach(state => {
             this.nodes.add({
-                id: `state_${index}`,
-                label: state,
-                x: index * spacing,
-                y: stateY,
-                color: {
-                    background: '#16a085',
-                    border: '#138d75'
+                id: `hidden_${state.id}`,
+                label: `🔒 ${state.label}`,
+                level: 0,
+                color: { 
+                    background: '#f3e8ff', 
+                    border: '#9333ea', 
+                    highlight: { background: '#e9d5ff', border: '#7e22ce' }
                 },
-                font: { color: '#ffffff', size: 14 },
-                shape: 'ellipse',
-                fixed: true
+                font: { color: '#581c87', face: 'arial bold' }
             });
         });
 
-        // Agregar nodos de observaciones
-        hmm.observations.forEach((obs, index) => {
+        // Observaciones (Nivel 1)
+        hmm.observations.forEach(obs => {
             this.nodes.add({
-                id: `obs_${index}`,
-                label: obs,
-                x: index * spacing,
-                y: obsY,
-                color: {
-                    background: '#e67e22',
-                    border: '#d35400'
+                id: `obs_${obs.id}`,
+                label: `👁️ ${obs.label}`,
+                level: 1,
+                color: { 
+                    background: '#ddd6fe', 
+                    border: '#7c3aed', 
+                    highlight: { background: '#c4b5fd', border: '#6d28d9' }
                 },
-                font: { color: '#ffffff', size: 12 },
-                shape: 'box',
-                fixed: true
+                font: { color: '#4c1d95' }
             });
         });
 
-        // Agregar transiciones entre estados
-        hmm.transitionMatrix.forEach((row, fromIndex) => {
-            row.forEach((prob, toIndex) => {
-                if (prob > 0.01) {
-                    this.edges.add({
-                        from: `state_${fromIndex}`,
-                        to: `state_${toIndex}`,
-                        label: prob.toFixed(2),
-                        arrows: 'to',
-                        color: { color: '#16a085' },
-                        width: Math.max(1, prob * 3)
-                    });
-                }
+        // Transiciones
+        if (hmm.transitionMatrix) {
+            Object.entries(hmm.transitionMatrix).forEach(([from, targets]) => {
+                Object.entries(targets).forEach(([to, prob]) => {
+                    if (prob > 0) {
+                        this.edges.add({
+                            from: `hidden_${from}`,
+                            to: `hidden_${to}`,
+                            label: prob.toFixed(2),
+                            color: { color: '#9333ea' }
+                        });
+                    }
+                });
             });
-        });
+        }
 
-        // Agregar emisiones (estado -> observación)
-        hmm.emissionMatrix.forEach((row, stateIndex) => {
-            row.forEach((prob, obsIndex) => {
-                if (prob > 0.01) {
-                    this.edges.add({
-                        from: `state_${stateIndex}`,
-                        to: `obs_${obsIndex}`,
-                        label: prob.toFixed(2),
-                        arrows: 'to',
-                        color: { color: '#e67e22' },
-                        dashes: true,
-                        width: Math.max(1, prob * 3)
-                    });
-                }
+        // Emisiones
+        if (hmm.emissionMatrix) {
+            Object.entries(hmm.emissionMatrix).forEach(([state, emissions]) => {
+                Object.entries(emissions).forEach(([obs, prob]) => {
+                    if (prob > 0) {
+                        this.edges.add({
+                            from: `hidden_${state}`,
+                            to: `obs_${obs}`,
+                            label: prob.toFixed(2),
+                            color: { color: '#c026d3' },
+                            dashes: true
+                        });
+                    }
+                });
             });
-        });
-
-        const options = {
-            physics: { enabled: false },
-            interaction: { dragNodes: false }
-        };
+        }
 
         const data = { nodes: this.nodes, edges: this.edges };
-        this.network = new vis.Network(this.container, data, options);
-
+        
+        if (this.network) this.network.destroy();
+        this.network = new vis.Network(this.container, data, this.options);
         return this.network;
     }
 }
 
 // ==============================================================================
-// GRÁFICOS DE PROBABILIDAD (usando Chart.js si está disponible)
+// 4. GRÁFICOS DE PROBABILIDAD (Chart.js Wrapper)
 // ==============================================================================
 class ProbabilityChart {
     constructor(canvasId) {
         this.canvas = document.getElementById(canvasId);
-        this.ctx = this.canvas.getContext('2d');
         this.chart = null;
     }
 
-    /**
-     * Crea un gráfico de barras para probabilidades
-     */
-    renderBarChart(labels, data, title = 'Distribución de Probabilidad') {
-        if (this.chart) {
-            this.chart.destroy();
+    renderBarChart(labels, data, title = 'Distribución de Probabilidad', color = '#3b82f6') {
+        if (!this.canvas) return;
+        
+        const ctx = this.canvas.getContext('2d');
+        if (this.chart) this.chart.destroy();
+
+        // Verificar si Chart.js está cargado
+        if (typeof Chart === 'undefined') {
+            console.warn('Chart.js no está cargado');
+            return;
         }
 
-        this.chart = new Chart(this.ctx, {
+        this.chart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: labels,
                 datasets: [{
                     label: 'Probabilidad',
                     data: data,
-                    backgroundColor: 'rgba(52, 152, 219, 0.6)',
-                    borderColor: 'rgba(52, 152, 219, 1)',
-                    borderWidth: 2
+                    backgroundColor: color + '80', // Opacidad 50%
+                    borderColor: color,
+                    borderWidth: 1,
+                    borderRadius: 4
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                     y: {
                         beginAtZero: true,
                         max: 1,
-                        ticks: {
-                            callback: function(value) {
-                                return (value * 100).toFixed(0) + '%';
-                            }
-                        }
+                        ticks: { format: { style: 'percent' } }
                     }
                 },
                 plugins: {
-                    title: {
-                        display: true,
-                        text: title,
-                        font: { size: 16 }
-                    },
-                    legend: {
-                        display: false
-                    }
-                }
-            }
-        });
-    }
-
-    /**
-     * Crea un gráfico de línea para evolución temporal
-     */
-    renderLineChart(labels, datasets, title = 'Evolución Temporal') {
-        if (this.chart) {
-            this.chart.destroy();
-        }
-
-        this.chart = new Chart(this.ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: datasets
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 1
-                    }
-                },
-                plugins: {
-                    title: {
-                        display: true,
-                        text: title,
-                        font: { size: 16 }
-                    }
+                    title: { display: true, text: title },
+                    legend: { display: false }
                 }
             }
         });
@@ -399,43 +329,43 @@ class ProbabilityChart {
 }
 
 // ==============================================================================
-// UTILIDADES DE ANIMACIÓN
+// 5. UTILIDADES DE ANIMACIÓN
 // ==============================================================================
 const AnimationUtils = {
     /**
-     * Anima un número desde un valor inicial hasta un valor final
+     * Anima un número en un elemento DOM
      */
     animateValue(element, start, end, duration = 1000) {
-        const range = end - start;
-        const startTime = performance.now();
-
-        function update(currentTime) {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            
-            const easeOutQuad = progress * (2 - progress);
-            const current = start + (range * easeOutQuad);
-            
-            element.textContent = current.toFixed(4);
-            
+        if (!element) return;
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            const value = Math.floor(progress * (end - start) + start);
+            element.innerHTML = value; // O toFixed si son decimales
             if (progress < 1) {
-                requestAnimationFrame(update);
+                window.requestAnimationFrame(step);
             }
-        }
-
-        requestAnimationFrame(update);
+        };
+        window.requestAnimationFrame(step);
     },
 
     /**
-     * Resalta un elemento temporalmente
+     * Resalta un elemento temporalmente (Flash)
      */
-    flashElement(element, color = '#FFD700', duration = 500) {
+    flashElement(element, color = '#fef3c7', duration = 500) {
+        if (!element) return;
+        const originalTransition = element.style.transition;
         const originalBg = element.style.backgroundColor;
+
+        element.style.transition = 'background-color 0.2s ease';
         element.style.backgroundColor = color;
-        element.style.transition = 'background-color 0.3s ease';
-        
+
         setTimeout(() => {
             element.style.backgroundColor = originalBg;
+            setTimeout(() => {
+                element.style.transition = originalTransition;
+            }, 200);
         }, duration);
     }
 };
@@ -450,5 +380,14 @@ if (typeof module !== 'undefined' && module.exports) {
         HMMVisualizer,
         ProbabilityChart,
         AnimationUtils
+    };
+} else {
+    // Exponer al scope global del navegador
+    window.AppViz = {
+        Bayesian: BayesianNetworkVisualizer,
+        Markov: MarkovChainVisualizer,
+        HMM: HMMVisualizer,
+        Chart: ProbabilityChart,
+        Anim: AnimationUtils
     };
 }

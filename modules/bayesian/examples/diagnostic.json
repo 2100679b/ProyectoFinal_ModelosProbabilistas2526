@@ -1,86 +1,54 @@
 {
-  "name": "Red de Diagnóstico de Fallas",
-  "description": "Sistema de diagnóstico para fallas en equipos mecánicos",
-  "domain": "Ingeniería",
+  "name": "Diagnóstico de Fallas - Automóvil",
+  "description": "Sistema de diagnóstico para fallas mecánicas en vehículos",
   "nodes": [
     {
-      "id": "FallaMotor",
-      "label": "Falla del Motor",
-      "description": "El motor presenta problemas"
+      "id": "falla_motor",
+      "label": "Falla del Motor"
     },
     {
-      "id": "FallaBateria",
-      "label": "Falla de Batería",
-      "description": "La batería está descargada o dañada"
+      "id": "falla_bateria",
+      "label": "Falla de Batería"
     },
     {
-      "id": "NoArranca",
-      "label": "No Arranca",
-      "description": "El vehículo no enciende"
+      "id": "no_arranca",
+      "label": "No Arranca"
     },
     {
-      "id": "RuidoAnormal",
-      "label": "Ruido Anormal",
-      "description": "Se escuchan ruidos extraños"
+      "id": "ruido_anormal",
+      "label": "Ruido Anormal"
     },
     {
-      "id": "LucesDebiles",
-      "label": "Luces Débiles",
-      "description": "Las luces del tablero están tenues"
+      "id": "luces_debiles",
+      "label": "Luces Débiles"
     }
   ],
   "edges": [
-    { "from": "FallaMotor", "to": "NoArranca" },
-    { "from": "FallaMotor", "to": "RuidoAnormal" },
-    { "from": "FallaBateria", "to": "NoArranca" },
-    { "from": "FallaBateria", "to": "LucesDebiles" }
+    { "from": "falla_motor", "to": "no_arranca" },
+    { "from": "falla_motor", "to": "ruido_anormal" },
+    { "from": "falla_bateria", "to": "no_arranca" },
+    { "from": "falla_bateria", "to": "luces_debiles" }
   ],
   "cpt": {
-    "FallaMotor": {
-      "verdadero": 0.05,
-      "falso": 0.95
+    "falla_motor": {
+      "root": 0.05
     },
-    "FallaBateria": {
-      "verdadero": 0.10,
-      "falso": 0.90
+    "falla_bateria": {
+      "root": 0.10
     },
-    "NoArranca": {
-      "{\"FallaMotor\":\"verdadero\",\"FallaBateria\":\"verdadero\"}": {
-        "verdadero": 0.98,
-        "falso": 0.02
-      },
-      "{\"FallaMotor\":\"verdadero\",\"FallaBateria\":\"falso\"}": {
-        "verdadero": 0.70,
-        "falso": 0.30
-      },
-      "{\"FallaMotor\":\"falso\",\"FallaBateria\":\"verdadero\"}": {
-        "verdadero": 0.80,
-        "falso": 0.20
-      },
-      "{\"FallaMotor\":\"falso\",\"FallaBateria\":\"falso\"}": {
-        "verdadero": 0.05,
-        "falso": 0.95
-      }
+    "no_arranca": {
+      "falla_bateria=False,falla_motor=False": 0.05,
+      "falla_bateria=False,falla_motor=True": 0.70,
+      "falla_bateria=True,falla_motor=False": 0.80,
+      "falla_bateria=True,falla_motor=True": 0.98
     },
-    "RuidoAnormal": {
-      "{\"FallaMotor\":\"verdadero\"}": {
-        "verdadero": 0.85,
-        "falso": 0.15
-      },
-      "{\"FallaMotor\":\"falso\"}": {
-        "verdadero": 0.10,
-        "falso": 0.90
-      }
+    "ruido_anormal": {
+      "falla_motor=False": 0.10,
+      "falla_motor=True": 0.85
     },
-    "LucesDebiles": {
-      "{\"FallaBateria\":\"verdadero\"}": {
-        "verdadero": 0.90,
-        "falso": 0.10
-      },
-      "{\"FallaBateria\":\"falso\"}": {
-        "verdadero": 0.05,
-        "falso": 0.95
-      }
+    "luces_debiles": {
+      "falla_bateria=False": 0.05,
+      "falla_bateria=True": 0.90
     }
   }
 }

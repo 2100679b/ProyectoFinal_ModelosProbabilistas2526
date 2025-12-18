@@ -50,19 +50,23 @@ require_once BASE_PATH . '/includes/navbar.php';
                 </div>
             </div>
             
-            <!-- Sección: Algoritmos -->
+            <!-- Sección: Algoritmos (Ahora funcionales) -->
             <div class="sidebar-section">
                 <h3><i class="fas fa-cogs"></i> Algoritmo de Inferencia</h3>
                 <div class="algorithm-selector">
                     <div class="algorithm-option">
-                        <input type="radio" name="algorithm" id="algo-enum" value="enumeration" checked>
+                        <!-- El atributo onchange notifica al JS del cambio -->
+                        <input type="radio" name="algorithm" id="algo-enum" value="enumeration" checked onchange="window.onAlgorithmChange()">
                         <label for="algo-enum">Enumeración Exacta</label>
                     </div>
                     <div class="algorithm-option">
-                        <input type="radio" name="algorithm" id="algo-elim" value="variable_elimination">
+                        <input type="radio" name="algorithm" id="algo-elim" value="variable_elimination" onchange="window.onAlgorithmChange()">
                         <label for="algo-elim">Eliminación de Variables</label>
                     </div>
                 </div>
+                <small class="text-muted" style="display:block; margin-top:10px; font-size:0.85em;">
+                    <i class="fas fa-info-circle"></i> Selecciona el método para calcular probabilidades.
+                </small>
             </div>
             
             <!-- Sección: Acciones -->
@@ -71,11 +75,16 @@ require_once BASE_PATH . '/includes/navbar.php';
                 <button class="btn btn-primary" onclick="createNewNetwork()" style="width: 100%; margin-bottom: 0.5rem;">
                     <i class="fas fa-plus"></i> Nueva Red
                 </button>
+                <!-- Botón de guardar manual (sin autoguardado) -->
                 <button class="btn btn-secondary" onclick="saveNetwork()" style="width: 100%; margin-bottom: 0.5rem;">
                     <i class="fas fa-save"></i> Guardar
                 </button>
-                <button class="btn btn-secondary" onclick="exportNetwork()" style="width: 100%;">
+                <button class="btn btn-secondary" onclick="exportNetwork()" style="width: 100%; margin-bottom: 0.5rem;">
                     <i class="fas fa-download"></i> Exportar JSON
+                </button>
+                <!-- Botón de Limpiar Todo (Nuevo) -->
+                <button class="btn btn-outline-danger" onclick="window.clearAll()" style="width: 100%;">
+                    <i class="fas fa-trash-alt"></i> Limpiar Todo
                 </button>
             </div>
             
@@ -107,7 +116,6 @@ require_once BASE_PATH . '/includes/navbar.php';
                 <div class="tab-panel active" id="tab-network">
                     <h3>Estructura de la Red Bayesiana</h3>
                     
-                    <!-- Controles de visualización -->
                     <div class="network-controls">
                         <button class="btn btn-secondary btn-sm" onclick="addNode()">
                             <i class="fas fa-plus-circle"></i> Agregar Nodo
@@ -123,81 +131,63 @@ require_once BASE_PATH . '/includes/navbar.php';
                         </button>
                     </div>
                     
-                    <!-- Canvas de visualización -->
                     <div id="network-visualization" class="network-visualization"></div>
                     
-                    <!-- Información de nodos -->
                     <div id="node-info" class="node-info-panel" style="display: none;">
                         <h4><i class="fas fa-info-circle"></i> Información del Nodo</h4>
                         <div id="node-details"></div>
                     </div>
                 </div>
                 
-                <!-- Tab 2: Tablas de Probabilidad Condicional -->
+                <!-- Tab 2: Probabilidades -->
                 <div class="tab-panel" id="tab-probabilities">
                     <h3>Tablas de Probabilidad Condicional (CPT)</h3>
-                    <p class="text-muted">Las tablas de probabilidad condicional definen cómo cada nodo depende de sus padres en la red</p>
-                    
+                    <p class="text-muted">Las tablas definen cómo cada nodo depende de sus padres.</p>
                     <div id="cpt-container">
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle"></i> Carga un ejemplo para ver las tablas de probabilidad condicional
-                        </div>
+                        <div class="alert alert-info">Carga un ejemplo para ver las tablas.</div>
                     </div>
                 </div>
                 
-                <!-- Tab 3: Consultas de Inferencia -->
+                <!-- Tab 3: Inferencia -->
                 <div class="tab-panel" id="tab-inference">
                     <h3>Realizar Consulta</h3>
-                    <p class="text-muted">Configura una consulta de inferencia bayesiana para calcular probabilidades</p>
+                    <p class="text-muted">Configura una consulta de inferencia bayesiana.</p>
                     
                     <div class="query-builder">
-                        
-                        <!-- Variable a consultar -->
                         <div class="query-section">
                             <h4><i class="fas fa-question-circle"></i> Variable a Consultar</h4>
-                            <p class="text-muted" style="font-size: 0.9em;">Selecciona la variable cuya probabilidad deseas calcular</p>
-                            <div id="query-variables" class="variable-selector">
-                                <p class="text-muted">Carga una red primero</p>
+                            <div id="query-variables" class="variable-selector"></div>
+                            <div class="mt-2">
+                                <button class="btn btn-sm btn-outline-secondary" onclick="window.clearQuery()">
+                                    <i class="fas fa-times"></i> Limpiar selección
+                                </button>
                             </div>
                         </div>
                         
-                        <!-- Evidencia -->
                         <div class="query-section">
                             <h4><i class="fas fa-check-circle"></i> Evidencia (Valores Conocidos)</h4>
-                            <p class="text-muted" style="font-size: 0.9em;">Selecciona las variables con valores conocidos</p>
-                            <div id="evidence-variables" class="variable-selector">
-                                <p class="text-muted">Selecciona variables de evidencia</p>
-                            </div>
-                            <div id="evidence-inputs" class="evidence-inputs">
-                                <p class="text-muted" style="margin: 10px 0;">
-                                    <i class="fas fa-info-circle"></i> No hay evidencia seleccionada
-                                </p>
+                            <div id="evidence-variables" class="variable-selector"></div>
+                            <div id="evidence-inputs" class="evidence-inputs"></div>
+                            <div class="mt-2">
+                                <button class="btn btn-sm btn-outline-secondary" onclick="window.clearEvidence()">
+                                    <i class="fas fa-eraser"></i> Limpiar evidencia
+                                </button>
                             </div>
                         </div>
                         
-                        <!-- Botón de ejecución -->
-                        <button class="btn btn-primary btn-run" onclick="runInference()" id="btn-run-inference">
-                            <i class="fas fa-play"></i> Ejecutar Inferencia
-                        </button>
-                        
+                        <div class="d-flex justify-content-center mt-3">
+                            <button class="btn btn-primary btn-run" onclick="runInference()" id="btn-run-inference" style="padding: 12px 30px; font-size: 1.1em;">
+                                <i class="fas fa-play"></i> Ejecutar Inferencia
+                            </button>
+                        </div>
                     </div>
                 </div>
                 
                 <!-- Tab 4: Resultados -->
                 <div class="tab-panel" id="tab-results">
                     <h3>Resultados de la Inferencia</h3>
-                    <p class="text-muted">Probabilidades calculadas usando el algoritmo de inferencia seleccionado</p>
-                    
                     <div id="results-container">
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle"></i> Los resultados aparecerán aquí después de ejecutar una consulta
-                        </div>
-                    </div>
-                    
-                    <!-- Detalles del algoritmo -->
-                    <div id="algorithm-details" style="display: none;">
-                        <h4>Pasos del Algoritmo</h4>
-                        <div id="algorithm-steps"></div>
+                        <div class="alert alert-info">Los resultados aparecerán aquí después de ejecutar una consulta.</div>
                     </div>
                 </div>
                 

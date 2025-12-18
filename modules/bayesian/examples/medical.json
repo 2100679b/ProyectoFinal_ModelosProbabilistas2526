@@ -1,120 +1,69 @@
 {
   "name": "Red Médica de Diagnóstico",
   "description": "Red bayesiana para diagnóstico médico considerando síntomas y enfermedades respiratorias",
-  "domain": "Medicina",
   "nodes": [
     {
-      "id": "Fumador",
-      "label": "Fumador",
-      "description": "El paciente es fumador habitual"
+      "id": "fumador",
+      "label": "Fumador"
     },
     {
-      "id": "ContaminacionAire",
-      "label": "Contaminación del Aire",
-      "description": "Exposición a alta contaminación ambiental"
+      "id": "contaminacion",
+      "label": "Contaminación del Aire"
     },
     {
-      "id": "CancerPulmon",
-      "label": "Cáncer de Pulmón",
-      "description": "Presencia de cáncer pulmonar"
+      "id": "cancer_pulmon",
+      "label": "Cáncer de Pulmón"
     },
     {
-      "id": "Bronquitis",
-      "label": "Bronquitis",
-      "description": "Inflamación de los bronquios"
+      "id": "bronquitis",
+      "label": "Bronquitis"
     },
     {
-      "id": "Disnea",
-      "label": "Disnea",
-      "description": "Dificultad para respirar"
+      "id": "disnea",
+      "label": "Disnea (Dificultad Respirar)"
     },
     {
-      "id": "RayosXAnormal",
-      "label": "Rayos X Anormal",
-      "description": "Resultados anormales en radiografía de tórax"
+      "id": "rayos_x_anormal",
+      "label": "Rayos X Anormal"
     }
   ],
   "edges": [
-    { "from": "Fumador", "to": "CancerPulmon" },
-    { "from": "Fumador", "to": "Bronquitis" },
-    { "from": "ContaminacionAire", "to": "CancerPulmon" },
-    { "from": "ContaminacionAire", "to": "Bronquitis" },
-    { "from": "CancerPulmon", "to": "Disnea" },
-    { "from": "CancerPulmon", "to": "RayosXAnormal" },
-    { "from": "Bronquitis", "to": "Disnea" }
+    { "from": "fumador", "to": "cancer_pulmon" },
+    { "from": "fumador", "to": "bronquitis" },
+    { "from": "contaminacion", "to": "cancer_pulmon" },
+    { "from": "contaminacion", "to": "bronquitis" },
+    { "from": "cancer_pulmon", "to": "disnea" },
+    { "from": "cancer_pulmon", "to": "rayos_x_anormal" },
+    { "from": "bronquitis", "to": "disnea" }
   ],
   "cpt": {
-    "Fumador": {
-      "verdadero": 0.30,
-      "falso": 0.70
+    "fumador": {
+      "root": 0.30
     },
-    "ContaminacionAire": {
-      "alto": 0.10,
-      "bajo": 0.90
+    "contaminacion": {
+      "root": 0.10
     },
-    "CancerPulmon": {
-      "{\"Fumador\":\"verdadero\",\"ContaminacionAire\":\"alto\"}": {
-        "verdadero": 0.05,
-        "falso": 0.95
-      },
-      "{\"Fumador\":\"verdadero\",\"ContaminacionAire\":\"bajo\"}": {
-        "verdadero": 0.02,
-        "falso": 0.98
-      },
-      "{\"Fumador\":\"falso\",\"ContaminacionAire\":\"alto\"}": {
-        "verdadero": 0.03,
-        "falso": 0.97
-      },
-      "{\"Fumador\":\"falso\",\"ContaminacionAire\":\"bajo\"}": {
-        "verdadero": 0.001,
-        "falso": 0.999
-      }
+    "cancer_pulmon": {
+      "contaminacion=False,fumador=False": 0.001,
+      "contaminacion=False,fumador=True": 0.02,
+      "contaminacion=True,fumador=False": 0.03,
+      "contaminacion=True,fumador=True": 0.05
     },
-    "Bronquitis": {
-      "{\"Fumador\":\"verdadero\",\"ContaminacionAire\":\"alto\"}": {
-        "verdadero": 0.60,
-        "falso": 0.40
-      },
-      "{\"Fumador\":\"verdadero\",\"ContaminacionAire\":\"bajo\"}": {
-        "verdadero": 0.30,
-        "falso": 0.70
-      },
-      "{\"Fumador\":\"falso\",\"ContaminacionAire\":\"alto\"}": {
-        "verdadero": 0.25,
-        "falso": 0.75
-      },
-      "{\"Fumador\":\"falso\",\"ContaminacionAire\":\"bajo\"}": {
-        "verdadero": 0.05,
-        "falso": 0.95
-      }
+    "bronquitis": {
+      "contaminacion=False,fumador=False": 0.05,
+      "contaminacion=False,fumador=True": 0.30,
+      "contaminacion=True,fumador=False": 0.25,
+      "contaminacion=True,fumador=True": 0.60
     },
-    "Disnea": {
-      "{\"CancerPulmon\":\"verdadero\",\"Bronquitis\":\"verdadero\"}": {
-        "verdadero": 0.90,
-        "falso": 0.10
-      },
-      "{\"CancerPulmon\":\"verdadero\",\"Bronquitis\":\"falso\"}": {
-        "verdadero": 0.70,
-        "falso": 0.30
-      },
-      "{\"CancerPulmon\":\"falso\",\"Bronquitis\":\"verdadero\"}": {
-        "verdadero": 0.80,
-        "falso": 0.20
-      },
-      "{\"CancerPulmon\":\"falso\",\"Bronquitis\":\"falso\"}": {
-        "verdadero": 0.10,
-        "falso": 0.90
-      }
+    "disnea": {
+      "bronquitis=False,cancer_pulmon=False": 0.10,
+      "bronquitis=False,cancer_pulmon=True": 0.70,
+      "bronquitis=True,cancer_pulmon=False": 0.80,
+      "bronquitis=True,cancer_pulmon=True": 0.90
     },
-    "RayosXAnormal": {
-      "{\"CancerPulmon\":\"verdadero\"}": {
-        "verdadero": 0.90,
-        "falso": 0.10
-      },
-      "{\"CancerPulmon\":\"falso\"}": {
-        "verdadero": 0.20,
-        "falso": 0.80
-      }
+    "rayos_x_anormal": {
+      "cancer_pulmon=False": 0.20,
+      "cancer_pulmon=True": 0.90
     }
   }
 }

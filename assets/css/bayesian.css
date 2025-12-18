@@ -161,7 +161,9 @@
     transform: translateX(3px);
 }
 
-/* Selector de algoritmo */
+/* ========================================
+   SELECTOR DE ALGORITMO - ESTILO BOTONES COMPLETOS
+   ======================================== */
 .algorithm-selector {
     display: flex;
     flex-direction: column;
@@ -169,32 +171,75 @@
 }
 
 .algorithm-option {
+    position: relative;
+    display: block;
+}
+
+/* OCULTAR el input radio nativo */
+.algorithm-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    width: 0;
+    height: 0;
+}
+
+/* LABEL como BOTÓN COMPLETO */
+.algorithm-option label {
     display: flex;
     align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 14px 20px;
+    background: #f8f9fa;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #64748b;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
     gap: 10px;
-    padding: 10px;
-    background: #f9fafb;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.algorithm-option:hover {
-    background: var(--bayesian-light);
+/* Icono opcional antes del texto */
+.algorithm-option label::before {
+    content: '⚙️';
+    font-size: 1.2em;
+    display: inline-block;
 }
 
-.algorithm-option input[type="radio"] {
-    cursor: pointer;
-    width: 18px;
-    height: 18px;
-    accent-color: var(--bayesian-primary);
+/* HOVER - Estado al pasar el mouse */
+.algorithm-option label:hover {
+    background: #e0f2fe;
+    border-color: #3b82f6;
+    color: #1e40af;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
 }
 
-.algorithm-option label {
-    cursor: pointer;
-    font-weight: 500;
-    color: var(--text-primary);
-    flex: 1;
+/* SELECCIONADO - Botón azul sólido */
+.algorithm-option input[type="radio"]:checked + label {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border-color: #1e40af;
+    color: white;
+    font-weight: 800;
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+    transform: translateY(-1px);
+}
+
+/* Icono cambia cuando está seleccionado */
+.algorithm-option input[type="radio"]:checked + label::before {
+    content: '✓';
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+/* CLICK - Animación al hacer clic */
+.algorithm-option label:active {
+    transform: translateY(0) scale(0.98);
 }
 
 /* ========================================
@@ -628,6 +673,12 @@
     
     .btn {
         width: 100%;
+    }
+    
+    /* Botones de algoritmo más pequeños en móvil */
+    .algorithm-option label {
+        padding: 12px 16px;
+        font-size: 0.85rem;
     }
 }
 

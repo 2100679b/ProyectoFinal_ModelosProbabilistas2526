@@ -1,86 +1,66 @@
 {
-  "name": "Red de Alarma Antirrobo",
-  "description": "Modelo clásico de red bayesiana que representa la relación entre terremotos, robos y alarmas",
-  "domain": "Seguridad",
+  "name": "Alarma - Terremoto - Ladrón",
+  "description": "Red bayesiana clásica que modela una alarma que puede ser activada por un terremoto o un ladrón",
   "nodes": [
     {
-      "id": "Terremoto",
-      "label": "Terremoto",
-      "description": "Ocurrencia de un terremoto en la zona"
+      "id": "terremoto",
+      "label": "Terremoto"
     },
     {
-      "id": "Robo",
-      "label": "Robo",
-      "description": "Ocurrencia de un robo en la propiedad"
+      "id": "ladron",
+      "label": "Ladrón"
     },
     {
-      "id": "Alarma",
-      "label": "Alarma",
-      "description": "La alarma antirrobo se activa"
+      "id": "alarma",
+      "label": "Alarma"
     },
     {
-      "id": "JuanLlama",
-      "label": "Juan Llama",
-      "description": "El vecino Juan llama reportando la alarma"
+      "id": "juan_llama",
+      "label": "Juan Llama"
     },
     {
-      "id": "MariaLlama",
-      "label": "María Llama",
-      "description": "La vecina María llama reportando la alarma"
+      "id": "maria_llama",
+      "label": "María Llama"
     }
   ],
   "edges": [
-    { "from": "Terremoto", "to": "Alarma" },
-    { "from": "Robo", "to": "Alarma" },
-    { "from": "Alarma", "to": "JuanLlama" },
-    { "from": "Alarma", "to": "MariaLlama" }
+    {
+      "from": "terremoto",
+      "to": "alarma"
+    },
+    {
+      "from": "ladron",
+      "to": "alarma"
+    },
+    {
+      "from": "alarma",
+      "to": "juan_llama"
+    },
+    {
+      "from": "alarma",
+      "to": "maria_llama"
+    }
   ],
   "cpt": {
-    "Terremoto": {
-      "verdadero": 0.002,
-      "falso": 0.998
+    "terremoto": {
+      "root": 0.002
     },
-    "Robo": {
-      "verdadero": 0.001,
-      "falso": 0.999
+    "ladron": {
+      "root": 0.001
     },
-    "Alarma": {
-      "{\"Terremoto\":\"verdadero\",\"Robo\":\"verdadero\"}": {
-        "verdadero": 0.95,
-        "falso": 0.05
-      },
-      "{\"Terremoto\":\"verdadero\",\"Robo\":\"falso\"}": {
-        "verdadero": 0.29,
-        "falso": 0.71
-      },
-      "{\"Terremoto\":\"falso\",\"Robo\":\"verdadero\"}": {
-        "verdadero": 0.94,
-        "falso": 0.06
-      },
-      "{\"Terremoto\":\"falso\",\"Robo\":\"falso\"}": {
-        "verdadero": 0.001,
-        "falso": 0.999
-      }
+    "alarma": {
+      "ladron=False,terremoto=False": 0.001,
+      "ladron=False,terremoto=True": 0.29,
+      "ladron=True,terremoto=False": 0.94,
+      "ladron=True,terremoto=True": 0.95
     },
-    "JuanLlama": {
-      "{\"Alarma\":\"verdadero\"}": {
-        "verdadero": 0.90,
-        "falso": 0.10
-      },
-      "{\"Alarma\":\"falso\"}": {
-        "verdadero": 0.05,
-        "falso": 0.95
-      }
+    "juan_llama": {
+      "alarma=False": 0.05,
+      "alarma=True": 0.90
     },
-    "MariaLlama": {
-      "{\"Alarma\":\"verdadero\"}": {
-        "verdadero": 0.70,
-        "falso": 0.30
-      },
-      "{\"Alarma\":\"falso\"}": {
-        "verdadero": 0.01,
-        "falso": 0.99
-      }
+    "maria_llama": {
+      "alarma=False": 0.01,
+      "alarma=True": 0.70
     }
   }
 }

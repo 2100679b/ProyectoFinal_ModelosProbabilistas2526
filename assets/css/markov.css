@@ -155,6 +155,27 @@
     transform: translateX(5px);
 }
 
+/* Botones de análisis con estado activo */
+.analysis-buttons .btn {
+    background-color: #6b7280; /* Gris por defecto */
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.analysis-buttons .btn:hover {
+    background-color: #4b5563; /* Gris más oscuro al hover */
+    transform: translateY(-2px);
+}
+
+.analysis-buttons .btn.active {
+    background-color: var(--markov-primary); /* Verde cuando está activo */
+}
+
+.analysis-buttons .btn.active:hover {
+    background-color: var(--markov-secondary); /* Verde oscuro al hover */
+}
+
 /* Opciones de configuración */
 .config-option {
     margin-bottom: 15px;

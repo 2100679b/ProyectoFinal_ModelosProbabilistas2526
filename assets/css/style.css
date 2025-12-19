@@ -11,7 +11,7 @@
     --primary-color: #2563eb;
     --secondary-color: #1e40af;
     --success-color: #10b981;
-    --warning-color: #f59e0b;
+    --warning-color: #8b5cf6; /* CAMBIADO DE #f59e0b A MORADO */
     --danger-color: #ef4444;
     --info-color: #3b82f6;
     
@@ -282,8 +282,8 @@ a:hover {
 }
 
 .hmm-card { 
-    border-top-color: #f59e0b;
-    color: #f59e0b;
+    border-top-color: #8b5cf6; /* CAMBIADO DE #f59e0b A MORADO */
+    color: #8b5cf6; /* CAMBIADO DE #f59e0b A MORADO */
 }
 
 .module-icon {
@@ -388,11 +388,11 @@ a:hover {
 }
 
 .btn-warning { 
-    background: var(--warning-color);
+    background: var(--warning-color); /* AHORA ES MORADO */
 }
 
 .btn-warning:hover {
-    background: #d97706;
+    background: #7c3aed; /* CAMBIADO DE #d97706 A MORADO OSCURO */
 }
 
 .btn-secondary {

@@ -8,7 +8,7 @@
 require_once __DIR__ . '/config.php';
 
 // Definir título de página
-$pageTitle = 'Modelos Probabilísticos - Inicio';
+$pageTitle = 'Modelos Probabilísticos';
 
 // Cargar componentes comunes
 include BASE_PATH . '/includes/header.php';
@@ -18,8 +18,9 @@ include BASE_PATH . '/includes/navbar.php';
 <div class="container">
     <!-- Sección Hero -->
     <div class="hero-section">
-        <h1>Proyecto de Modelos Probabilísticos</h1>
-        <p class="lead">Sistema interactivo para explorar Redes Bayesianas, Cadenas de Markov y Modelos Ocultos de Markov</p>
+        <h1>Modelos Probabilísticos</h1>
+        <p class="lead">Universidad Michoacana de San Nicolás de Hidalgo</p>
+        <p class="text-muted">Proyecto Académico - Facultad de Ingeniería Eléctrica</p>
     </div>
 
     <!-- Grid de Módulos -->
@@ -29,15 +30,9 @@ include BASE_PATH . '/includes/navbar.php';
             <div class="module-card bayesian-card">
                 <div class="module-icon">🔷</div>
                 <h3>Redes Bayesianas</h3>
-                <p>Representación gráfica de relaciones probabilísticas entre variables con algoritmos de inferencia.</p>
-                <ul class="features-list">
-                    <li>Enumeración exacta</li>
-                    <li>Eliminación de variables</li>
-                    <li>Visualización de grafos</li>
-                    <li>4 ejemplos interactivos</li>
-                </ul>
+                <p>Representación gráfica de relaciones probabilísticas entre variables.</p>
                 <a href="<?php echo BASE_URL; ?>/modules/bayesian/index.php" class="btn btn-primary">
-                    <i class="fas fa-arrow-right"></i> Explorar RB
+                    <i class="fas fa-arrow-right"></i> Abrir Módulo
                 </a>
             </div>
         </div>
@@ -47,15 +42,9 @@ include BASE_PATH . '/includes/navbar.php';
             <div class="module-card markov-card">
                 <div class="module-icon">🔄</div>
                 <h3>Cadenas de Markov</h3>
-                <p>Modelos estocásticos para sistemas que transicionan entre estados con probabilidades definidas.</p>
-                <ul class="features-list">
-                    <li>Matrices de transición</li>
-                    <li>Probabilidades estacionarias</li>
-                    <li>Simulación de cadenas</li>
-                    <li>3 ejemplos aplicados</li>
-                </ul>
+                <p>Modelos de transición entre estados con probabilidades definidas.</p>
                 <a href="<?php echo BASE_URL; ?>/modules/markov/index.php" class="btn btn-success">
-                    <i class="fas fa-arrow-right"></i> Explorar CM
+                    <i class="fas fa-arrow-right"></i> Abrir Módulo
                 </a>
             </div>
         </div>
@@ -64,16 +53,10 @@ include BASE_PATH . '/includes/navbar.php';
         <div class="col-md-4">
             <div class="module-card hmm-card">
                 <div class="module-icon">🎯</div>
-                <h3>Modelos Ocultos de Markov</h3>
-                <p>HMM para secuencias observables con estados ocultos subyacentes.</p>
-                <ul class="features-list">
-                    <li>Algoritmo Forward</li>
-                    <li>Algoritmo Viterbi</li>
-                    <li>Forward-Backward</li>
-                    <li>3 ejemplos avanzados</li>
-                </ul>
-                <a href="<?php echo BASE_URL; ?>/modules/hmm/index.php" class="btn btn-warning">
-                    <i class="fas fa-arrow-right"></i> Explorar HMM
+                <h3>HMM</h3>
+                <p>Secuencias observables con estados ocultos subyacentes.</p>
+                <a href="<?php echo BASE_URL; ?>/modules/hmm/index.php" class="btn btn-purple">
+                    <i class="fas fa-arrow-right"></i> Abrir Módulo
                 </a>
             </div>
         </div>
@@ -81,200 +64,214 @@ include BASE_PATH . '/includes/navbar.php';
 
     <!-- Sección de Información -->
     <div class="info-section">
-        <h2>Acerca del Proyecto</h2>
+        <h2>Información del Proyecto</h2>
         <p>
-            Este proyecto educativo implementa tres modelos probabilísticos fundamentales 
-            en inteligencia artificial y aprendizaje automático. Cada módulo incluye 
-            implementaciones algorítmicas, visualizaciones interactivas y ejemplos prácticos.
+            Proyecto académico desarrollado para la materia de <strong>Modelos Probabilísticos (CI7300-T)</strong>.
+            Implementa tres modelos fundamentales en inteligencia artificial y aprendizaje automático.
         </p>
         
         <div class="row mt-4">
-            <!-- Tecnologías -->
+            <!-- Información Académica -->
             <div class="col-md-6">
-                <h4><i class="fas fa-code"></i> Tecnologías Utilizadas</h4>
+                <h4><i class="fas fa-graduation-cap"></i> Información Académica</h4>
                 <ul>
-                    <li><strong>Backend:</strong> PHP <?php echo phpversion(); ?></li>
-                    <li><strong>Frontend:</strong> HTML5, CSS3, JavaScript</li>
-                    <li><strong>Visualización:</strong> Vis.js</li>
-                    <li><strong>Estilos:</strong> CSS personalizado</li>
-                    <li><strong>Iconos:</strong> Font Awesome 6</li>
+                    <li><strong>Materia:</strong> Modelos Probabilísticos</li>
+                    <li><strong>Clave:</strong> CI7300-T</li>
+                    <li><strong>Universidad:</strong> UMSNH</li>
+                    <li><strong>Facultad:</strong> Ingeniería Eléctrica</li>
                 </ul>
             </div>
             
-            <!-- Referencias -->
+            <!-- Contenido -->
             <div class="col-md-6">
-                <h4><i class="fas fa-book"></i> Referencias Académicas</h4>
+                <h4><i class="fas fa-book"></i> Contenido del Proyecto</h4>
                 <ul>
-                    <li>Russell & Norvig - Inteligencia Artificial: Un Enfoque Moderno</li>
-                    <li>Barber - Bayesian Reasoning and Machine Learning</li>
-                    <li>Ibe - Markov Processes for Stochastic Modelling</li>
-                    <li>Rabiner - Tutorial on Hidden Markov Models</li>
+                    <li>Redes Bayesianas e Inferencia</li>
+                    <li>Cadenas de Markov</li>
+                    <li>Modelos Ocultos de Markov</li>
+                    <li>Ejemplos interactivos</li>
                 </ul>
             </div>
         </div>
 
-        <!-- Información adicional -->
+        <!-- Referencias -->
         <div class="row mt-4">
             <div class="col-md-12">
-                <h4><i class="fas fa-info-circle"></i> Características del Sistema</h4>
-                <div class="features-grid">
-                    <div class="feature-item">
-                        <i class="fas fa-chart-line"></i>
-                        <h5>Visualización Interactiva</h5>
-                        <p>Grafos dinámicos para comprender las relaciones entre variables y estados</p>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-calculator"></i>
-                        <h5>Algoritmos Implementados</h5>
-                        <p>Inferencia exacta, simulación y cálculo de probabilidades</p>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-file-code"></i>
-                        <h5>Ejemplos Prácticos</h5>
-                        <p>Casos de uso reales en diagnóstico, predicción y análisis</p>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-mobile-alt"></i>
-                        <h5>Multiplataforma</h5>
-                        <p>Funciona en Windows, Linux y Termux (Android)</p>
-                    </div>
-                </div>
+                <h4><i class="fas fa-book-open"></i> Referencias Principales</h4>
+                <ul>
+                    <li>Russell & Norvig - Inteligencia Artificial: Un Enfoque Moderno</li>
+                    <li>David Barber - Bayesian Reasoning and Machine Learning</li>
+                    <li>Oliver C. Ibe - Markov Processes for Stochastic Modelling</li>
+                </ul>
             </div>
-        </div>
-    </div>
-
-    <!-- Sección de inicio rápido -->
-    <div class="quick-start">
-        <h2><i class="fas fa-rocket"></i> Inicio Rápido</h2>
-        <p>Selecciona un módulo para comenzar a explorar los modelos probabilísticos:</p>
-        <div class="quick-links">
-            <a href="<?php echo BASE_URL; ?>/modules/bayesian/index.php" class="quick-link bayesian">
-                <i class="fas fa-project-diagram"></i>
-                <span>Redes Bayesianas</span>
-            </a>
-            <a href="<?php echo BASE_URL; ?>/modules/markov/index.php" class="quick-link markov">
-                <i class="fas fa-sync-alt"></i>
-                <span>Cadenas de Markov</span>
-            </a>
-            <a href="<?php echo BASE_URL; ?>/modules/hmm/index.php" class="quick-link hmm">
-                <i class="fas fa-eye-slash"></i>
-                <span>HMM</span>
-            </a>
         </div>
     </div>
 </div>
 
-<!-- Estilos adicionales para la página principal -->
+<!-- Estilos simplificados -->
 <style>
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
-}
-
-.feature-item {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
+.hero-section {
     text-align: center;
-    transition: transform 0.3s ease;
-}
-
-.feature-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.feature-item i {
-    font-size: 2.5em;
-    color: #2563eb;
-    margin-bottom: 10px;
-}
-
-.feature-item h5 {
-    color: #1e40af;
-    margin: 10px 0;
-}
-
-.feature-item p {
-    color: #6b7280;
-    font-size: 0.9em;
-}
-
-.quick-start {
+    padding: 40px 20px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 40px;
-    border-radius: 12px;
-    margin-top: 40px;
-    text-align: center;
+    border-radius: 10px;
+    margin-bottom: 40px;
 }
 
-.quick-start h2 {
-    color: white;
-    margin-bottom: 15px;
+.hero-section h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    font-weight: 700;
 }
 
-.quick-links {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 30px;
-    flex-wrap: wrap;
+.hero-section .lead {
+    font-size: 1.2em;
+    margin-bottom: 5px;
+    opacity: 0.95;
 }
 
-.quick-link {
+.hero-section .text-muted {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-size: 1em;
+}
+
+.modules-grid {
+    margin-bottom: 40px;
+}
+
+.module-card {
     background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    text-align: center;
+    height: 100%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Borde superior morado para HMM */
+.hmm-card {
+    border-top: 4px solid #8b5cf6;
+}
+
+.module-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+/* Borde superior morado para la tarjeta HMM */
+.hmm-card {
+    border-top: 4px solid #8b5cf6;
+}
+
+.module-icon {
+    font-size: 3.5em;
+    margin-bottom: 20px;
+}
+
+.module-card h3 {
     color: #333;
-    padding: 20px 30px;
-    border-radius: 8px;
-    text-decoration: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    transition: all 0.3s ease;
-    min-width: 150px;
-}
-
-.quick-link:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.quick-link i {
-    font-size: 2em;
-}
-
-.quick-link.bayesian i {
-    color: #2563eb;
-}
-
-.quick-link.markov i {
-    color: #10b981;
-}
-
-.quick-link.hmm i {
-    color: #f59e0b;
-}
-
-.quick-link span {
+    margin-bottom: 15px;
+    font-size: 1.5em;
     font-weight: 600;
 }
 
+.module-card p {
+    color: #666;
+    margin-bottom: 25px;
+    min-height: 60px;
+    line-height: 1.6;
+}
+
+.module-card .btn {
+    padding: 10px 25px;
+    font-weight: 600;
+    border-radius: 8px;
+}
+
+/* Botón morado personalizado para HMM */
+.btn-purple {
+    background-color: #8b5cf6;
+    color: white;
+    border: none;
+}
+
+.btn-purple:hover {
+    background-color: #7c3aed;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.btn-purple:active {
+    background-color: #6d28d9;
+    transform: translateY(0);
+}
+
+.info-section {
+    background: #f8f9fa;
+    padding: 40px;
+    border-radius: 10px;
+    margin-top: 40px;
+}
+
+.info-section h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.info-section h4 {
+    color: #667eea;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.info-section ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.info-section ul li {
+    padding: 8px 0;
+    color: #555;
+    line-height: 1.6;
+}
+
+.info-section ul li strong {
+    color: #333;
+}
+
+.info-section ul li i {
+    color: #667eea;
+    margin-right: 8px;
+}
+
 @media (max-width: 768px) {
-    .features-grid {
-        grid-template-columns: 1fr;
+    .hero-section {
+        padding: 30px 15px;
     }
     
-    .quick-links {
-        flex-direction: column;
-        align-items: stretch;
+    .hero-section h1 {
+        font-size: 2em;
     }
     
-    .quick-link {
-        width: 100%;
+    .hero-section .lead {
+        font-size: 1em;
+    }
+    
+    .module-card {
+        margin-bottom: 20px;
+    }
+    
+    .module-card p {
+        min-height: auto;
+    }
+    
+    .info-section {
+        padding: 25px;
     }
 }
 </style>

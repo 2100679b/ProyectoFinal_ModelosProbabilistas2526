@@ -44,7 +44,9 @@ if (typeof window.markovModuleLoaded !== 'undefined') {
         initTabs();
         initMarkovDiagram();
         initExampleButtons();
-        ensureAnalysisTab(); // Asegurar UI
+        
+        // Establecer el primer botón como activo por defecto
+        setActiveAnalysisButton('btn-steady-state');
         
         // Si no hay cadena cargada, iniciar una nueva
         if (!currentChain.states || currentChain.states.length === 0) {
@@ -92,16 +94,21 @@ if (typeof window.markovModuleLoaded !== 'undefined') {
         }
     }
 
-    function ensureAnalysisTab() {
-        // Asegurar que el contenedor de resultados de análisis existe
-        let container = document.getElementById('analysis-results');
-        if (!container) {
-            const tabAnalysis = document.getElementById('tab-analysis');
-            if (tabAnalysis) {
-                container = document.createElement('div');
-                container.id = 'analysis-results';
-                tabAnalysis.appendChild(container);
-            }
+    // ========== GESTIÓN DE BOTONES DE ANÁLISIS ==========
+    function setActiveAnalysisButton(buttonId) {
+        // Remover clase 'active' de todos los botones de análisis
+        document.querySelectorAll('.analysis-buttons .btn').forEach(btn => {
+            btn.classList.remove('active');
+            btn.classList.remove('btn-primary');
+            btn.classList.add('btn-secondary');
+        });
+        
+        // Agregar clase 'active' al botón seleccionado
+        const activeBtn = document.getElementById(buttonId);
+        if (activeBtn) {
+            activeBtn.classList.add('active');
+            activeBtn.classList.remove('btn-secondary');
+            activeBtn.classList.add('btn-primary');
         }
     }
 
@@ -302,6 +309,7 @@ if (typeof window.markovModuleLoaded !== 'undefined') {
     // ========== MATRIZ DE TRANSICIÓN ==========
 
     window.showTransitionMatrix = function() {
+        setActiveAnalysisButton('btn-transition-matrix');
         activateTab('matrix');
     };
 
@@ -371,8 +379,11 @@ if (typeof window.markovModuleLoaded !== 'undefined') {
     // ========== ANÁLISIS Y ESTADO ESTACIONARIO (CLIENTE) ==========
     
     window.calculateSteadyState = function() {
+        setActiveAnalysisButton('btn-steady-state');
+
+        // Se busca 'analysis-results' tal como se definió en el HTML
         const container = document.getElementById('analysis-results');
-        if (!container) return; // Si no existe, no hacemos nada (ya se creó en ensureAnalysisTab)
+        if (!container) return; 
 
         if (!currentChain.states || currentChain.states.length === 0) {
             container.innerHTML = '<div class="alert alert-warning">No hay cadena para analizar.</div>';
@@ -389,6 +400,9 @@ if (typeof window.markovModuleLoaded !== 'undefined') {
         // Cálculo Local
         const result = computeSteadyStateClient(currentChain);
         renderSteadyStateResults(result, container);
+
+        // Cambiar a la pestaña de análisis
+        activateTab('analysis');
     };
 
     function verifyStochasticMatrix() {
@@ -480,6 +494,7 @@ if (typeof window.markovModuleLoaded !== 'undefined') {
     // ========== SIMULACIÓN (CLIENTE) ==========
 
     window.simulateSteps = function() {
+        setActiveAnalysisButton('btn-simulate-steps');
         activateTab('simulation');
     };
 
@@ -487,7 +502,9 @@ if (typeof window.markovModuleLoaded !== 'undefined') {
         const select = document.getElementById('initial-state-selector');
         if (!select) return;
         
-        select.innerHTML = '';
+        // No borramos todo el contenido inicial, solo eliminamos los botones de estado previos
+        select.querySelectorAll('button').forEach(btn => btn.remove());
+        
         currentChain.states.forEach(s => {
             const btn = document.createElement('button');
             btn.className = 'btn btn-outline-primary btn-sm m-1';

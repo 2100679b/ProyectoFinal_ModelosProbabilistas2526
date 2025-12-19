@@ -50,17 +50,17 @@ require_once BASE_PATH . '/includes/navbar.php';
                 </div>
             </div>
             
-            <!-- Sección: Análisis -->
+            <!-- Sección: Análisis (CORREGIDA CON IDS) -->
             <div class="sidebar-section">
                 <h3><i class="fas fa-calculator"></i> Análisis</h3>
                 <div class="analysis-buttons">
-                    <button class="btn btn-primary" onclick="calculateSteadyState()" style="width: 100%; margin-bottom: 0.5rem;">
+                    <button class="btn btn-primary" id="btn-steady-state" onclick="calculateSteadyState()" style="width: 100%; margin-bottom: 0.5rem;">
                         <i class="fas fa-balance-scale"></i> Estado Estacionario
                     </button>
-                    <button class="btn btn-secondary" onclick="showTransitionMatrix()" style="width: 100%; margin-bottom: 0.5rem;">
+                    <button class="btn btn-secondary" id="btn-transition-matrix" onclick="showTransitionMatrix()" style="width: 100%; margin-bottom: 0.5rem;">
                         <i class="fas fa-table"></i> Matriz de Transición
                     </button>
-                    <button class="btn btn-secondary" onclick="simulateSteps()" style="width: 100%;">
+                    <button class="btn btn-secondary" id="btn-simulate-steps" onclick="simulateSteps()" style="width: 100%;">
                         <i class="fas fa-forward"></i> Simular Pasos
                     </button>
                 </div>
@@ -173,6 +173,13 @@ require_once BASE_PATH . '/includes/navbar.php';
                             <i class="fas fa-play"></i> Ejecutar Simulación
                         </button>
                         
+                        <!-- Contenedor de resultados de simulación -->
+                        <div id="simulation-results">
+                            <div class="alert alert-info mt-3">
+                                <i class="fas fa-info-circle"></i> Los resultados de la simulación aparecerán aquí después de ejecutar.
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
                 
@@ -181,7 +188,8 @@ require_once BASE_PATH . '/includes/navbar.php';
                     <h3>Análisis de la Cadena</h3>
                     <p class="text-muted">Propiedades y características de la cadena de Markov</p>
                     
-                    <div id="analysis-container">
+                    <!-- ID sincronizado con markov.js para mostrar resultados de Steady State -->
+                    <div id="analysis-results">
                         <div class="alert alert-info">
                             <i class="fas fa-info-circle"></i> Los resultados del análisis aparecerán aquí
                         </div>
